@@ -11,3 +11,5 @@ npx create-expo-app -e with-router
 ## 📝 Notes
 
 - [Expo Router: Docs](https://docs.expo.dev/router/introduction/)
+- @react-navigation/bottom-tabs
+-@react-vavigation/native
