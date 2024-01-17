@@ -1,11 +1,9 @@
-
 import { SafeAreaView, Text, View  } from 'react-native';
 
-export default function Home() {
+export default function Profile() {
   return (
     <SafeAreaView >
-      <Text>Home!Screen</Text>
+      <Text>Profile! Screen</Text>
     </SafeAreaView>
   );
 }
-
