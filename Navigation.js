@@ -43,8 +43,8 @@ function ProfileStackScreen() {
       }}
     >
       <ProfileStack.Screen
-        name="Profile"
-        component={Profile}
+        name="Profiles"
+        component={Profiles}
       />
       <ProfileStack.Screen
         name="EditProfile"
