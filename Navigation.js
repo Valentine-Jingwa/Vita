@@ -12,6 +12,7 @@ import Settings from "./screens/Settings";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
+const ProfileStack = createStackNavigator();
 
 
 
@@ -30,6 +31,39 @@ function AddDataStackScreen() {
       />
       {/* You can add more screens to this stack as needed */}
     </AddDataStack.Navigator>
+  );
+}
+
+
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        headerShown: false, // This will hide the header bar on all screens within this stack
+      }}
+    >
+      <ProfileStack.Screen
+        name="Profile"
+        component={Profile}
+      />
+      <ProfileStack.Screen
+        name="EditProfile"
+        component={EditProfile} // You need to create this component
+      />
+      <ProfileStack.Screen
+        name="ProfileSettings"
+        component={ProfileSettings} // You need to create this component
+      />
+      <ProfileStack.Screen
+        name="SharePrint"
+        component={SharePrint} // You need to create this component
+      />
+      <ProfileStack.Screen
+        name="SupportUs"
+        component={SupportUs} // You need to create this component
+      />
+      {/* Add any additional screens related to Profile */}
+    </ProfileStack.Navigator>
   );
 }
 
