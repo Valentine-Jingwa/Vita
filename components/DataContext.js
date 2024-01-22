@@ -9,7 +9,7 @@ export const useData = () => useContext(DataContext);
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState({
     // Initial data structure
-    vitals: { id: 1, data: [1,40,30,26] },
+    vitals: { id: 1, data: [1,40,30,26] }, // todo: color in design later
     medication: { id: 2, data: [5,10,15,20] },
     nutrition: { id: 3, data: [7,11,24,22] },
     others: { id: 4, data: [10,13,16,19] }
