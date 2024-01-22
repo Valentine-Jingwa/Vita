@@ -3,8 +3,8 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from "./screens/home";
-import Profile from "./screens/profile";
+import Home from "./screens/Home";
+import Profile from "./screens/Profile";
 import Viewing from "./screens/Viewing";
 import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/DataCategory"; // The new screen you'll create
