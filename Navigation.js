@@ -9,6 +9,10 @@ import Viewing from "./screens/Viewing";
 import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settings";
+import Vitals from "./screens/Vitals"; 
+import Medication from "./screens/Medication";
+import Nutrition from "./screens/Nutrition";
+import Others from "./screens/Others";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -28,6 +32,26 @@ function AddDataStackScreen() {
         name="DataCategory"
         component={DataCategory}
         options={{ title: 'Data Category' }}
+      />
+      <AddDataStack.Screen
+        name="Vitals"
+        component={Vitals}
+        options={{ title: 'Vitals' }}
+      />
+      <AddDataStack.Screen
+        name="Medication"
+        component={Medication}
+        options={{ title: 'Medication' }}
+      />
+      <AddDataStack.Screen
+        name="Nutrition"
+        component={Nutrition}
+        options={{ title: 'Nutrition' }}
+      />
+      <AddDataStack.Screen
+        name="Others"
+        component={Others}
+        options={{ title: 'Others' }}
       />
       {/* You can add more screens to this stack as needed */}
     </AddDataStack.Navigator>
