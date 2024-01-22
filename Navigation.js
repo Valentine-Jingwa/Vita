@@ -11,7 +11,9 @@ import DataCategory from "./screens/DataCategory"; // The new screen you'll crea
 import Settings from "./screens/settings";
 
 const Tab = createBottomTabNavigator();
-const AddDataStack = createStackNavigator();
+const AddDataStack = createStackNavigator(); // This section if for the add data stack
+
+
 
 function AddDataStackScreen() {
   return (
@@ -33,10 +35,17 @@ function AddDataStackScreen() {
 
 function BottomTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+    screenOptions={{
+      headerShown: false, // This will hide the header bar on all screens within this stack
+    }}
+    >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
+      <Tab.Screen
+       name="AddData" 
+       component={AddDataStackScreen}
+      /> 
       <Tab.Screen name="Viewing" component={Viewing} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
