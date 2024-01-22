@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { SafeAreaView, Text, StyleSheet } from 'react-native';
-import { Button, Icon, Layout, Tab } from '@ui-kitten/components';
-
+import { Button, Icon, Layout } from '@ui-kitten/components';
 
 export default function Home() {
   const pulseIconRef = useRef();
@@ -29,8 +28,6 @@ export default function Home() {
       >
         PULSE
       </Button>
-
-      <Tab.Navigation/>
     </SafeAreaView>
   );
 }
