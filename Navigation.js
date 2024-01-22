@@ -11,7 +11,9 @@ import DataCategory from "./screens/DataCategory"; // The new screen you'll crea
 import Settings from "./screens/Settings";
 
 const Tab = createBottomTabNavigator();
-const AddDataStack = createStackNavigator();
+const AddDataStack = createStackNavigator(); // This section if for the add data stack
+
+
 
 function AddDataStackScreen() {
   return (
@@ -40,7 +42,10 @@ function BottomTabs() {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
+      <Tab.Screen
+       name="AddData" 
+       component={AddDataStackScreen}
+      /> 
       <Tab.Screen name="Viewing" component={Viewing} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
