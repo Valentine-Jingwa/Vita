@@ -3,12 +3,12 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from "./screens/home";
-import Profile from "./screens/profile";
+import Home from "./screens/Home";
+import Profile from "./screens/Profile";
 import Viewing from "./screens/Viewing";
 import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/DataCategory"; // The new screen you'll create
-import Settings from "./screens/settings";
+import Settings from "./screens/Settings";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator();
@@ -33,7 +33,11 @@ function AddDataStackScreen() {
 
 function BottomTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+    screenOptions={{
+      headerShown: false, // This will hide the header bar on all screens within this stack
+    }}
+    >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
