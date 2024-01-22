@@ -1,30 +1,54 @@
+// Navigation.js
+import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
-import Home from "./screens/Home";
-import Profile from "./screens/Profile";
-import Viewing from "./screens/Viewing";
-import AddData from "./screens/AddData";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from "./screens/home";
+import Profile from "./screens/profile";
+import Viewing from "./screens/Viewing";
+import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
+import DataCategory from "./screens/DataCategory"; // The new screen you'll create
+import Settings from "./screens/settings";
 
-//Bottom Tab Navigator
 const Tab = createBottomTabNavigator();
+const AddDataStack = createStackNavigator();
+
+function AddDataStackScreen() {
+  return (
+    <AddDataStack.Navigator>
+      <AddDataStack.Screen
+        name="AddDataOptions"
+        component={AddDataOptions}
+        options={{ title: 'Add Data' }}
+      />
+      <AddDataStack.Screen
+        name="DataCategory"
+        component={DataCategory}
+        options={{ title: 'Data Category' }}
+      />
+      {/* You can add more screens to this stack as needed */}
+    </AddDataStack.Navigator>
+  );
+}
 
 function BottomTabs() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="AddData" component={AddData} />
+      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
       <Tab.Screen name="Viewing" component={Viewing} />
+      <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
 }
 
-export default function Navigation(){
+export default function Navigation() {
   return (
     <NavigationContainer>
       <BottomTabs />
     </NavigationContainer>
-  )
+  );
 }
 
 

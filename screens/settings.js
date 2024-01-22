@@ -1,9 +1,9 @@
 import { SafeAreaView, Text, View  } from 'react-native';
 
-export default function AddData() {
+export default function Settings() {
   return (
     <SafeAreaView >
-      <Text>Profile! Screen</Text>
+      <Text>Settings! Screen</Text>
     </SafeAreaView>
   );
 }
