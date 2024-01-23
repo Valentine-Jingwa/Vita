@@ -3,12 +3,16 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from "./screens/home";
-import Profile from "./screens/profile";
+import Home from "./screens/Home";
+import Profile from "./screens/Profile";
 import Viewing from "./screens/Viewing";
 import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settings";
+import Vitals from "./screens/Vitals"; 
+import Medication from "./screens/Medication";
+import Nutrition from "./screens/Nutrition";
+import Others from "./screens/Others";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -29,6 +33,26 @@ function AddDataStackScreen() {
         component={DataCategory}
         options={{ title: 'Data Category' }}
       />
+      <AddDataStack.Screen
+        name="Vitals"
+        component={Vitals}
+        options={{ title: 'Vitals' }}
+      />
+      <AddDataStack.Screen
+        name="Medication"
+        component={Medication}
+        options={{ title: 'Medication' }}
+      />
+      <AddDataStack.Screen
+        name="Nutrition"
+        component={Nutrition}
+        options={{ title: 'Nutrition' }}
+      />
+      <AddDataStack.Screen
+        name="Others"
+        component={Others}
+        options={{ title: 'Others' }}
+      />
       {/* You can add more screens to this stack as needed */}
     </AddDataStack.Navigator>
   );
@@ -43,8 +67,8 @@ function ProfileStackScreen() {
       }}
     >
       <ProfileStack.Screen
-        name="Profile"
-        component={Profile}
+        name="Profiles"
+        component={Profiles}
       />
       <ProfileStack.Screen
         name="EditProfile"
