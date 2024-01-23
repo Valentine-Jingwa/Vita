@@ -4,7 +4,7 @@ import { SafeAreaView, Text, View, StyleSheet, Dimensions, Button  } from 'react
 
 import React from 'react';
 import { LineChart } from 'react-native-chart-kit';
-import { useData } from '../components/DataContext';
+import { useData } from '../../components/DataContext';
 
 const Viewing = () => {
   const { data } = useData();

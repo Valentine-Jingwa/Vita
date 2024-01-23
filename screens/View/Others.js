@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View, Button, TextInput, StyleSheet } from 'react-native';
-import { useData } from '../components/DataContext';
+import { useData } from '../../components/DataContext';
 
 const OthersEntryScreen = () => {
   const { data, updateData } = useData();

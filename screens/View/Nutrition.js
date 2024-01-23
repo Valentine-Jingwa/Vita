@@ -1,15 +1,15 @@
 
 import React from 'react';
 import { View, Button, TextInput, StyleSheet } from 'react-native';
-import { useData } from '../components/DataContext';
+import { useData } from '../../components/DataContext';
 
-const VitalsEntryScreen = () => {
+const NutritionEntryScreen = () => {
   const { data, updateData } = useData();
   const [inputValue, setInputValue] = React.useState('');
 
   const handleSubmit = () => {
-    const newDataArray = [...data.vitals.data, parseInt(inputValue)]; // Add inputValue to the existing data array this is where the magic happens
-    updateData('vitals', newDataArray);
+    const newDataArray = [...data.nutrition.data, parseInt(inputValue)]; // Add inputValue to the existing data array this is where the magic happens
+    updateData('nutrition', newDataArray);
   };
 
   return (
@@ -36,4 +36,5 @@ const styles = StyleSheet.create({
     // Add any other styling properties here
   },
 });
-export default VitalsEntryScreen;
+
+export default NutritionEntryScreen;
