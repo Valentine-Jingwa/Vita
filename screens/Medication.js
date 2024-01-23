@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Button, TextInput } from 'react-native';
+import { View, Button, TextInput, StyleSheet } from 'react-native';
 import { useData } from '../components/DataContext';
 
 const MedicationEntryScreen = () => {

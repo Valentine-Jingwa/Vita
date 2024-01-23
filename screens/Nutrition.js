@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Button, TextInput } from 'react-native';
+import { View, Button, TextInput, StyleSheet } from 'react-native';
 import { useData } from '../components/DataContext';
 
 const NutritionEntryScreen = () => {
@@ -14,10 +14,27 @@ const NutritionEntryScreen = () => {
 
   return (
     <View>
-      <TextInput value={inputValue} onChangeText={setInputValue} />
+      {/* TextInput with border styling */}
+      <TextInput
+        value={inputValue}
+        onChangeText={setInputValue}
+        style={styles.input}
+      />
       <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
 };
+
+
+// Styles for the TextInput component
+const styles = StyleSheet.create({
+  input: {
+    borderColor: '#000', // Change borderColor here
+    borderWidth: 1,      // Change borderWidth here
+    borderRadius: 5,     // Change borderRadius here
+    padding: 10,         // Change padding here
+    // Add any other styling properties here
+  },
+});
 
 export default NutritionEntryScreen;

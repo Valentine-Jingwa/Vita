@@ -9,12 +9,6 @@ export default function AddDataOptions({ navigation }) {
         title="Add New Data"
         onPress={() => navigation.navigate('DataCategory')}
       />
-      <Button
-        title="View Previous Data Log"
-        onPress={() => {
-          // Logic to view previous data logs
-        }}
-      />
     </SafeAreaView>
   );
 }
