@@ -8,8 +8,8 @@ const MedicationEntryScreen = () => {
   const [inputValue, setInputValue] = React.useState('');
 
   const handleSubmit = () => {
-    const newDataArray = [...data.vitals.data, parseInt(inputValue)]; // Add inputValue to the existing data array this is where the magic happens
-    updateData('vitals', newDataArray);
+    const newDataArray = [...data.medication.data, parseInt(inputValue)]; // Add inputValue to the existing data array this is where the magic happens
+    updateData('medication', newDataArray);
   };
 
   return (
