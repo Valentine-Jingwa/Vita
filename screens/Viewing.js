@@ -1,5 +1,5 @@
 
-import { SafeAreaView, Text, View, StyleSheet, Dimensions  } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, Dimensions, Button  } from 'react-native';
 
 
 import React from 'react';
@@ -8,12 +8,13 @@ import { useData } from '../components/DataContext';
 
 const Viewing = () => {
   const { data } = useData();
+  const [selectedCategory, setSelectedCategory] = React.useState('vitals');
 
   const chartData = {
     labels: ["70", "90", "110", "130", "150", "170"],
     datasets: [
       {
-        data: data.vitals?.data || [], // Fallback to an empty array if data is undefined
+        data: data[selectedCategory]?.data || [], // Fallback to an empty array if data is undefined
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
         strokeWidth: 2
       }
@@ -22,12 +23,18 @@ const Viewing = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.buttonContainer}> 
+        <Button title="Vitals" onPress={() => setSelectedCategory('vitals')} />
+        <Button title="Medication" onPress={() => setSelectedCategory('medication')} />
+        <Button title="Nutrition" onPress={() => setSelectedCategory('nutrition')} />
+        <Button title="Others" onPress={() => setSelectedCategory('others')} />
+      </View>
       <LineChart
         data={chartData}
         width={Dimensions.get('window').width - 16} // Width of the screen minus some margin
         height={220}
         chartConfig={{
-          backgroundColor: '#0000',
+          backgroundColor: '#',
           backgroundGradientFrom: '#fb8c00',
           backgroundGradientTo: '#ffa726',
           decimalPlaces: 2,

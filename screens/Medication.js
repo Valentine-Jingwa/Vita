@@ -1,9 +1,23 @@
-import { SafeAreaView, Text, View  } from 'react-native';
 
-export default function Medication() {
+import React from 'react';
+import { View, Button, TextInput } from 'react-native';
+import { useData } from '../components/DataContext';
+
+const MedicationEntryScreen = () => {
+  const { data, updateData } = useData();
+  const [inputValue, setInputValue] = React.useState('');
+
+  const handleSubmit = () => {
+    const newDataArray = [...data.vitals.data, parseInt(inputValue)]; // Add inputValue to the existing data array this is where the magic happens
+    updateData('vitals', newDataArray);
+  };
+
   return (
-    <SafeAreaView >
-      <Text>Medication</Text>
-    </SafeAreaView>
+    <View>
+      <TextInput value={inputValue} onChangeText={setInputValue} />
+      <Button title="Submit" onPress={handleSubmit} />
+    </View>
   );
-}
+};
+
+export default MedicationEntryScreen;
