@@ -12,6 +12,7 @@ export default function Profile({ navigation }) {
             <Image
             source={{ uri: 'https://via.placeholder.com/150' }} // Replace with your image URI
             style={styles.profilePicture}
+            onPress={() => navigation.navigate('Profiles')}
             />
         </TouchableOpacity>
         <TouchableOpacity

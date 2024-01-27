@@ -7,7 +7,7 @@ export default function DataCategory({ navigation }) {
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('Vitals')}
+          onPress={() => navigation.navigate('SelectData')}
         >
           <Text style={styles.buttonText}>VITALS</Text>
         </TouchableOpacity>

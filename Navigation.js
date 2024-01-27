@@ -13,6 +13,13 @@ import Vitals from "./screens/View/Vitals";
 import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
+import SelectData from "./screens/AddDatasc/SelectData";
+import Profiles from "./screens/Proiflesc/Profiles";
+import EditProfile from "./screens/Proiflesc/EditProfile";
+import ProfileSettings from "./screens/Proiflesc/ProfileSettings";
+import SharePrint from "./screens/Proiflesc/SharePrint";
+import SupportUs from "./screens/Proiflesc/SupportUs";
+
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -86,7 +93,6 @@ function ProfileStackScreen() {
         name="SupportUs"
         component={SupportUs} // You need to create this component
       />
-      {/* Add any additional screens related to Profile */}
     </ProfileStack.Navigator>
   );
 }
