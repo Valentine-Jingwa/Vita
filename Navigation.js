@@ -20,12 +20,9 @@ import ProfileSettings from "./screens/Proiflesc/ProfileSettings";
 import SharePrint from "./screens/Proiflesc/SharePrint";
 import SupportUs from "./screens/Proiflesc/SupportUs";
 
-
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
-
-
 
 function AddDataStackScreen() {
   return (
@@ -123,5 +120,3 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
-
-
