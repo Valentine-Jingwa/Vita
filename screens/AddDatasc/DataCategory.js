@@ -1,35 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import DataEntryModal from '../../components/DataEntryModal';
+import { subcategories } from '../../components/DataList';
 
 export default function DataCategory({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const openModal = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    setModalVisible(true);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const handleSave = (id, value, unit) => {
+    console.log(`Data for ${id}: ${value} ${unit}`);
+    // Implement save logic
+  };
+
+  const mainCategories = ['Vitals', 'Medication', 'Nutrition', 'Others'];
+
   return (
     <SafeAreaView style={styles.fullScreenModal}>
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Vitals')}
-        >
-          <Text style={styles.buttonText}>VITALS</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Medication')}
-        >
-          <View></View>
-          <Text style={styles.buttonText}>MEDICATION</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Nutrition')}
-        >
-          <Text style={styles.buttonText}>NUTRITION</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('Others')}
-        >
-          <Text style={styles.buttonText}>OTHER</Text>
-        </TouchableOpacity>
+        {!selectedCategory && mainCategories.map(category => (
+          <TouchableOpacity
+            key={category}
+            style={styles.button}
+            onPress={() => handleCategorySelect(category)}
+          >
+            <Text style={styles.buttonText}>{category}</Text>
+          </TouchableOpacity>
+        ))}
+
+        {selectedCategory && subcategories
+          .filter(subcat => subcat.categoryname === selectedCategory)
+          .map(subcategory => (
+            <TouchableOpacity
+              key={subcategory.id}
+              style={styles.button}
+              onPress={() => openModal(subcategory)}
+            >
+              <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
+            </TouchableOpacity>
+          ))
+        }
+
+        {selectedCategory && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {/* Handle adding a new subcategory */}}
+          >
+            <Text style={styles.buttonText}>+ Add New</Text>
+          </TouchableOpacity>
+        )}
+
+        <DataEntryModal
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          subcategory={selectedSubcategory}
+          onSave={handleSave}
+        />
       </View>
     </SafeAreaView>
   );

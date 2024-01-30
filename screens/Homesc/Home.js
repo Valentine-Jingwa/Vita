@@ -1,37 +1,27 @@
-import React, { useRef, useEffect } from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
-import { Button, Icon, Layout } from '@ui-kitten/components';
+// Home.js
+import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
-export default function Home() {
-  const pulseIconRef = useRef();
-
-  useEffect(() => {
-    pulseIconRef.current.startAnimation();
-  }, []);
-
-  const renderPulseIcon = (props) => (
-    <Icon
-      {...props}
-      ref={pulseIconRef}
-      animation='pulse'
-      name='activity'
-    />
-  );
+const Home = ({ data = [] }) => { // Set a default value for data in case it's not provided
+  const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {
+    const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
+    acc[formattedDate] = { marked: true, dotColor: 'red' };
+    return acc;
+  }, {}) : {};
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Home Screen</Text>
-      <Button
-        style={styles.button}
-        accessoryLeft={renderPulseIcon}
-        onPress={() => pulseIconRef.current.startAnimation()}
-      >
-        PULSE
-      </Button>
+      <Calendar
+        markedDates={markedDates}
+        // Other props for the Calendar component
+      />
+      {/* Additional UI components for displaying data */}
     </SafeAreaView>
   );
-}
+};
 
+export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
