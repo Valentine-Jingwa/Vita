@@ -1,10 +1,9 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { useDataContext } from './DataContext';
 
 const SubcategoryDataModal = ({ visible, onClose, subcategoryName, graphData }) => {
-  // Removed the chartData definition from here since we're now using graphData prop
-
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent={true}>
       <View style={styles.modalView}>
@@ -45,6 +44,7 @@ const SubcategoryDataModal = ({ visible, onClose, subcategoryName, graphData }) 
     </Modal>
   );
 };
+    
 
 const styles = StyleSheet.create({
   modalView: {
