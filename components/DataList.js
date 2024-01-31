@@ -27,8 +27,8 @@ export const subcategories = [
         {id: 8, categoryname: 'Medication', subcategory: 'Insulin', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
         {id: 9, categoryname: 'Medication', subcategory: 'Aspirin', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
         //Nutrition Default
-        { id: 11, categoryname: 'Nutrition', subcategory: 'Intake', datatype: 'text', intakeType: 'Liquid', items: ['Water', 'Juice', 'Alcohol'] },
-        { id: 12, categoryname: 'Nutrition', subcategory: 'Intake', datatype: 'text', intakeType: 'Solid', items: ['Bread', 'Rice', 'Vegetables'] },
+        { id: 11, categoryname: 'Nutrition', subcategory: 'Liquid-Intake', datatype: 'text', intakeType: 'Liquid', items: ['Water', 'Juice', 'Alcohol'] },
+        { id: 12, categoryname: 'Nutrition', subcategory: 'Solid-Intake', datatype: 'text', intakeType: 'Solid', items: ['Bread', 'Rice', 'Vegetables'] },
         { id: 13, categoryname: 'Nutrition', subcategory: 'Output', datatype: 'text', outputType: 'Dieper Change', items: ['Urine', 'Poop'] },
         //Others Default
         //Nothing here when the user clicks others they have to create all 
