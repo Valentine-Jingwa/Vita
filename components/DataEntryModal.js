@@ -1,6 +1,6 @@
 // DataEntryModal.js
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { subcategories } from './DataList';
@@ -12,6 +12,8 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   // State for input value and selected unit
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit);
+  const [selectedItem, setSelectedItem] = useState(subcategory.items ? subcategory.items[0] : '');
+
 
   // Function to handle saving the input data and closing the modal
   const handleSaveAndExit = () => {
@@ -26,6 +28,15 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     setInputValue('');
   };
 
+  useEffect(() => {
+    // Check if subcategory has items and set the first one as the selected item
+    if (subcategory && subcategory.items && subcategory.items.length > 0) {
+      setSelectedItem(subcategory.items[0]);
+    } else {
+      setSelectedItem('');
+    }
+  }, [subcategory]);
+
   // Function to handle closing the modal without saving
   const handleClose = () => {
     setInputValue('');
@@ -38,9 +49,44 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       <View style={styles.modalOverlay}>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeButtonText}>×</Text>
+            <Text style={styles.closeButtonText}>Exit</Text>
           </TouchableOpacity>
           <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
+          {subcategory.subcategory === 'Intake' && (
+            <>
+              <Text>Type: {subcategory.intakeType}</Text>
+              <Picker
+                selectedValue={selectedItem}
+                onValueChange={(itemValue, itemIndex) => setSelectedItem(itemValue)}
+                style={styles.picker}
+              >
+                {subcategory.items.map((item) => (
+                  <Picker.Item key={item} label={item} value={item} />
+                ))}
+              </Picker>
+              {subcategory.intakeType === 'liquid' && (
+                <TextInput
+                  style={styles.input}
+                  value={inputValue}
+                  onChangeText={setInputValue}
+                  keyboardType="numeric"
+                  placeholder="Enter quantity"
+                />
+              )}
+            </>
+          )}
+
+          {subcategory.subcategory === 'Output' && (
+            <Picker
+              selectedValue={selectedItem}
+              onValueChange={(itemValue, itemIndex) => setSelectedItem(itemValue)}
+              style={styles.picker}
+            >
+              {subcategory.items.map((item) => (
+                <Picker.Item key={item} label={item} value={item} />
+              ))}
+            </Picker>
+          )}
           <TextInput
             style={styles.input}
             value={inputValue}
