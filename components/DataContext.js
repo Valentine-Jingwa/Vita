@@ -1,29 +1,27 @@
-
 // DataContext.js
-import React, { createContext, useState, useContext } from 'react';
+
+import React, { createContext, useContext, useState } from 'react';
 
 const DataContext = createContext();
 
-export const useData = () => useContext(DataContext);
+export const useDataContext = () => useContext(DataContext);
 
 export const DataProvider = ({ children }) => {
-  const [data, setData] = useState({
-    // Initial data structure
-    vitals: { id: 1, data: [1,40,30,26] }, // todo: color in design later
-    medication: { id: 2, data: [5,10,15,20] },
-    nutrition: { id: 3, data: [7,11,24,22] },
-    others: { id: 4, data: [10,13,16,19] }
+  // Example structure for storing data points
+  const [dataPoints, setDataPoints] = useState({
+    // Subcategory ID as key, array of values as value
+    // '1': [120, 130, 140], // Example for Blood Pressure
   });
 
-  const updateData = (category, newData) => {
-    setData(prevData => ({
-      ...prevData,
-      [category]: { ...prevData[category], data: newData }
+  const addDataPoint = (subcategoryId, value) => {
+    setDataPoints(prev => ({
+      ...prev,
+      [subcategoryId]: [...(prev[subcategoryId] || []), value],
     }));
   };
 
   return (
-    <DataContext.Provider value={{ data, updateData }}>
+    <DataContext.Provider value={{ dataPoints, addDataPoint }}>
       {children}
     </DataContext.Provider>
   );

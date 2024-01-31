@@ -3,16 +3,16 @@ import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import Home from "./screens/Home";
-import Profile from "./screens/Profile";
-import Viewing from "./screens/Viewing";
-import AddDataOptions from "./screens/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import DataCategory from "./screens/DataCategory"; // The new screen you'll create
-import Settings from "./screens/Settings";
-import Vitals from "./screens/Vitals"; 
-import Medication from "./screens/Medication";
-import Nutrition from "./screens/Nutrition";
-import Others from "./screens/Others";
+import Home from "./screens/Homesc/Home";
+import Profile from "./screens/Proiflesc/Profile";
+import Viewing from "./screens/View/Viewing";
+import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
+import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
+import Settings from "./screens/Settingsc/Settings";
+import Vitals from "./screens/View/Vitals"; 
+import Medication from "./screens/View/Medication";
+import Nutrition from "./screens/View/Nutrition";
+import Others from "./screens/View/Others";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -119,3 +119,4 @@ export default function Navigation() {
 }
 
 
+//A commit a day keeps unemployment away!
