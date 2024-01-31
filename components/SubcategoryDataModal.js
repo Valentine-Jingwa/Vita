@@ -1,16 +1,17 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import { useDataContext } from './DataContext';
 
 const SubcategoryDataModal = ({ visible, onClose, subcategoryName, graphData }) => {
+
+
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent={true}>
       <View style={styles.modalView}>
         <Text style={styles.title}>{subcategoryName}</Text>
         
         {/* Conditional rendering based on graphData */}
-        {graphData && graphData.datasets && graphData.datasets[0].data.length > 0 && (
+        {graphData && graphData.datasets && graphData.datasets[0].data.length > 0 ? (
           <LineChart
             data={graphData}
             width={Dimensions.get('window').width - 32} // Adjusted for modal padding
@@ -37,6 +38,8 @@ const SubcategoryDataModal = ({ visible, onClose, subcategoryName, graphData }) 
               borderRadius: 16,
             }}
           />
+        ) : (
+          <Text>No data available</Text>
         )}
 
         <Text style={styles.closeButton} onPress={onClose}>Close</Text>
