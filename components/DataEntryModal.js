@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { subcategories } from './DataList';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   // If subcategory is not provided, return null to avoid rendering the modal
@@ -52,10 +53,9 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             selectedValue={selectedUnit}
             onValueChange={(itemValue) => setSelectedUnit(itemValue)}
           >
-            {subcategory.units && subcategory.units.map((unit) => (
-              <Picker.Item key={unit} label={unit} value={unit} />
-            ))}
+            <Picker.Item label={subcategory.units} value={subcategory.dunit} />
           </Picker>
+            
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveAndExit}>
               <Text style={styles.buttonText}>Save</Text>
