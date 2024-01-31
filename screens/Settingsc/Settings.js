@@ -1,15 +1,11 @@
-import { SafeAreaView, Text, View  } from 'react-native';
 import React from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
 
 export default function Settings() {
-  // Placeholders for whatever we decide to add
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
 
   return (
-    <SafeAreaView >
-      <Text>Settings! Screen</Text>
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Settings</Text>
@@ -38,7 +34,7 @@ export default function Settings() {
       </TouchableOpacity>
     </SafeAreaView>
   );
-}}
+}
 
 const styles = StyleSheet.create({
   container: {
