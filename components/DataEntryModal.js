@@ -4,6 +4,7 @@ import React, { useState, useEffect, } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { subcategories } from './DataList';
+import { useDataContext } from './DataContext';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   // If subcategory is not provided, return null to avoid rendering the modal
@@ -15,6 +16,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   const [selectedItem, setSelectedItem] = useState(subcategory.items ? subcategory.items[0] : '');
   const [newItem, setNewItem] = useState('');
   const [unit, setUnit] = useState(''); // State to store user input for unit
+  const { addDataPoint } = useDataContext();
 
 
 
@@ -26,11 +28,15 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     setNewItem('');
   };
 
-
   // Function to handle saving the input data and closing the modal
   const handleSaveAndExit = () => {
-    onSave(subcategory.id, inputValue, selectedUnit, new Date().toISOString());
-    setInputValue('');
+    // Extract the numeric value from inputValue if needed
+    const numericValue = isNaN(parseFloat(inputValue)) ? 0 : parseFloat(inputValue);
+    setInputValue(''); // Reset the input value
+    addDataPoint(subcategory.id, { value: numericValue, unit: selectedUnit });
+
+    // Reset state and close modal as before
+    setUnit('');
     onClose();
   };
 
@@ -60,16 +66,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   };
 
   
-  const handleSave = () => {
-    // Assuming onSave expects an object { id, value, unit }
-    onSave({
-      id: subcategory.id,
-      value: selectedItem,
-      unit: unit,
-    });
-    setUnit(''); // Reset unit state
-    onClose(); // Close modal
-  };
+
 
   // Render the modal with input, picker, and action buttons
   return (
