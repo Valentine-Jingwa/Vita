@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from "./screens/Homesc/Home";
-import Profile from "./screens/Proiflesc/Profile";
+import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
@@ -13,6 +13,13 @@ import Vitals from "./screens/View/Vitals";
 import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
+
+//Imoprt statments for screens
+import Profiles from "./screens/Profilesc/Profiles";
+import EditProfile from "./screens/Profilesc/EditProfile";
+import ProfileSettings from "./screens/Profilesc/ProfileSettings";
+import SharePrint from "./screens/Profilesc/SharePrint";
+import SupportUs from "./screens/Profilesc/SupportUs";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
