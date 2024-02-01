@@ -2,7 +2,7 @@
 import React from 'react';
 import { SafeAreaView, Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function Profile({ navigation }) {
+const  Profile  =  ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
         
@@ -96,3 +96,5 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
 });
+
+export default Profile;

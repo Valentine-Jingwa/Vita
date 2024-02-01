@@ -14,13 +14,6 @@ import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
 
-//Imoprt statments for screens
-import Profiles from "./screens/Profilesc/Profiles";
-import EditProfile from "./screens/Profilesc/EditProfile";
-import ProfileSettings from "./screens/Profilesc/ProfileSettings";
-import SharePrint from "./screens/Profilesc/SharePrint";
-import SupportUs from "./screens/Profilesc/SupportUs";
-
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();

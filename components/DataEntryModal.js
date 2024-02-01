@@ -1,8 +1,10 @@
 // DataEntryModal.js
 
-import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, } from 'react';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { subcategories } from './DataList';
+import { useDataContext } from './DataContext';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   // If subcategory is not provided, return null to avoid rendering the modal
@@ -11,11 +13,30 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   // State for input value and selected unit
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit);
+  const [selectedItem, setSelectedItem] = useState(subcategory.items ? subcategory.items[0] : '');
+  const [newItem, setNewItem] = useState('');
+  const [unit, setUnit] = useState(''); // State to store user input for unit
+  const { addDataPoint } = useDataContext();
+
+
+
+  const handleAddNewItem = () => {
+    if (newItem.trim() === '') return; // Prevent adding empty items
+    const updatedItems = [...subcategory.items, newItem.trim()];
+    onUpdateSubcategories(subcategory.id, updatedItems); // Implement this function to update global state
+    setSelectedItem(newItem.trim());
+    setNewItem('');
+  };
 
   // Function to handle saving the input data and closing the modal
   const handleSaveAndExit = () => {
-    onSave(subcategory.id, inputValue, selectedUnit, new Date().toISOString());
-    setInputValue('');
+    // Extract the numeric value from inputValue if needed
+    const numericValue = isNaN(parseFloat(inputValue)) ? 0 : parseFloat(inputValue);
+    setInputValue(''); // Reset the input value
+    addDataPoint(subcategory.id, { value: numericValue, unit: selectedUnit });
+
+    // Reset state and close modal as before
+    setUnit('');
     onClose();
   };
 
@@ -25,21 +46,77 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     setInputValue('');
   };
 
+  useEffect(() => {
+    // Initialize selectedItem with the first item of the subcategory, if available
+    if (subcategory && subcategory.items && subcategory.items.length > 0) {
+      setSelectedItem(subcategory.items[0]);
+    }
+  }, [subcategory]);
+
+  useEffect(() => {
+    if (subcategory?.items?.length > 0) {
+      setSelectedItem(subcategory.items[0]);
+    }
+  }, [subcategory]);
+
   // Function to handle closing the modal without saving
   const handleClose = () => {
     setInputValue('');
     onClose();
   };
 
+  
+
+
   // Render the modal with input, picker, and action buttons
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
+
       <View style={styles.modalOverlay}>
+
         <View style={styles.modalView}>
+
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeButtonText}>×</Text>
+
+            <Text style={styles.closeButtonText}>Exit</Text>
+
           </TouchableOpacity>
           <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
+          {subcategory.subcategory === 'Intake' && (
+            <>
+              <Text>Type: {subcategory.intakeType}</Text>
+              <Picker
+                selectedValue={selectedItem}
+                onValueChange={(itemValue,) => setSelectedItem(itemValue)}
+                style={styles.picker}
+              >
+                {subcategory.items.map((item) => (
+                  <Picker.Item key={item} label={item} value={item} />
+                ))}
+              </Picker>
+              {subcategory.intakeType === 'liquid' && (
+                <TextInput
+                  style={styles.input}
+                  value={inputValue}
+                  onChangeText={setInputValue}
+                  keyboardType="numeric"
+                  placeholder="Enter quantity"
+                />
+              )}
+            </>
+          )}
+
+          {subcategory.subcategory === 'Output' && (
+            <Picker
+              selectedValue={selectedItem}
+              onValueChange={(itemValue, itemIndex) => setSelectedItem(itemValue)}
+              style={styles.picker}
+            >
+              {subcategory.items.map((item) => (
+                <Picker.Item key={item} label={item} value={item} />
+              ))}
+            </Picker>
+          )}
           <TextInput
             style={styles.input}
             value={inputValue}
@@ -52,10 +129,9 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             selectedValue={selectedUnit}
             onValueChange={(itemValue) => setSelectedUnit(itemValue)}
           >
-            {subcategory.units && subcategory.units.map((unit) => (
-              <Picker.Item key={unit} label={unit} value={unit} />
-            ))}
+            <Picker.Item label={subcategory.units} value={subcategory.dunit} />
           </Picker>
+            
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveAndExit}>
               <Text style={styles.buttonText}>Save</Text>
@@ -66,6 +142,10 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
           </View>
           <TouchableOpacity style={styles.cancelButton} onPress={handleClose}>
             <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.addButton} onPress={handleAddNewItem}>
+            <Text style={styles.buttonText}>Add Item</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -155,6 +235,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  addButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    marginTop: 10,
+    borderRadius: 10,
+    elevation: 2,
+    width: '100%',
   },
 });
 

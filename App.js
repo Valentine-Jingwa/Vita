@@ -5,13 +5,14 @@ import { ApplicationProvider, IconRegistry, Layout, Text } from '@ui-kitten/comp
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { DataProvider } from './components/DataContext';
 
+
 export default function App() {
   return (
     <>
     <IconRegistry icons={EvaIconsPack} />
     <ApplicationProvider {...eva} theme={eva.light}>
       <DataProvider>
-    <Navigation />
+          <Navigation />
       </DataProvider>
     </ApplicationProvider>
     </>
