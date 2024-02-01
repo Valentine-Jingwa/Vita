@@ -14,6 +14,7 @@ import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
 
+
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
