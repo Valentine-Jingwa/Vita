@@ -106,12 +106,12 @@ function BottomTabs() {
     }}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Viewing" component={Viewing} />      
       <Tab.Screen
        name="AddData" 
        component={AddDataStackScreen}
       /> 
-      <Tab.Screen name="Viewing" component={Viewing} />
+      <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
