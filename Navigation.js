@@ -1,5 +1,6 @@
 // Navigation.js
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,6 +14,11 @@ import Vitals from "./screens/View/Vitals";
 import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
+
+import Profiles from "./screens/Profilesc/Profiles";  
+import EditProfile from "./screens/Profilesc/EditProfile";
+import ProfileSettings from "./screens/Profilesc/ProfileSettings";
+import SupportUs from "./screens/Profilesc/SupportUs";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -63,7 +69,7 @@ function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator
       screenOptions={{
-        headerShown: false, // This will hide the header bar on all screens within this stack
+        headerShown: true, // This will hide the header bar on all screens within this stack
       }}
     >
       <ProfileStack.Screen
@@ -96,6 +102,7 @@ function BottomTabs() {
     <Tab.Navigator
     screenOptions={{
       headerShown: false, // This will hide the header bar on all screens within this stack
+      tabBarStyle: { height: 60 },
     }}
     >
       <Tab.Screen name="Home" component={Home} />
@@ -118,5 +125,9 @@ export default function Navigation() {
   );
 }
 
-
+const styles = StyleSheet.create({
+  bottomTabs: {
+    height: 32,
+  },
+});//The navigation is too small
 //A commit a day keeps unemployment away!
