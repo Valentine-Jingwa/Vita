@@ -21,19 +21,23 @@ export const subcategories = [
         {id: 3, categoryname: 'Vitals', subcategory: 'Temperature', units: '°C', dunit: '°C', datatype: 'number', max: 999, min: 0},
         {id: 4, categoryname: 'Vitals', subcategory: 'Respiratory Rate', units: 'bpm', dunit: 'bpm', datatype: 'number', max: 999, min: 0},
         {id: 5, categoryname: 'Vitals', subcategory: 'Oxygen Saturation', units: '%', dunit: '%', datatype: 'number', max: 100, min: 0},
+
         //Medication Default
+
         {id: 6, categoryname: 'Medication', subcategory: 'Advil', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
         {id: 7, categoryname: 'Medication', subcategory: 'Tylenol', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
         {id: 8, categoryname: 'Medication', subcategory: 'Insulin', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
         {id: 9, categoryname: 'Medication', subcategory: 'Aspirin', units: 'mg', dunit: 'mg', datatype: 'number', max: 9999, min: 0},
+
         //Nutrition Default
+        
         { id: 11, categoryname: 'Nutrition', subcategory: 'Liquid-Intake', datatype: 'text', intakeType: 'Liquid', items: ['Water', 'Juice', 'Alcohol'] },
         { id: 12, categoryname: 'Nutrition', subcategory: 'Solid-Intake', datatype: 'text', intakeType: 'Solid', items: ['Bread', 'Rice', 'Vegetables'] },
         { id: 13, categoryname: 'Nutrition', subcategory: 'Output', datatype: 'text', outputType: 'Dieper Change', items: ['Urine', 'Poop'] },
+        
         //Others Default
         //Nothing here when the user clicks others they have to create all 
       ];
-
-      //TODO add a funtion where user can add a new category and subcategory
+//TODO add a funtion where user can add a new category and subcategory
 
 
