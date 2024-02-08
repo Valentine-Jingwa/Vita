@@ -1,31 +1,25 @@
-import RNFS from 'react-native-fs';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const fileName = 'localdata.json';
-const filePath = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+const STORAGE_KEY = 'localData';
 
 const DataStorage = {
   async Store(data) {
     try {
       const jsonData = JSON.stringify(data);
-      await RNFS.writeFile(filePath, jsonData, 'utf8');
-      console.log('Data successfully saved to file.');
+      await AsyncStorage.setItem(STORAGE_KEY, jsonData);
+      console.log('Data successfully saved.');
     } catch (error) {
-      console.log('Failed to save data to file.', error);
+      console.log('Failed to save data.', error);
     }
   },
 
   async Retrieve() {
     try {
-      if (await RNFS.exists(filePath)) {
-        const jsonData = await RNFS.readFile(filePath, 'utf8');
-        return JSON.parse(jsonData);
-      } else {
-        console.log('File does not exist, returning empty object.');
-        return {}; // Or appropriate default value
-      }
+      const jsonData = await AsyncStorage.getItem(STORAGE_KEY);
+      return jsonData != null ? JSON.parse(jsonData) : null;
     } catch (error) {
-      console.log('Failed to read data from file.', error);
-      return null;
+      console.log('Failed to read data.', error);
+      return null; // Or appropriate default value
     }
   },
 };
