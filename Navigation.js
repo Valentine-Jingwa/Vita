@@ -1,10 +1,11 @@
 // Navigation.js
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from "./screens/Homesc/Home";
-import Profile from "./screens/Proiflesc/Profile";
+import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
@@ -14,6 +15,13 @@ import Medication from "./screens/View/Medication";
 import Nutrition from "./screens/View/Nutrition";
 import Others from "./screens/View/Others";
 
+import Profiles from "./screens/Profilesc/Profiles";  
+import EditProfile from "./screens/Profilesc/EditProfile";
+import ProfileSettings from "./screens/Profilesc/ProfileSettings";
+import SupportUs from "./screens/Profilesc/SupportUs";
+
+//Icon Importation
+import {IHome, IPeople, ISettings, IGlobeOutline, IPersonOutline, IPlusCircle} from "./assets/Icon";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -64,7 +72,7 @@ function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator
       screenOptions={{
-        headerShown: false, // This will hide the header bar on all screens within this stack
+        headerShown: true, // This will hide the header bar on all screens within this stack
       }}
     >
       <ProfileStack.Screen
@@ -95,17 +103,36 @@ function ProfileStackScreen() {
 function BottomTabs() {
   return (
     <Tab.Navigator
-    screenOptions={{
+    screenOptions={({ route }) => ({
       headerShown: false, // This will hide the header bar on all screens within this stack
-    }}
+      tabBarStyle: { height: 60 },
+      tabBarIcon: ({ focused, color, size }) => {
+        let IconComponent;
+
+        if (route.name === 'Home') {
+          IconComponent = IHome;
+        } else if (route.name === 'Viewing') {
+          IconComponent = IGlobeOutline;
+        } else if (route.name === 'AddData') {
+          IconComponent = IPlusCircle;
+        } else if (route.name === 'Profile') {
+          IconComponent = IPersonOutline;
+        } else if (route.name === 'Settings') {
+          IconComponent = ISettings;
+        }
+
+        // You can return any component that you like here!
+        return <IconComponent color={color} size={size} />;
+      },
+    })}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Viewing" component={Viewing} />      
       <Tab.Screen
        name="AddData" 
        component={AddDataStackScreen}
       /> 
-      <Tab.Screen name="Viewing" component={Viewing} />
+      <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
   );
@@ -119,5 +146,8 @@ export default function Navigation() {
   );
 }
 
-
-//A commit a day keeps unemployment away!
+const styles = StyleSheet.create({
+  bottomTabs: {
+    height: 32,
+  },
+});
