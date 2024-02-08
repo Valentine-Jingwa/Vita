@@ -1,32 +1,20 @@
+// Home.js
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import { SafeAreaView, Text, StyleSheet, View } from 'react-native';
+import CalendarComponent from '../../components/CalenderComponent';
 
 const Home = ({ data = [], healthSummary }) => {
-  const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {
-    const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
-    acc[formattedDate] = { marked: true, dotColor: '#e1a3a6', activeOpacity: 0 };
-    return acc;
-  }, {}) : {};
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Welcome to Vita</Text>
+        <Text style={styles.headerText}>Header Menu</Text>
       </View>
-      <Calendar
-        style={styles.calendar}
-        markedDates={markedDates}
-        // Other props for the Calendar component
-        theme={{
-          todayTextColor: '#e1a3a6',
-          dayTextColor: '#4a4a4a',
-          monthTextColor: '#4a4a4a',
-          arrowColor: '#e1a3a6',
-        }}
-        // Add other Calendar props
-      />
-      {/* Additional UI components for displaying data */}
+      <View style={styles.calendarContainer}>
+        <CalendarComponent data={data} />
+      </View>
+      <View style={styles.ListContainer}>
+        <Text style={styles.summaryTitle}>Recent Data</Text>
+      </View>
     </SafeAreaView>
   );
 };
@@ -35,35 +23,42 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#f8d7da',
+    backgroundColor: '#f8f8f8',
     alignItems: 'center',
-    padding: 10,
+    paddingTop: 50,
   },
-  calendar: {
-    borderWidth: 1,
-    borderColor: '#e1a3a6',
-    borderRadius: 10,
+  calendarContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    width: '100%',
+    padding: 20,
+    
   },
   headerContainer: {
     marginBottom: 20,
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+    padding: 10,
   },
   headerText: {
     fontSize: 26,
     color: '#4a4a4a',
     fontWeight: 'bold',
   },
-  summaryContainer: {
+  ListContainer: {
     marginVertical: 20,
-    padding: 10,
+    padding: 5,
     backgroundColor: 'white',
     borderRadius: 10,
     width: '90%',
+    height: 350,
   },
   summaryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4a4a4a',
     marginBottom: 10,
+    alignSelf: 'center',
   },
   summaryText: {
     fontSize: 16,
