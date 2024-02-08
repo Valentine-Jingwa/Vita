@@ -20,6 +20,9 @@ import EditProfile from "./screens/Profilesc/EditProfile";
 import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
+//Icon Importation
+import {IHome, IPeople, ISettings, IGlobeOutline, IPersonOutline, IPlusCircle} from "./assets/Icon";
+
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
@@ -100,10 +103,28 @@ function ProfileStackScreen() {
 function BottomTabs() {
   return (
     <Tab.Navigator
-    screenOptions={{
+    screenOptions={({ route }) => ({
       headerShown: false, // This will hide the header bar on all screens within this stack
       tabBarStyle: { height: 60 },
-    }}
+      tabBarIcon: ({ focused, color, size }) => {
+        let IconComponent;
+
+        if (route.name === 'Home') {
+          IconComponent = IHome;
+        } else if (route.name === 'Viewing') {
+          IconComponent = IGlobeOutline;
+        } else if (route.name === 'AddData') {
+          IconComponent = IPlusCircle;
+        } else if (route.name === 'Profile') {
+          IconComponent = IPersonOutline;
+        } else if (route.name === 'Settings') {
+          IconComponent = ISettings;
+        }
+
+        // You can return any component that you like here!
+        return <IconComponent color={color} size={size} />;
+      },
+    })}
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Viewing" component={Viewing} />      
@@ -129,5 +150,4 @@ const styles = StyleSheet.create({
   bottomTabs: {
     height: 32,
   },
-});//The navigation is too small
-//A commit a day keeps unemployment away!
+});
