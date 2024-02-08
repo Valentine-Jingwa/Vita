@@ -1,29 +1,53 @@
+// CalendarComponent.js
+import React from 'react';
 import { Calendar } from 'react-native-calendars';
+import { StyleSheet } from 'react-native';
 
-const CalendarComponent = ({ data }) => {
-  // Assuming 'data' is an array of objects with 'date' and other properties
-  const markedDates = data.reduce((acc, { date }) => {
-    const formattedDate = date.split('T')[0]; // Format date to 'YYYY-MM-DD'
-    acc[formattedDate] = { marked: true, dotColor: 'red' };
+const CalendarComponent = ({ data = [] }) => {
+  const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {
+    const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
+    acc[formattedDate] = { marked: true, dotColor: '#e1a3a6', activeOpacity: 0 };
     return acc;
-  }, {});
+  }, {}) : {};
 
   return (
-    <View style={styles.container}>
-      <Calendar
-        // ... other calendar props
-        markedDates={markedDates}
-      />
-      {/* Additional components, such as a list of events for the selected date, can be added here */}
-    </View>
+    <Calendar
+      style={styles.calendar}
+      markedDates={markedDates}
+      theme={{
+        backgroundColor: '#f2f2f2',
+        calendarBackground: '#eaeaea',
+        textSectionTitleColor: '#7b7b7b',
+        textSectionTitleDisabledColor: '#cccccc',
+        selectedDayBackgroundColor: '#ff9f00',
+        selectedDayTextColor: '#ffffff',
+        todayTextColor: '#ff2323',
+        dayTextColor: '#6d6d6d',
+        textDisabledColor: '#b6b6b6',
+        dotColor: '#ff9f00',
+        selectedDotColor: '#ffffff',
+        arrowColor: '#ff9f00',
+        disabledArrowColor: '#d9e1e8',
+        monthTextColor: '#bf5f82',
+        indicatorColor: 'yellow',
+        textDayFontWeight: '300',
+        textMonthFontWeight: 'bold',
+        textDayHeaderFontWeight: '300',
+        textDayFontSize: 15,
+        textMonthFontSize: 15,
+        textDayHeaderFontSize: 15,
+      }}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // ... your styles for the container
+  calendar: {
+    borderWidth: 1,
+    borderColor: '#e1a3a6',
+    borderRadius: 10,
+    width: '100%', // Maintains the calendar width relative to its parent
   },
-  // ... any other styles you want to define
 });
 
 export default CalendarComponent;
