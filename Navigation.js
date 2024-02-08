@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
+import { useWindowDimensions } from 'react-native';
 import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
@@ -101,11 +102,14 @@ function ProfileStackScreen() {
 }
 
 function BottomTabs() {
+  const dimensions = useWindowDimensions();
+  const tabBarHeight = dimensions.height * 0.08;
   return (
+    
     <Tab.Navigator
     screenOptions={({ route }) => ({
       headerShown: false, // This will hide the header bar on all screens within this stack
-      tabBarStyle: { height: 60 },
+      tabBarStyle: { height: tabBarHeight },
       tabBarIcon: ({ focused, color, size }) => {
         let IconComponent;
 
