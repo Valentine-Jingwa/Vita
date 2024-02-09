@@ -150,8 +150,3 @@ export default function Navigation() {
   );
 }
 
-const styles = StyleSheet.create({
-  bottomTabs: {
-    height: 32,
-  },
-});
