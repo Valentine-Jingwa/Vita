@@ -3,23 +3,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEY = 'localData';
 
 const DataStorage = {
-  async Store(data) {
+  async Store(newData) {
     try {
-      const jsonData = JSON.stringify(data);
-      await AsyncStorage.setItem(STORAGE_KEY, jsonData);
+      const existingDataJson = await AsyncStorage.getItem(STORAGE_KEY);
+      let existingData = existingDataJson ? JSON.parse(existingDataJson) : [];
+      
+      // Ensure existingData is an array. If not, convert it into an array.
+      if (!Array.isArray(existingData)) {
+        existingData = [];
+      }
+
+      const updatedData = [...existingData, newData];
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
       console.log('Data successfully saved.');
     } catch (error) {
-      console.log('Failed to save data.', error);
+      console.error('Failed to save data.', error);
     }
   },
 
   async Retrieve() {
     try {
       const jsonData = await AsyncStorage.getItem(STORAGE_KEY);
-      return jsonData != null ? JSON.parse(jsonData) : null;
+      return jsonData ? JSON.parse(jsonData) : [];
     } catch (error) {
-      console.log('Failed to read data.', error);
-      return null; // Or appropriate default value
+      console.error('Failed to read data.', error);
+      return []; // Return an empty array as a fallback
     }
   },
 };

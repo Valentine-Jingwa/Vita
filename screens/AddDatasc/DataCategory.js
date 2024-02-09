@@ -5,6 +5,7 @@ import { subcategories } from '../../components/DataList';
 import DataStorage from '../../components/DataStorage'; // Adjust the import path as necessary
 
 export default function DataCategory({ navigation }) {
+  const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -32,14 +33,16 @@ export default function DataCategory({ navigation }) {
     }, 3000); // Display for 3 seconds
   };
 
-  const handleSave = async (id, value, unit) => {
-    // Example validation; adjust according to your needs
+  const handleSave = async (id, value, unit, subcategory) => {
     if (value && unit) {
       try {
-        // Assuming your data structure; adjust as necessary
-        const dataToStore = { id, value, unit };
-        await DataStorage.Store(dataToStore);
+        // Here, adapt this to how your data should be structured
+        const newDataPoint = { id, value, unit, subcategory, timestamp: new Date().toISOString() };
+        await DataStorage.Store(newDataPoint);
+        setModalVisible(false); // Close the modal
         showNotification('Data successfully saved');
+        // Optionally, fetch data again to update the list
+        fetchData();
       } catch (error) {
         console.error('Save error:', error);
         showNotification('Failed to save data');
@@ -48,6 +51,17 @@ export default function DataCategory({ navigation }) {
       showNotification('Incorrect data');
     }
   };
+  // Ensure fetchData is defined outside of useEffect if you want to call it here
+const fetchData = async () => {
+  const storedData = await DataStorage.Retrieve();
+  if (storedData) {
+    setData(Array.isArray(storedData) ? storedData : [storedData]);
+  }
+};
+
+useEffect(() => {
+  fetchData();
+}, []);
 
   const openModal = (subcategory) => {
     setSelectedSubcategory(subcategory);
