@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Vita.R",
-    "slug": "Vita.R",
+    "name": "Vita",
+    "slug": "Vita",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
