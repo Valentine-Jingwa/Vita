@@ -5,8 +5,11 @@ import { StyleSheet } from 'react-native';
 
 const CalendarComponent = ({ data = [] }) => {
   const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {
-    const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
-    acc[formattedDate] = { marked: true, dotColor: '#e1a3a6', activeOpacity: 0 };
+    // Ensure currentItem.date exists before trying to split it
+    if (currentItem.date) {
+      const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
+      acc[formattedDate] = { marked: true, dotColor: '#e1a3a6', activeOpacity: 0 };
+    }
     return acc;
   }, {}) : {};
 
