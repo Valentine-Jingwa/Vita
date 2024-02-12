@@ -2,13 +2,21 @@
 import React from 'react';
 import { Calendar } from 'react-native-calendars';
 import { StyleSheet } from 'react-native';
+import ColorId from '../constants/ColorId'; 
 
-const CalendarComponent = ({ data = [] }) => {
+const CalendarComponent = ({ data, onDayPress }) => {
   const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {
-    // Ensure currentItem.date exists before trying to split it
     if (currentItem.date) {
       const formattedDate = currentItem.date.split('T')[0]; // Format date to 'YYYY-MM-DD'
-      acc[formattedDate] = { marked: true, dotColor: '#e1a3a6', activeOpacity: 0 };
+      if (!acc[formattedDate]) {
+        acc[formattedDate] = { dots: [], activeOpacity: 0 };
+      }
+      if (acc[formattedDate].dots.length < 6) {
+        acc[formattedDate].dots.push({
+          color: ColorId.getColor(currentItem.id), // getColor is a new method to get color by id
+          selectedDotColor: 'white',
+        });
+      }
     }
     return acc;
   }, {}) : {};
@@ -17,6 +25,8 @@ const CalendarComponent = ({ data = [] }) => {
     <Calendar
       style={styles.calendar}
       markedDates={markedDates}
+      markingType={'multi-dot'}
+      onDayPress={(day) => onDayPress(day.dateString)}
       theme={{
         backgroundColor: '#f2f2f2',
         calendarBackground: '#eaeaea',

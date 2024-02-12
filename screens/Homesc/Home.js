@@ -3,15 +3,49 @@ import { SafeAreaView, Text, StyleSheet, View, ScrollView } from 'react-native';
 import CalendarComponent from '../../components/CalendarComponent';
 import DataStorage from '../../components/DataStorage';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
+import ColorId from '../../constants/ColorId';
+import TimeCalculator from '../../components/TimeCalculator';
+import DataModal from '../../components/DataModal';
 
 const Home = () => {
   const [data, setData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState('');
+  const [dayData, setDayData] = useState([]);
+
 
   const fetchData = async () => {
     const storedData = await DataStorage.Retrieve();
     if (storedData) {
-      setData(Array.isArray(storedData) ? storedData : [storedData]);
+      // Make sure each item in storedData has a 'date' property
+      const formattedData = storedData.map(item => ({
+        ...item,
+        date: item.date || '', // Provide an empty string if date is undefined
+      }));
+      setData(Array.isArray(formattedData) ? formattedData : [formattedData]);
     }
+  };
+  
+  const handleDayPress = (dateString) => {
+    // Format the date to 'YYYY-MM-DD' if it's not already in that format
+    const formattedDateString = dateString.includes('T') ? dateString.split('T')[0] : dateString;
+  
+    // Filter the data to match the selected day
+    const filteredDayData = data.filter((item) => item.date && typeof item.date === 'string' && item.date.startsWith(formattedDateString));
+    
+    setDayData(filteredDayData);
+    setSelectedDay(formattedDateString);
+    setModalVisible(true);
+  };
+  
+  
+  
+
+  // Function to format the day information
+  const getDayInfo = (dateString) => {
+    const date = new Date(dateString);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
   };
 
   // Fetch data on component mount
@@ -29,23 +63,30 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Header Menu</Text>
+        <Text style={styles.headerText}>Vita Home</Text>
       </View>
       <View style={styles.calendarContainer}>
-        <CalendarComponent data={data} />
+        <CalendarComponent data={data} onDayPress={handleDayPress} />
       </View>
       <View style={styles.ListContainer}>
         <Text style={styles.summaryTitle}>Recent Data</Text>
         <ScrollView style={styles.homescroll}>
           {data.map((item, index) => (
             <View key={index} style={styles.dataBox}>
-              <Text style={styles.dataText}>ID: {item.id}</Text>
-              <Text style={styles.dataText}>Value: {item.value}</Text>
-              <Text style={styles.dataText}>Unit: {item.unit}</Text>
-              <Text style={styles.dataText}>Category: {item.subcategory}</Text>
-              <Text style={styles.dataText}>Timestamp: {item.timestamp}</Text>
+              <Text style={styles.dataText}>ID:<ColorId id={item.id}/></Text>
+              <View style={styles.contentBox}>
+                <Text style={styles.subcatName}>Value: {item.value}</Text>
+                <Text style={styles.valueunit}>{item.subcategory} {item.unit}</Text>
+                <Text><TimeCalculator timestamp={item.timestamp} /></Text>
+              </View>
             </View>
           ))}
+          <DataModal
+            isVisible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            dayData={dayData}
+            dayInfo={getDayInfo(selectedDay)}
+          />
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -61,10 +102,31 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
   dataBox: {
-    backgroundColor: '#eaeaea',
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
+    backgroundColor: '#eaeaea',
+    borderRadius: 10,
     marginVertical: 5,
+  },
+  colorDot: {
+    width: 10,
+    height: 10,
     borderRadius: 5,
+    backgroundColor: '#ff0000', // This should come from your ColorId component
+    marginRight: 10,
+  },
+  contentBox: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  subcatName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  valueunit: {
+    fontSize: 14,
+    color: '#333',
   },
   dataText: {
     fontSize: 14,
