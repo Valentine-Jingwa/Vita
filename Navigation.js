@@ -22,7 +22,7 @@ import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline} from "./assets/Icon";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -114,15 +114,15 @@ function BottomTabs() {
         let IconComponent;
 
         if (route.name === 'Home') {
-          IconComponent = IHome;
+          IconComponent = IHomeOutline;
         } else if (route.name === 'Viewing') {
           IconComponent = ITrendingUpOutline;
         } else if (route.name === 'AddData') {
-          IconComponent = IPlusCircle;
+          IconComponent = IPlusOutline;
         } else if (route.name === 'Profile') {
           IconComponent = IPersonOutline;
         } else if (route.name === 'Settings') {
-          IconComponent = ISettings;
+          IconComponent = ISettings2Outline;
         }
 
         // You can return any component that you like here!
