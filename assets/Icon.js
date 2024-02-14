@@ -17,6 +17,10 @@ import IHomeOutline from './icons/home-outline.svg';
 import IHome from './icons/home.svg';
 import IMessageCircleOutline from './icons/message-circle-outline.svg';
 import IMessageCircle from './icons/message-circle.svg';
+import IMicOff from './icons/mic-off.svg';
+import IMicOutline from './icons/mic-outline.svg';
+import IMic from './icons/mic.svg';
+import IMicOffOutline from './icons/mic-off-outline.svg';
 import INavigation2Outline from './icons/navigation-2-outline.svg';
 import INavigation2 from './icons/navigation-2.svg';
 import IPeopleOutline from './icons/people-outline.svg';
@@ -41,6 +45,8 @@ import ISettings from './icons/settings.svg';
 import IShare from './icons/share.svg';
 import ISlashOutline from './icons/slash-outline.svg';
 import ISlash from './icons/slash.svg';
+import ITrendingDownOutline from './icons/trending-down-outline.svg';
+import ITrendingUpOutline from './icons/trending-up-outline.svg';
 
 export {
   IAlertCircleOutline,
@@ -61,6 +67,10 @@ export {
   IHome,
   IMessageCircleOutline,
   IMessageCircle,
+  IMicOff,
+  IMicOutline,
+  IMic,
+  IMicOffOutline,
   INavigation2Outline,
   INavigation2,
   IPeopleOutline,
@@ -84,5 +94,7 @@ export {
   ISettings,
   IShare,
   ISlashOutline,
-  ISlash
+  ISlash,
+  ITrendingDownOutline,
+  ITrendingUpOutline,
 };

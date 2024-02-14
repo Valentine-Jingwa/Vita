@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEff
 import ColorId from '../../constants/ColorId';
 import TimeCalculator from '../../components/TimeCalculator';
 import DataModal from '../../components/DataModal';
+import DataCard from '../../components/Home/DataCard';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -62,24 +63,16 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Vita Home</Text>
-      </View>
       <View style={styles.calendarContainer}>
+
         <CalendarComponent data={data} onDayPress={handleDayPress} />
       </View>
       <View style={styles.ListContainer}>
         <Text style={styles.summaryTitle}>Recent Data</Text>
         <ScrollView style={styles.homescroll}>
           {data.map((item, index) => (
-            <View key={index} style={styles.dataBox}>
-              <Text style={styles.dataText}>ID:<ColorId id={item.id}/></Text>
-              <View style={styles.contentBox}>
-                <Text style={styles.subcatName}>Value: {item.value}</Text>
-                <Text style={styles.valueunit}>{item.subcategory} {item.unit}</Text>
-                <Text><TimeCalculator timestamp={item.timestamp} /></Text>
-              </View>
-            </View>
+
+            <DataCard key={index} item={item} />
           ))}
           <DataModal
             isVisible={modalVisible}
@@ -136,7 +129,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     width: '100%',
-    padding: 20,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+    height: 300,
   },
   headerContainer: {
     marginBottom: 20,
@@ -155,7 +150,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     width: '90%',
-    height: 350,
+    height: '40%',
   },
   homescroll: {
     width: '100%',

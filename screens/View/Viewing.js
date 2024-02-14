@@ -70,6 +70,10 @@ const Viewing = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.chartContainer}>
+
+      </View>
+
       <View style={styles.buttonContainer}>
         <Button title="Vitals" onPress={() => handleCategorySelect('Vitals')} />
         <Button title="Medication" onPress={() => handleCategorySelect('Medication')} />

@@ -1,7 +1,7 @@
 // CalendarComponent.js
 import React from 'react';
 import { Calendar } from 'react-native-calendars';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import ColorId from '../constants/ColorId'; 
 
 const CalendarComponent = ({ data, onDayPress }) => {
@@ -22,6 +22,7 @@ const CalendarComponent = ({ data, onDayPress }) => {
   }, {}) : {};
 
   return (
+    <View style={styles.calendertest}>
     <Calendar
       style={styles.calendar}
       markedDates={markedDates}
@@ -50,11 +51,15 @@ const CalendarComponent = ({ data, onDayPress }) => {
         textMonthFontSize: 15,
         textDayHeaderFontSize: 15,
       }}
-    />
+    /></View>
   );
 };
 
 const styles = StyleSheet.create({
+  calendertest: {
+    height: 100,
+  },
+
   calendar: {
     borderWidth: 1,
     borderColor: '#e1a3a6',

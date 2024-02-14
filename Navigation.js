@@ -22,7 +22,7 @@ import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IGlobeOutline, IPersonOutline, IPlusCircle} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline} from "./assets/Icon";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -116,7 +116,7 @@ function BottomTabs() {
         if (route.name === 'Home') {
           IconComponent = IHome;
         } else if (route.name === 'Viewing') {
-          IconComponent = IGlobeOutline;
+          IconComponent = ITrendingUpOutline;
         } else if (route.name === 'AddData') {
           IconComponent = IPlusCircle;
         } else if (route.name === 'Profile') {
