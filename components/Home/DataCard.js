@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ColorId from '../../constants/ColorId';
-import TimeCalculator from '../TimeCalculator';
+import TimeCalculator from './TimeCalculator';
 
 const DataCard = ({index, item}) => {
     return (

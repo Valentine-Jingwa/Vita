@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react'; // Import useCallback
 import { SafeAreaView, Text, StyleSheet, View, ScrollView } from 'react-native';
-import CalendarComponent from '../../components/CalendarComponent';
-import DataStorage from '../../components/DataStorage';
+import CalendarComponent from '../../components/Home/CalendarComponent';
+import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
 import ColorId from '../../constants/ColorId';
-import TimeCalculator from '../../components/TimeCalculator';
-import DataModal from '../../components/DataModal';
+import TimeCalculator from '../../components/Home/TimeCalculator';
+import DataModal from '../../components/Datahandling/CalendarModal';
 import DataCard from '../../components/Home/DataCard';
 
 const Home = () => {
