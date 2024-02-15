@@ -22,10 +22,12 @@ const Home = () => {
       const formattedData = storedData.map(item => ({
         ...item,
         date: item.date || '', // Provide an empty string if date is undefined
-      }));
+      })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort data by timestamp in descending order
+  
       setData(Array.isArray(formattedData) ? formattedData : [formattedData]);
     }
   };
+  
   
   const handleDayPress = (dateString) => {
     // Format the date to 'YYYY-MM-DD' if it's not already in that format

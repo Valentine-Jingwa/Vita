@@ -7,12 +7,13 @@ import TimeCalculator from './TimeCalculator';
 const DataCard = ({index, item}) => {
     return (
         <View key={index} style={styles.dataBox}>
-            <Text style={styles.dataText}>ID:<ColorId id={item.id}/></Text>
+            <Text style={styles.dataText}><ColorId id={item.id}/></Text>
             <View style={styles.contentBox}>
-                <Text style={styles.subcatName}>Value: {item.value}</Text>
-                <Text style={styles.valueunit}>{item.subcategory} {item.unit}</Text>
-                <Text><TimeCalculator timestamp={item.timestamp} /></Text>
+                <Text style={styles.subcatName}>{item.subcategory} </Text>
+                <Text style={styles.valueunit}>{item.value} {item.unit}</Text>   
+
             </View>
+            <Text><TimeCalculator timestamp={item.timestamp} /></Text>
        </View>
     );
 };
@@ -20,34 +21,33 @@ export default DataCard;
 
 const styles = StyleSheet.create({
     dataBox: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         padding: 10,
         backgroundColor: '#eaeaea',
         borderRadius: 10,
         marginVertical: 5,
     },
-    colorDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#ff0000', // This should come from your ColorId component
-        marginRight: 10,
-    },
     contentBox: {
-        flex: 1,
-        justifyContent: 'space-between',
+        display: 'flex',
+        flexDirection: 'row',
+        backgroundColor: '#fff',
+        width:'90%',
     },
     subcatName: {
-        fontSize: 16,
+        fontSize: 26,
         fontWeight: 'bold',
+        width:'70%',
+        textAlign: 'center',
     },
     valueunit: {
-        fontSize: 14,
+        fontSize: 30,
         color: '#333',
+        width:'30%',
+        textAlign: 'center',
     },
     dataText: {
-        fontSize: 14,
-        color: '#333',
+        fontSize: 18,
+        color: '#fff',
     },
 });

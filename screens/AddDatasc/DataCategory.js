@@ -33,7 +33,7 @@ export default function DataCategory({ navigation }) {
     }, 3000); // Display for 3 seconds
   };
 
-  const handleSave = async (id, value, unit, subcategory) => {
+  const handleSave = async (id, value, unit, subcategory, categoryname) => {
     if (value && unit) {
       try {
         // Here, adapt this to how your data should be structured
