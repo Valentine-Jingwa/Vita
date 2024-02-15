@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { subcategories } from './DataList';
+import { subcategories } from '../DataList';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   if (!subcategory) return null;

@@ -11,10 +11,6 @@ import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settingsc/Settings";
-import Vitals from "./screens/View/Vitals"; 
-import Medication from "./screens/View/Medication";
-import Nutrition from "./screens/View/Nutrition";
-import Others from "./screens/View/Others";
 
 import Profiles from "./screens/Profilesc/Profiles";  
 import EditProfile from "./screens/Profilesc/EditProfile";
@@ -22,7 +18,7 @@ import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IGlobeOutline, IPersonOutline, IPlusCircle} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline} from "./assets/Icon";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -43,7 +39,7 @@ function AddDataStackScreen() {
         component={DataCategory}
         options={{ title: 'Data Category' }}
       />
-      <AddDataStack.Screen
+      {/* <AddDataStack.Screen
         name="Vitals"
         component={Vitals}
         options={{ title: 'Vitals' }}
@@ -62,7 +58,7 @@ function AddDataStackScreen() {
         name="Others"
         component={Others}
         options={{ title: 'Others' }}
-      />
+      /> */}
       {/* You can add more screens to this stack as needed */}
     </AddDataStack.Navigator>
   );
@@ -114,15 +110,15 @@ function BottomTabs() {
         let IconComponent;
 
         if (route.name === 'Home') {
-          IconComponent = IHome;
+          IconComponent = IHomeOutline;
         } else if (route.name === 'Viewing') {
-          IconComponent = IGlobeOutline;
+          IconComponent = ITrendingUpOutline;
         } else if (route.name === 'AddData') {
-          IconComponent = IPlusCircle;
+          IconComponent = IPlusOutline;
         } else if (route.name === 'Profile') {
           IconComponent = IPersonOutline;
         } else if (route.name === 'Settings') {
-          IconComponent = ISettings;
+          IconComponent = ISettings2Outline;
         }
 
         // You can return any component that you like here!

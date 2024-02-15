@@ -36,7 +36,7 @@ export const subcategories = [
         { id: 13, categoryname: 'Nutrition', subcategory: 'Output', datatype: 'text', outputType: 'Dieper Change', items: ['Urine', 'Poop'] },
         
         //Others Default
-        //Nothing here when the user clicks others they have to create all 
+        //there is a function here that helps the user add a new category and subcategory and the units for that category id's are automatically assigned. 
       ];
 //TODO add a funtion where user can add a new category and subcategory
 
