@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated } from 'react-native';
-import DataEntryModal from '../../components/DataEntryModal';
+import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
-import DataStorage from '../../components/DataStorage'; // Adjust the import path as necessary
+import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 
 export default function DataCategory({ navigation }) {
   const [data, setData] = useState([]);
@@ -33,11 +33,11 @@ export default function DataCategory({ navigation }) {
     }, 3000); // Display for 3 seconds
   };
 
-  const handleSave = async (id, value, unit, subcategory) => {
+  const handleSave = async (id, value, unit, subcategory, categoryname) => {
     if (value && unit) {
       try {
         // Here, adapt this to how your data should be structured
-        const newDataPoint = { id, value, unit, subcategory, timestamp: new Date().toISOString() };
+        const newDataPoint = { id, value, unit, subcategory, categoryname ,timestamp: new Date().toISOString() };
         await DataStorage.Store(newDataPoint);
         setModalVisible(false); // Close the modal
         showNotification('Data successfully saved');

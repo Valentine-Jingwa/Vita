@@ -30,6 +30,31 @@ const DataStorage = {
       return []; // Return an empty array as a fallback
     }
   },
+
+  async getDataForSubcategory(subcategory) {
+    try {
+      const jsonData = await AsyncStorage.getItem(STORAGE_KEY);
+      const data = jsonData ? JSON.parse(jsonData) : [];
+      // Filter data based on subcategory
+      // Assuming each item in your data array has a 'subcategory' property
+      const filteredData = data.filter(item => item.subcategory === subcategory);
+      return filteredData;
+    } catch (error) {
+      console.error('Failed to filter data by subcategory.', error);
+      return []; // Return an empty array as a fallback
+    }
+  },
+
+  async Clear() {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      console.log('Storage successfully cleared.');
+    } catch (error) {
+      console.error('Failed to clear storage.', error);
+    }
+  }
+  
+  
 };
 
 export default DataStorage;

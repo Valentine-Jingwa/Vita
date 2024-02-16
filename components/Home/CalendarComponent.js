@@ -2,7 +2,7 @@
 import React from 'react';
 import { Calendar } from 'react-native-calendars';
 import { StyleSheet, View } from 'react-native';
-import ColorId from '../constants/ColorId'; 
+import ColorId from '../../constants/ColorId'; 
 
 const CalendarComponent = ({ data, onDayPress }) => {
   const markedDates = data && Array.isArray(data) ? data.reduce((acc, currentItem) => {

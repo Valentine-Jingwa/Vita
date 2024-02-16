@@ -2,17 +2,18 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ColorId from '../../constants/ColorId';
-import TimeCalculator from '../TimeCalculator';
+import TimeCalculator from './TimeCalculator';
 
 const DataCard = ({index, item}) => {
     return (
         <View key={index} style={styles.dataBox}>
-            <Text style={styles.dataText}>ID:<ColorId id={item.id}/></Text>
             <View style={styles.contentBox}>
-                <Text style={styles.subcatName}>Value: {item.value}</Text>
-                <Text style={styles.valueunit}>{item.subcategory} {item.unit}</Text>
-                <Text><TimeCalculator timestamp={item.timestamp} /></Text>
+                <Text style={styles.idcolor}><ColorId id={item.id}/></Text>
+                <Text style={styles.subcatName}>{item.subcategory} </Text>
+                <Text style={styles.textvalue}>{item.value}</Text>
+                <Text style={styles.textunit}>{item.unit}</Text>  
             </View>
+            <Text><TimeCalculator timestamp={item.timestamp} /></Text>
        </View>
     );
 };
@@ -20,34 +21,46 @@ export default DataCard;
 
 const styles = StyleSheet.create({
     dataBox: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
         backgroundColor: '#eaeaea',
         borderRadius: 10,
         marginVertical: 5,
     },
-    colorDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#ff0000', // This should come from your ColorId component
-        marginRight: 10,
-    },
     contentBox: {
-        flex: 1,
-        justifyContent: 'space-between',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        width:'90%',
     },
     subcatName: {
-        fontSize: 16,
+        fontSize: 25,
+        width:'60%',
+        textAlign: 'center',
+    },
+    textvalue: {
+        fontSize: 30,
         fontWeight: 'bold',
+        color: '#333',
+        width:'15%',
+        textAlign: 'center',
     },
-    valueunit: {
+    textunit: {
         fontSize: 14,
         color: '#333',
+        width:'15%',
+
     },
-    dataText: {
-        fontSize: 14,
-        color: '#333',
+
+    idcolor: {
+        flex: 1,
+        justifyContent: 'center', // Centers items vertically in the container
+        alignItems: 'center', // Centers items horizontally in the container
+        fontSize: 18,
+        width: '10%',
     },
+    
 });

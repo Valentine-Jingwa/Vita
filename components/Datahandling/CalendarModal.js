@@ -4,10 +4,10 @@
 import React from 'react';
 import { Modal, View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import DataStorage from './DataStorage';
-import ColorId from './../constants/ColorId'; // Import ColorId component
-import TimeCalculator from './TimeCalculator'; // Import TimeCalculator component
+import ColorId from '../../constants/ColorId'; // Import ColorId component
+import TimeCalculator from '../Home/TimeCalculator'; // Import TimeCalculator component
 
-const DataModal = ({ isVisible, onClose, dayData, dayInfo }) => {
+const CalendarModal = ({ isVisible, onClose, dayData, dayInfo }) => {
   return (
     <Modal
       visible={isVisible}
@@ -41,7 +41,7 @@ const DataModal = ({ isVisible, onClose, dayData, dayInfo }) => {
 };
 
 // ... styles for DataModal
-export default DataModal;
+export default CalendarModal;
 const styles = StyleSheet.create({
     modalOverlay: {
       flex: 1,
