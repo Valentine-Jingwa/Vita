@@ -36,7 +36,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       alert('Invalid data');
       return false; // Indicate invalid data
     }
-    onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory);
+    onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory, subcategory.categoryname);
     if (shouldCloseAfterSave) {
       setInputValue(''); // Reset for next entry
       onClose(); // Close modal after save

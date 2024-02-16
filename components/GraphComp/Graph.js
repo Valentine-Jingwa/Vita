@@ -15,15 +15,17 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Assuming DataStorage has a method to fetch data for a subcategory
         const rawData = await DataStorage.getDataForSubcategory(selectedSubcategory);
         console.log("Raw data fetched:", rawData);
   
-        // Assuming rawData needs to be processed to fit into filteredData's structure
-        const filteredData = rawData.map(/* your data processing logic here */);
+        // Process rawData to fit into the chart's data structure
+        const filteredData = rawData.map((item, index) => ({
+          label: `Point ${index + 1}`,
+          value: item.value
+        }));
   
         const chartData = {
-          labels: filteredData.map((_, index) => `Point ${index + 1}`),
+          labels: filteredData.map(item => item.label),
           datasets: [{
             data: filteredData.map(item => parseFloat(item.value)),
             color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
@@ -33,13 +35,11 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   
         if (!chartData.datasets[0].data.every(value => value !== undefined && !isNaN(value))) {
           console.error("Data array contains non-numeric or undefined values.");
-          // Handle the error appropriately, maybe set an error state to show a message to the user
         } else {
           setDataPoints(chartData);
         }
       } catch (error) {
         console.error("Failed to fetch or process data:", error);
-        // Handle the error appropriately, maybe set an error state to show a message to the user
       }
     };
   

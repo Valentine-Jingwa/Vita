@@ -7,11 +7,11 @@ import TimeCalculator from './TimeCalculator';
 const DataCard = ({index, item}) => {
     return (
         <View key={index} style={styles.dataBox}>
-            <Text style={styles.dataText}><ColorId id={item.id}/></Text>
             <View style={styles.contentBox}>
+                <Text style={styles.idcolor}><ColorId id={item.id}/></Text>
                 <Text style={styles.subcatName}>{item.subcategory} </Text>
-                <Text style={styles.valueunit}>{item.value} {item.unit}</Text>   
-
+                <Text style={styles.textvalue}>{item.value}</Text>
+                <Text style={styles.textunit}>{item.unit}</Text>  
             </View>
             <Text><TimeCalculator timestamp={item.timestamp} /></Text>
        </View>
@@ -23,31 +23,44 @@ const styles = StyleSheet.create({
     dataBox: {
         flexDirection: 'column',
         alignItems: 'center',
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 5,
         backgroundColor: '#eaeaea',
         borderRadius: 10,
         marginVertical: 5,
     },
     contentBox: {
         display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'row',
-        backgroundColor: '#fff',
         width:'90%',
     },
     subcatName: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        width:'70%',
+        fontSize: 25,
+        width:'60%',
         textAlign: 'center',
     },
-    valueunit: {
+    textvalue: {
         fontSize: 30,
+        fontWeight: 'bold',
         color: '#333',
-        width:'30%',
+        width:'15%',
         textAlign: 'center',
     },
-    dataText: {
-        fontSize: 18,
-        color: '#fff',
+    textunit: {
+        fontSize: 14,
+        color: '#333',
+        width:'15%',
+
     },
+
+    idcolor: {
+        flex: 1,
+        justifyContent: 'center', // Centers items vertically in the container
+        alignItems: 'center', // Centers items horizontally in the container
+        fontSize: 18,
+        width: '10%',
+    },
+    
 });

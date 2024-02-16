@@ -37,7 +37,7 @@ export default function DataCategory({ navigation }) {
     if (value && unit) {
       try {
         // Here, adapt this to how your data should be structured
-        const newDataPoint = { id, value, unit, subcategory, timestamp: new Date().toISOString() };
+        const newDataPoint = { id, value, unit, subcategory, categoryname ,timestamp: new Date().toISOString() };
         await DataStorage.Store(newDataPoint);
         setModalVisible(false); // Close the modal
         showNotification('Data successfully saved');

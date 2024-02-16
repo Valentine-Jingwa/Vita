@@ -25,16 +25,12 @@ const ColorId = ({ id }) => {
 
 const styles = StyleSheet.create({
   dot: {
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
-    borderWidth: 2,
+    width: 25,
+    height: 25,
+    borderRadius: 100,
+    borderWidth: 6,
     borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });
 

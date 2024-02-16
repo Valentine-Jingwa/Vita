@@ -1,9 +1,17 @@
 import React from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
+import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
+
 
 export default function Settings() {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
+
+  const handleClearStorage = async () => {
+    await DataStorage.Clear(); // Call the Clear method to wipe storage
+    // Optionally, add any follow-up actions (e.g., update UI or state to reflect the data has been cleared)
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,6 +35,9 @@ export default function Settings() {
           trackColor={{ false: "#767577", true: "#e1a3a6" }}
           thumbColor={darkModeEnabled ? "#f8d7da" : "#f4f3f4"}
         />
+      <TouchableOpacity style={styles.button} onPress={handleClearStorage}>
+        <Text style={styles.buttonText}>Wipe Storage</Text>
+      </TouchableOpacity>
       </View>
       {/* Add more settings */}
       <TouchableOpacity style={styles.button}>
