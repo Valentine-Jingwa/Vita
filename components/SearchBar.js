@@ -1,83 +1,38 @@
 // SearchBar.js
+// The search bar will apppear slight transparent when it's not being used and when the user clickes it becomes clearer. When the user types into the search bar the subcategory will appear.
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { subcategories } from './DataList'; // Adjust this path as necessary
+import { View, TextInput, StyleSheet } from 'react-native';
 
-const SearchBar = ({ onSubcategorySelect }) => {
+const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredData, setFilteredData] = useState(subcategories);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = (text) => {
     setSearchQuery(text);
-    setIsLoading(true);
-
-    // Filter subcategories based on the search query
-    const newData = subcategories.filter(item => {
-      const itemData = `${item.subcategory}`.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
-
-    setFilteredData(newData);
-    setIsLoading(false);
+    onSearch(text);
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchBar}>
-        <Ionicons name="ios-search" size={20} color="#000" />
-        <TextInput
-          placeholder="Search"
-          placeholderTextColor="#999"
-          style={styles.textInput}
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-      </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <FlatList
-          data={filteredData}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              onPress={() => onSubcategorySelect(item.subcategory)}
-            >
-              <Text style={styles.itemText}>{item.subcategory}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      )}
+      <TextInput
+        style={styles.input}
+        placeholder="Search subcategories..."
+        value={searchQuery}
+        onChangeText={handleSearch}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    backgroundColor: '#EEE',
-    borderRadius: 20,
     padding: 10,
-    alignItems: 'center',
   },
-  textInput: {
-    marginLeft: 10,
-    flex: 1,
-  },
-  item: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCC',
-  },
-  itemText: {
-    fontSize: 16,
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 5,
   },
 });
 

@@ -1,32 +1,78 @@
 // Viewing.js
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
 import SearchBar from '../../components/SearchBar';
-import GraphModal from '../../components/GraphComp/Graph'; // Adjust the import path for GraphModal
+import GraphModal from '../../components/GraphComp/Graph';
+import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path for DataStorage
+import { subcategories } from '../../components/DataList'; // Adjust the import path for subcategories data
 
 export default function Viewing() {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [filteredSubcategories, setFilteredSubcategories] = useState(subcategories);
 
-  const handleSubcategorySelect = (subcategory) => {
+  useEffect(() => {
+    // Initial fetch or setup code if needed
+  }, []);
+
+  const handleSubcategorySelect = async (subcategory) => {
     setSelectedSubcategory(subcategory);
-    setIsGraphModalVisible(true);
+    const data = await DataStorage.getDataForSubcategory(subcategory);
+    if (data.length === 0) {
+      // Handle empty data scenario
+      console.log('No data available for this subcategory');
+      // setIsGraphModalVisible(true);
+    } else {
+      setIsGraphModalVisible(true);
+    }
+  };
+
+  const renderSubcategory = ({ item }) => (
+    <TouchableOpacity
+      style={styles.subcategoryItem}
+      onPress={() => handleSubcategorySelect(item.subcategory)}>
+      <Text style={styles.subcategoryText}>{item.subcategory}</Text>
+    </TouchableOpacity>
+  );
+
+  const handleSearch = (text) => {
+    const filteredData = subcategories.filter(item =>
+      item.subcategory.toLowerCase().includes(text.toLowerCase())
+    );
+    setFilteredSubcategories(filteredData);
   };
 
   return (
-    <View style={styles.container}>
-      <SearchBar onSubcategorySelect={handleSubcategorySelect} />
+    <SafeAreaView style={styles.container}>
+      <SearchBar onSearch={handleSearch} />
+      <FlatList
+        data={filteredSubcategories}
+        renderItem={renderSubcategory}
+        keyExtractor={item => item.id.toString()}
+        numColumns={2} // Adjust based on your layout preference
+      />
       <GraphModal
         isVisible={isGraphModalVisible}
         onClose={() => setIsGraphModalVisible(false)}
         selectedSubcategory={selectedSubcategory}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  subcategoryItem: {
+    flex: 1,
+    margin: 10,
+    padding: 20,
+    backgroundColor: '#f9f9f9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subcategoryText: {
+    fontSize: 16,
   },
 });
