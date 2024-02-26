@@ -25,7 +25,7 @@ const SearchBar = ({ onSearch }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    paddingTop: 30,
   },
   input: {
     height: 40,
