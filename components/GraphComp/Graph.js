@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit'; // Import LineChart from react-native-chart-kit
 import DataStorage from '../Datahandling/DataStorage'; // Adjust this import according to your project structure
+import ColorId from '../../constants/ColorId'; // Adjust the import path according to your project structure
+
 
 const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   const [dataPoints, setDataPoints] = useState({
@@ -22,19 +24,23 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
 
   const fetchDataForSubcategory = async (subcategory) => {
     const data = await DataStorage.getDataForSubcategory(subcategory);
+    // Assume subcategory or a derived ID here can be used with ColorId.getColor
+    const dotColor = ColorId.getColor(subcategory.id); // Adjust this to get the correct ID
     if (data.length > 0) {
-      // Assuming data is an array of objects with properties `value` and `timestamp`
       const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
       const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
       const datasets = [{ data: sortedData.map(item => Number(item.value) || 0) }];
-      setDataPoints({ labels, datasets });
+      setDataPoints({ labels, datasets, dotColor }); // Store dotColor in state for access in LineChart config
     } else {
       setDataPoints({
         labels: [],
         datasets: [{ data: [] }],
+        dotColor: '' // Default or fallback color could go here
       });
+      console.log(dotColor); // Add this line after fetching the dotColor
     }
-  };
+};
+
 
   return (
     <Modal
@@ -48,16 +54,16 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
           {dataPoints.datasets[0].data.length > 0 ? (
             <LineChart
               data={dataPoints}
-              width={Dimensions.get('window').width - 50} // from react-native
+              width={Dimensions.get('window').width - 50}
               height={220}
               yAxisLabel=""
               yAxisSuffix=""
-              yAxisInterval={1} // optional, defaults to 1
+              yAxisInterval={1}
               chartConfig={{
                 backgroundColor: '#e26a00',
                 backgroundGradientFrom: '#636373',
                 backgroundGradientTo: '#636363',
-                decimalPlaces: 2, // optional, defaults to 2dp
+                decimalPlaces: 2,
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 style: {
@@ -66,7 +72,7 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
                 propsForDots: {
                   r: '6',
                   strokeWidth: '2',
-                  stroke: '#ffa726',
+                  stroke: dataPoints.dotColor || '#636464', // Use the dotColor from state, with a fallback
                 },
               }}
               bezier
