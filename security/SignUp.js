@@ -78,31 +78,36 @@ export default function Signup({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  textInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-  },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  errorText: {
-    fontSize: 10,
-    color: 'red',
-  },
-});
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+      backgroundColor: '#95B5BB', // Soft teal background
+    },
+    textInput: {
+      height: 40,
+      borderColor: '#2C4151', // Dark slate gray for input border
+      borderWidth: 1,
+      marginBottom: 20,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      color: '#5C5547', // Dark brown for input text
+      backgroundColor: 'white', // White background for input for readability
+    },
+    button: {
+      backgroundColor: '#3E3047', // Deep purple for button background
+      padding: 10,
+      borderRadius: 5,
+      alignItems: 'center',
+      marginTop: 20, // Ensure there's some margin at the top
+    },
+    buttonText: {
+      color: 'white', // White text for contrast on the button
+      fontWeight: 'bold',
+    },
+    errorText: {
+      fontSize: 10,
+      color: 'red', // Keep error text red for visibility and standard practice
+    },
+  });
+  

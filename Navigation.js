@@ -1,10 +1,17 @@
 // Navigation.js
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator} from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import { useWindowDimensions } from 'react-native';
+
+import React, { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import Welcome from './security/Welcome';
+import Login from "./security/Login";
+import Signup from "./security/SignUp";
+import PasswordRecovery from "./security/PasswordRecovery";
 
 import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
@@ -24,7 +31,7 @@ import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutli
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
-
+const Stack = createStackNavigator();
 
 
 function AddDataStackScreen() {
@@ -40,27 +47,6 @@ function AddDataStackScreen() {
         component={DataCategory}
         options={{ title: 'Data Category' }}
       />
-      {/* <AddDataStack.Screen
-        name="Vitals"
-        component={Vitals}
-        options={{ title: 'Vitals' }}
-      />
-      <AddDataStack.Screen
-        name="Medication"
-        component={Medication}
-        options={{ title: 'Medication' }}
-      />
-      <AddDataStack.Screen
-        name="Nutrition"
-        component={Nutrition}
-        options={{ title: 'Nutrition' }}
-      />
-      <AddDataStack.Screen
-        name="Others"
-        component={Others}
-        options={{ title: 'Others' }}
-      /> */}
-      {/* You can add more screens to this stack as needed */}
     </AddDataStack.Navigator>
   );
 }
@@ -169,10 +155,7 @@ function BottomTabs() {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Viewing" component={Viewing} />      
-      <Tab.Screen
-       name="AddData" 
-       component={AddDataStackScreen}
-      /> 
+      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
       <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
@@ -180,9 +163,49 @@ function BottomTabs() {
 }
 
 export default function Navigation() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [userToken, setUserToken] = useState(null);
+
+    // Simulate loading user token
+    useEffect(() => {
+      const checkLoginStatus = async () => {
+        let token;
+        try {
+          token = await AsyncStorage.getItem('userToken');
+        } catch(e) {
+          console.error(e);
+        }
+        setIsLoading(false);
+        setUserToken(token);
+      };
+  
+      checkLoginStatus();
+    }, []);
+  
+    if (isLoading) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
+  
   return (
     <NavigationContainer>
-      <BottomTabs />
-    </NavigationContainer>
+    <Stack.Navigator>
+      {userToken == null ? (
+        // No token found, user isn't signed in
+        <>
+          <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Signup" component={Signup} />
+          <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}/>
+        </>
+      ) : (
+        // User is signed in
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+      )}
+    </Stack.Navigator>
+  </NavigationContainer>
   );
 }

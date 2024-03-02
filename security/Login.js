@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 const loginValidationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -19,7 +21,32 @@ export default function Login({ navigation }) {
       // navigation.navigate('YourAppMainScreen');
     }, 2000);
   };
-
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      // Use userInfo to log in or sign up with your backend
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+  const handleFacebookLogin = async () => {
+    try {
+      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+      if (result.isCancelled) {
+        throw new Error('User cancelled the login process');
+      }
+      const data = await AccessToken.getCurrentAccessToken();
+      if (!data) {
+        throw new Error('Something went wrong obtaining access token');
+      }
+      // Use data.accessToken to log in or sign up with your backend
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   const navigateToPasswordRecovery = () => {
     // Navigate to Password Recovery Screen
     navigation.navigate('PasswordRecovery');
@@ -60,6 +87,14 @@ export default function Login({ navigation }) {
             <TouchableOpacity onPress={navigateToPasswordRecovery} style={styles.forgotPasswordButton}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                <TouchableOpacity onPress={handleGoogleLogin} style={[styles.button, styles.googleButton]}>
+                <Text style={styles.buttonText}>Login with Google</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleFacebookLogin} style={[styles.button, styles.facebookButton]}>
+                <Text style={styles.buttonText}>Login with Facebook</Text>
+                </TouchableOpacity>
+            </View>
           </>
         )}
       </Formik>
@@ -68,39 +103,52 @@ export default function Login({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  textInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 20,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-  },
-  button: {
-    backgroundColor: 'blue',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  errorText: {
-    fontSize: 10,
-    color: 'red',
-  },
-  forgotPasswordButton: {
-    marginTop: 10,
-    alignItems: 'center',
-  },
-  forgotPasswordText: {
-    color: 'blue',
-    fontSize: 16,
-  },
-});
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 20,
+      backgroundColor: '#95B5BB', // Soft teal background
+    },
+    textInput: {
+      height: 40,
+      borderColor: '#2C4151', // Dark slate gray for input border
+      borderWidth: 1,
+      marginBottom: 20,
+      borderRadius: 5,
+      paddingHorizontal: 10,
+      color: '#5C5547', // Dark brown for input text
+      backgroundColor: 'white', // White background for input for readability
+    },
+    button: {
+      backgroundColor: '#3E3047', // Deep purple for button background
+      padding: 10,
+      borderRadius: 5,
+      alignItems: 'center',
+      marginTop: 20, // Ensure there's some margin at the top
+    },
+    buttonText: {
+      color: 'white', // White text for contrast on the button
+      fontWeight: 'bold',
+    },
+    errorText: {
+      fontSize: 10,
+      color: 'red', // Keep error text red for visibility and standard practice
+    },
+    forgotPasswordButton: {
+      marginTop: 10,
+      alignItems: 'center',
+    },
+    forgotPasswordText: {
+      color: '#6081C2', // Soft blue for "Forgot Password?" text
+      fontSize: 16,
+    },
+    googleButton: {
+        backgroundColor: '#DB4437', // Google's brand color
+        // other styles as needed
+      },
+      facebookButton: {
+        backgroundColor: '#4267B2', // Facebook's brand color
+        // other styles as needed
+      },
+  });
+  

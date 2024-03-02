@@ -1,5 +1,7 @@
 import React from 'react';
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet, View } from 'react-native';
+import Login from './Login';
+import Signup from './SignUp';
 
 const Welcome = ({ navigation }) => {
     return (
