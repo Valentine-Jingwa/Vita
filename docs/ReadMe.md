@@ -3,3 +3,4 @@
 2C4151
 6081C2
 95B5BB
+Basic Color pallet

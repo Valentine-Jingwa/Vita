@@ -98,6 +98,20 @@ function ProfileStackScreen() {
   );
 }
 
+const SettingsStack = createStackNavigator();
+
+function SettingsStackScreen() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="SettingsHome" component={Settings} options={{ title: 'Settings' }} />
+      <SettingsStack.Screen name="EditProfile" component={EditProfile} />
+      <SettingsStack.Screen name="ProfileSettings" component={ProfileSettings} />
+      <SettingsStack.Screen name="SupportUs" component={SupportUs} />
+      {/* Add more settings screens as needed */}
+    </SettingsStack.Navigator>
+  );
+}
+
 function BottomTabs() {
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.06;
@@ -129,14 +143,14 @@ function BottomTabs() {
 
           return (
             <View style={{
-              width: dimensions.width * 0.08,
+              width: dimensions.width * 0.10,
               height: dimensions.height * 0.08,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: backgroundColor,
               borderRadius: 80,
             }}>
-              <IconComponent color={iconColor} size={dimensions.scale*0.9} />
+              <IconComponent color={iconColor} size={24} />
             </View>
           );
         },
@@ -172,9 +186,3 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  bottomTabs: {
-    height: 32,
-  },
-});
