@@ -197,9 +197,10 @@ export default function Navigation() {
         // No token found, user isn't signed in
         <>
           <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Login" component={Login}/>
           <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}/>
+          <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}  />
         </>
       ) : (
         // User is signed in

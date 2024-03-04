@@ -10,3 +10,7 @@ npm install @react-navigation/native @react-navigation/bottom-tabs @react-naviga
 npm install formik yup
 npm install @react-native-google-signin/google-signin
 npm install react-native-fbsdk
+npm install mongoose
+npm install dotenv
+npm install react-native-keychain
+npm install @react-native-community/checkbox
