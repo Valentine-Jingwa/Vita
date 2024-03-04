@@ -1,10 +1,16 @@
 import React from 'react';
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity, StyleSheet, View, Image } from 'react-native';
 
 const Welcome = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.logo}>Vita</Text>
+            {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
+            <Image source={require('../assets/logo/2.png')} style={styles.image} />
+            <Text style={styles.brandName}>Health Tracker</Text>
+            <Text style={styles.slogan}>Extra ready for appointment</Text>
+            <Text style={styles.description}>
+                Input data and get it processed for your next appointment
+            </Text>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
                     style={[styles.button, styles.loginButton]}
@@ -14,7 +20,10 @@ const Welcome = ({ navigation }) => {
                 <TouchableOpacity
                     style={[styles.button, styles.signupButton]}
                     onPress={() => navigation.navigate('Signup')}>
-                    <Text style={styles.buttonText}>Sign Up</Text>
+                    <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.button, styles.signupButton]}>
+                    <Text style={styles.buttonText}>Guest login</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -24,35 +33,58 @@ const Welcome = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#95B5BB', // Using one of the provided colors for the background
+        backgroundColor: 'white',
     },
-    logo: {
-        fontSize: 48,
+    image: {
+        marginTop: 50, // Adjust as needed
+        width: '100%', // Adjust as needed
+        height: '40%', // Adjust as needed, depending on your image aspect ratio
+        resizeMode: 'contain',
+    },
+    brandName: {
+        fontSize: 32,
         fontWeight: 'bold',
+        color: '#3E3047',
+        marginTop: 30,
+    },
+    slogan: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2C4151',
+        marginTop: 10,
+    },
+    description: {
         color: '#5C5547',
-        marginBottom: 60, // Adjust based on your layout preference
+        fontSize: 16,
+        textAlign: 'center',
+        paddingHorizontal: 20,
+        marginTop: 10,
     },
     buttonContainer: {
         width: '100%',
-        paddingHorizontal: 20, // Adjust padding as needed
+        paddingHorizontal: 20,
+        marginTop: 30,
     },
     button: {
         padding: 15,
-        marginVertical: 10, // Space between buttons
-        borderRadius: 5,
+        marginVertical: 10,
+        borderRadius: 25, // Rounded corners
         alignItems: 'center',
+        width: '90%', // Adjust as needed
+        alignSelf: 'center',
     },
     loginButton: {
-        backgroundColor: '#3E3047',
+        backgroundColor: '#3E3047', // Deep purple for the login button
     },
     signupButton: {
-        backgroundColor: '#2C4151',
+        backgroundColor: '#6081C2', // Soft blue for the register button
     },
     buttonText: {
         color: 'white',
         fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 
