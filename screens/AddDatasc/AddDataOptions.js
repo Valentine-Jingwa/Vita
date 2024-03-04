@@ -5,13 +5,25 @@ import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Button} from 'r
 export default function AddDataOptions({ navigation }) {
   return (
     <SafeAreaView style={styles.fullScreenModal}>
-      <View style={styles.container}>
+      <View>
         <TouchableOpacity
           style={styles.button}
           onPress={() => navigation.navigate('DataCategory')}
         >
           <Text style={styles.buttonText}>Add New Data</Text>
         </TouchableOpacity>      
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Viewing')}
+        >
+          <Text style={styles.buttonText}>Remove Data</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Viewing')}
+        >
+          <Text style={styles.buttonText}>Preview Print</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -23,14 +35,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-  },
-  container: {
-    width: '80%', // Adjust the width as per your design
-    maxWidth: 600, // Maximum width of the buttons container
-    flexDirection: 'row', // Align buttons in a row
-    flexWrap: 'wrap', // Allow buttons to wrap to next line
-    justifyContent: 'center', // Space out buttons evenly
-    alignItems: 'center', // Center buttons vertically
   },
   button: {
     backgroundColor: 'lightgrey', // Background color for buttons

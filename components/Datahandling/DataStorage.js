@@ -44,6 +44,16 @@ const DataStorage = {
       return []; // Return an empty array as a fallback
     }
   },
+
+  async Clear() {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEY);
+      console.log('Storage successfully cleared.');
+    } catch (error) {
+      console.error('Failed to clear storage.', error);
+    }
+  }
+  
   
 };
 

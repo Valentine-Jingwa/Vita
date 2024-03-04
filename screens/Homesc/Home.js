@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#ff0000', // This should come from your ColorId component
+    backgroundColor: '#ff0000', 
     marginRight: 10,
   },
   contentBox: {

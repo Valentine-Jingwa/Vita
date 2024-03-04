@@ -1,101 +1,146 @@
-// GraphModal.js
+//Graph.js 
 import React, { useState, useEffect } from 'react';
-import { Modal, StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { LineChart } from 'react-native-chart-kit';
-import { Dimensions } from 'react-native';
-import DataStorage from '../Datahandling/DataStorage'; // Adjust this path as necessary
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { LineChart } from 'react-native-chart-kit'; // Import LineChart from react-native-chart-kit
+import DataStorage from '../Datahandling/DataStorage'; // Adjust this import according to your project structure
+import ColorId from '../../constants/ColorId'; // Adjust the import path according to your project structure
+
 
 const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   const [dataPoints, setDataPoints] = useState({
     labels: [],
-    datasets: [{ data: [] }]
+    datasets: [
+      {
+        data: [],
+      },
+    ],
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Assuming DataStorage has a method to fetch data for a subcategory
-        const rawData = await DataStorage.getDataForSubcategory(selectedSubcategory);
-        console.log("Raw data fetched:", rawData);
-  
-        // Assuming rawData needs to be processed to fit into filteredData's structure
-        const filteredData = rawData.map(/* your data processing logic here */);
-  
-        const chartData = {
-          labels: filteredData.map((_, index) => `Point ${index + 1}`),
-          datasets: [{
-            data: filteredData.map(item => parseFloat(item.value)),
-            color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-            strokeWidth: 2
-          }]
-        };
-  
-        if (!chartData.datasets[0].data.every(value => value !== undefined && !isNaN(value))) {
-          console.error("Data array contains non-numeric or undefined values.");
-          // Handle the error appropriately, maybe set an error state to show a message to the user
-        } else {
-          setDataPoints(chartData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch or process data:", error);
-        // Handle the error appropriately, maybe set an error state to show a message to the user
-      }
-    };
-  
-    if (selectedSubcategory) fetchData();
-  }, [selectedSubcategory]);
-  
-  const screenWidth = Dimensions.get('window').width;
-  const chartConfig = {
-    backgroundColor: '#000',
-    backgroundGradientFrom: '#fff',
-    backgroundGradientTo: '#fff',
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-  };
+    if (isVisible && selectedSubcategory) {
+      fetchDataForSubcategory(selectedSubcategory);
+    }
+  }, [isVisible, selectedSubcategory]);
+
+  const fetchDataForSubcategory = async (subcategory) => {
+    const data = await DataStorage.getDataForSubcategory(subcategory);
+    // Assume subcategory or a derived ID here can be used with ColorId.getColor
+    const dotColor = ColorId.getColor(subcategory.id); // Adjust this to get the correct ID
+    if (data.length > 0) {
+      const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
+      const datasets = [{ data: sortedData.map(item => Number(item.value) || 0) }];
+      setDataPoints({ labels, datasets, dotColor }); // Store dotColor in state for access in LineChart config
+    } else {
+      setDataPoints({
+        labels: [],
+        datasets: [{ data: [] }],
+        dotColor: '' // Default or fallback color could go here
+      });
+      console.log(dotColor); // Add this line after fetching the dotColor
+    }
+};
+
 
   return (
     <Modal
-      visible={isVisible}
       animationType="slide"
-      onRequestClose={onClose}
       transparent={true}
-    >
-      <SafeAreaView style={styles.modalContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={onClose}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-        <Text style={styles.modalTitle}>Units against Time</Text>
-        <LineChart
-          data={dataPoints}
-          width={screenWidth - 20}
-          height={220}
-          chartConfig={chartConfig}
-          bezier
-        />
-      </SafeAreaView>
+      visible={isVisible}
+      onRequestClose={onClose}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>Graph for {selectedSubcategory}</Text>
+          {dataPoints.datasets[0].data.length > 0 ? (
+            <LineChart
+              data={dataPoints}
+              width={Dimensions.get('window').width - 50}
+              height={220}
+              yAxisLabel=""
+              yAxisSuffix=""
+              yAxisInterval={1}
+              chartConfig={{
+                backgroundColor: '#e26a00',
+                backgroundGradientFrom: '#636373',
+                backgroundGradientTo: '#636363',
+                decimalPlaces: 2,
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: dataPoints.dotColor || '#636464', // Use the dotColor from state, with a fallback
+                },
+              }}
+              bezier
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+            />
+          ) : (
+            <View style={styles.placeholderGraph}>
+              <Text>No Data Available</Text>
+            </View>
+          )}
+          <TouchableOpacity style={styles.button} onPress={onClose}>
+            <Text style={styles.buttonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  centeredView: {
     flex: 1,
-    marginTop: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  placeholderGraph: {
+    width: 300,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    backgroundColor: '#f2f2f2',
+    borderRadius: 5,
+  },
+  button: {
+    borderRadius: 20,
     padding: 10,
+    elevation: 2,
+    backgroundColor: '#2196F3',
   },
-  backButton: {
-    marginBottom: 10,
-  },
-  modalTitle: {
-    fontSize: 20,
+  buttonText: {
+    color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 20,
   },
-  // Additional styles
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });
 
 export default GraphModal;

@@ -1,10 +1,11 @@
 // Navigation.js
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import { useWindowDimensions } from 'react-native';
+
 import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
@@ -97,34 +98,74 @@ function ProfileStackScreen() {
   );
 }
 
+const SettingsStack = createStackNavigator();
+
+function SettingsStackScreen() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen name="SettingsHome" component={Settings} options={{ title: 'Settings' }} />
+      <SettingsStack.Screen name="EditProfile" component={EditProfile} />
+      <SettingsStack.Screen name="ProfileSettings" component={ProfileSettings} />
+      <SettingsStack.Screen name="SupportUs" component={SupportUs} />
+      {/* Add more settings screens as needed */}
+    </SettingsStack.Navigator>
+  );
+}
+
 function BottomTabs() {
   const dimensions = useWindowDimensions();
-  const tabBarHeight = dimensions.height * 0.08;
+  const tabBarHeight = dimensions.height * 0.06;
   return (
     
     <Tab.Navigator
-    screenOptions={({ route }) => ({
-      headerShown: false, // This will hide the header bar on all screens within this stack
-      tabBarStyle: { height: tabBarHeight },
-      tabBarIcon: ({ focused, color, size }) => {
-        let IconComponent;
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarStyle: { height: tabBarHeight },
+        tabBarIcon: ({ focused, color }) => {
+          let IconComponent;
 
-        if (route.name === 'Home') {
-          IconComponent = IHomeOutline;
-        } else if (route.name === 'Viewing') {
-          IconComponent = ITrendingUpOutline;
-        } else if (route.name === 'AddData') {
-          IconComponent = IPlusOutline;
-        } else if (route.name === 'Profile') {
-          IconComponent = IPersonOutline;
-        } else if (route.name === 'Settings') {
-          IconComponent = ISettings2Outline;
-        }
+          // Determine the icon based on the route name
+          if (route.name === 'Home') {
+            IconComponent = IHomeOutline;
+          } else if (route.name === 'Viewing') {
+            IconComponent = ITrendingUpOutline;
+          } else if (route.name === 'AddData') {
+            IconComponent = IPlusOutline;
+          } else if (route.name === 'Profile') {
+            IconComponent = IPersonOutline;
+          } else if (route.name === 'Settings') {
+            IconComponent = ISettings2Outline;
+          }
 
-        // You can return any component that you like here!
-        return <IconComponent color={color} size={size} />;
-      },
-    })}
+          // Adjust icon color and background based on focus
+          const iconColor = focused ? 'white' : color;
+          const backgroundColor = focused ? 'white' : 'transparent';
+
+          return (
+            <View style={{
+              width: dimensions.width * 0.10,
+              height: dimensions.height * 0.08,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: backgroundColor,
+              borderRadius: 80,
+            }}>
+              <IconComponent color={iconColor} size={24} />
+            </View>
+          );
+        },
+        tabBarLabel: ({ focused }) => {
+          // Only show label if focused, wrapped in a Text component
+          if (focused) {
+            return (
+              <Text style={{ color: 'black' }}>
+                {route.name}
+              </Text>
+            );
+          }
+          return null;
+        },
+      })}
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Viewing" component={Viewing} />      
@@ -145,4 +186,3 @@ export default function Navigation() {
     </NavigationContainer>
   );
 }
-
