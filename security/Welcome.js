@@ -23,7 +23,7 @@ const Welcome = ({ navigation }) => {
                     <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.button, styles.signupButton]}
-                    onPress={() => navigation.navigate('BottomTabNavigator')}
+                    onPress={() => navigation.navigate('Guest')}
                 >
                     <Text style={styles.buttonText}>Guest login</Text>
                 </TouchableOpacity>
