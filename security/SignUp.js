@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Switch, Modal } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, StyleSheet, Switch, Modal, Image} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -32,6 +32,7 @@ export default function Signup({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Image source={require('../assets/logo/4.png')} style={styles.image} />
       <Text style={styles.title}>Register</Text>
       <Text style={styles.subtitle}>Enter Your Personal Information</Text>
       <Formik
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       color: '#2C4151',
       alignSelf: 'center',
-      marginTop: 40,
+      marginTop: 10,
     },
     subtitle: {
       fontSize: 16,
@@ -207,5 +208,10 @@ const styles = StyleSheet.create({
       fontSize: 16,
       color: '#5C5547',
     },
+    image: {
+      width: '100%', // Adjust as needed
+      height: '20%', // Adjust as needed, depending on your image aspect ratio
+      resizeMode: 'contain',
+  },
   });
   
