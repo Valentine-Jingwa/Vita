@@ -1,28 +1,30 @@
 // AddDataOptions.js
 import React from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Button} from 'react-native';
+import global from '../../global.js';
+import globalStyles from '../../global.js';
 
 export default function AddDataOptions({ navigation }) {
   return (
-    <SafeAreaView style={styles.fullScreenModal}>
+    <SafeAreaView style={styles.fullScreenModal} >
       <View>
         <TouchableOpacity
-          style={styles.button}
+          style={globalStyles.button}
           onPress={() => navigation.navigate('DataCategory')}
         >
-          <Text style={styles.buttonText}>Add New Data</Text>
+          <Text style={globalStyles.buttonText}>Add New Data</Text>
         </TouchableOpacity>      
         <TouchableOpacity
-          style={styles.button}
+          style={globalStyles.button}
           onPress={() => navigation.navigate('Viewing')}
         >
-          <Text style={styles.buttonText}>Remove Data</Text>
+          <Text style={globalStyles.buttonText}>Remove Data</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.button}
+          style={globalStyles.button}
           onPress={() => navigation.navigate('Viewing')}
         >
-          <Text style={styles.buttonText}>Preview Print</Text>
+          <Text style={globalStyles.buttonText}>Preview Print</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
