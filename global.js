@@ -20,7 +20,10 @@ const globalStyles = StyleSheet.create({
       textAlign: 'center',
       fontSize: 16,
     },
-    // Add other global styles here
+    primaryButton: {
+      backgroundColor: 'lightgrey',
+      padding: 20,
+    },
   });
   
   export default globalStyles;
