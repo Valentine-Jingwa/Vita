@@ -4,6 +4,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import * as Keychain from 'react-native-keychain';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
@@ -20,41 +21,52 @@ export default function Login({ navigation }) {
   const handleLogin = async (values) => {
     setLoading(true);
     console.log(values);
-    // Implement your login logic here
-    if (rememberUser) {
-      // Securely store the user's credentials
-      await Keychain.setGenericPassword(values.email, values.password);
-    }
-    setTimeout(() => {
+    // Implement your actual login logic here
+    // For demonstration, after a fake delay, navigate to the main app
+    setTimeout(async () => {
       setLoading(false);
-      // navigation.navigate('BottomNavigation');
+      
+      // Here, instead of just stopping the loader, navigate to the main part of your app
+      // For example, if using AsyncStorage to store a user token:
+      await AsyncStorage.setItem('@user_token', 'your_token_here');
+      
+      // Navigate to the Guest screen which seems to hold your BottomTabs navigation
+      navigation.navigate('LogHome');
     }, 2000);
-  };
-  const handleGoogleLogin = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      // Use userInfo to log in or sign up with your backend
-    } catch (error) {
-      console.error(error);
+};
+
+const handleGoogleLogin = async () => {
+  try {
+    await GoogleSignin.hasPlayServices();
+    const userInfo = await GoogleSignin.signIn();
+    // Use userInfo to log in or sign up with your backend
+    // Navigate to the main app on successful login
+    navigation.navigate('Guest');
+  } catch (error) {
+    console.error(error);
+    // Handle the error, e.g., show an error message
+  }
+};
+
+const handleFacebookLogin = async () => {
+  try {
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    if (result.isCancelled) {
+      throw new Error('User cancelled the login process');
     }
-  };
-  
-  const handleFacebookLogin = async () => {
-    try {
-      const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-      if (result.isCancelled) {
-        throw new Error('User cancelled the login process');
-      }
-      const data = await AccessToken.getCurrentAccessToken();
-      if (!data) {
-        throw new Error('Something went wrong obtaining access token');
-      }
-      // Use data.accessToken to log in or sign up with your backend
-    } catch (error) {
-      console.error(error);
+    const data = await AccessToken.getCurrentAccessToken();
+    if (!data) {
+      throw new Error('Something went wrong obtaining access token');
     }
-  };
+    // Use data.accessToken to log in or sign up with your backend
+    // Navigate to the main app on successful login
+    navigation.navigate('Guest');
+  } catch (error) {
+    console.error(error);
+    // Handle the error, e.g., show an error message
+  }
+};
+
   
   const navigateToPasswordRecovery = () => {
     // Navigate to Password Recovery Screen

@@ -161,52 +161,37 @@ function BottomTabs() {
     </Tab.Navigator>
   );
 }
-
 export default function Navigation() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [userToken, setUserToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    // Simulate loading user token
-    useEffect(() => {
-      const checkLoginStatus = async () => {
-        let token;
-        try {
-          token = await AsyncStorage.getItem('userToken');
-        } catch(e) {
-          console.error(e);
-        }
-        setIsLoading(false);
-        setUserToken(token);
-      };
-  
-      checkLoginStatus();
-    }, []);
-  
-    if (isLoading) {
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }
-  
+  useEffect(() => {
+    const checkAuthState = async () => {
+      const token = await AsyncStorage.getItem('@user_token');
+      if (token) {
+        setIsAuthenticated(true);
+      }
+    };
+
+    checkAuthState();
+  }, []);
+
   return (
     <NavigationContainer>
-    <Stack.Navigator>
-      {userToken == null ? (
-        // No token found, user isn't signed in
-        <>
-          <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
-          <Stack.Screen name="Login" component={Login}/>
-          <Stack.Screen name="Signup" component={Signup} />
-          <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
-          <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}  />
-        </>
-      ) : (
-        // User is signed in
-        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
-      )}
-    </Stack.Navigator>
-  </NavigationContainer>
+      <Stack.Navigator>
+        {isAuthenticated ? (
+          <>
+            <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="LogHome" component={BottomTabs} options={{ headerShown: false }} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login}/>
+            <Stack.Screen name="Signup" component={Signup} />
+            <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}  />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
