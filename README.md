@@ -19,3 +19,7 @@
 - npm install dotenv
 - npm install react-native-keychain
 - npm install @react-native-community/checkbox
+- npm install react-native-dotenv
+- node server.js
+- npm install express mongoose bcryptjs jsonwebtoken cors
+- npm install axios
