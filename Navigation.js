@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, ActivityIndicator, useWindowDimensions} from 'r
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
+import globalStyles from './global.js';
 
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,7 +31,7 @@ import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-nativ
 
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting} from "./assets/Icon";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // import HomeIcon from "./assets/navicons/";
@@ -110,28 +111,28 @@ function BottomTabs() {
   const tabBarHeight = dimensions.height * 0.1;
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-    <Tab.Navigator
+    // <SafeAreaView style={{ flex: 1 }}>
+    <Tab.Navigator 
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: { height: tabBarHeight },
+        tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
         tabBarShowLabel: false, // This line hides the label
-        tabBarIcon: ({ focused, color }) => {
+        tabBarIcon: ({ focused }) => {
           let IconComponent;
 
           if (route.name === 'Home') {
-            IconComponent = IHomeOutline;
+            IconComponent = Irealhome;
           } else if (route.name === 'Viewing') {
-            IconComponent = ITrendingUpOutline;
+            IconComponent = Irealview;
           } else if (route.name === 'AddData') {
-            IconComponent = IPlusOutline;
+            IconComponent = Irealadd;
           } else if (route.name === 'Profile') {
-            IconComponent = IPersonOutline;
+            IconComponent = Irealprofile;
           } else if (route.name === 'Settings') {
-            IconComponent = ISettings2Outline;
+            IconComponent = Irealsetting;
           }
 
-          const iconColor = focused ? 'white' : color;
+          const iconColor = focused ? 'blue' : 'grey';
           const animatedStyle = useAnimatedStyle(() => {
             const scale = focused ? 1.2 : 1; // Scale icon up when focused
             const translateY = focused ? -10 : 0; // Move icon up when focused
@@ -163,7 +164,7 @@ function BottomTabs() {
       <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 }
 

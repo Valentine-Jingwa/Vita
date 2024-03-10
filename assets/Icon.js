@@ -47,6 +47,11 @@ import ISlashOutline from './icons/slash-outline.svg';
 import ISlash from './icons/slash.svg';
 import ITrendingDownOutline from './icons/trending-down-outline.svg';
 import ITrendingUpOutline from './icons/trending-up-outline.svg';
+import Irealhome from './icons/realhome.svg';
+import Irealview from './icons/realview.svg';
+import Irealadd from './icons/realadd.svg';
+import Irealprofile from './icons/realprofile.svg';
+import Irealsetting from './icons/realsetting.svg';
 
 export {
   IAlertCircleOutline,
@@ -97,4 +102,9 @@ export {
   ISlash,
   ITrendingDownOutline,
   ITrendingUpOutline,
+  Irealhome,
+  Irealview,
+  Irealadd,
+  Irealprofile,
+  Irealsetting,
 };

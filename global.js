@@ -18,9 +18,24 @@ const globalStyles = StyleSheet.create({
       color: 'black',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: 16,
+      fontSize: 15,
     },
-    // Add other global styles here
+    tabBarStyle: {
+      backgroundColor: 'white',
+      position: 'absolute',
+      borderTopWidth: 0,
+      paddingBottom: 5,
+      marginTop: 10,
+      elevation: 5, // Add elevation for Android
+      shadowColor: "#000", // These shadow properties are for iOS
+      shadowOffset: {
+        width: 0,
+        height: -2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 3.84,
+    }
+    
   });
   
   export default globalStyles;
