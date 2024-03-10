@@ -31,7 +31,7 @@ import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-nativ
 
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting, Irealsetting2} from "./assets/Icon";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 // import HomeIcon from "./assets/navicons/";
@@ -129,7 +129,7 @@ function BottomTabs() {
           } else if (route.name === 'Profile') {
             IconComponent = Irealprofile;
           } else if (route.name === 'Settings') {
-            IconComponent = Irealsetting;
+            IconComponent = Irealsetting2;
           }
 
           const iconColor = focused ? 'blue' : 'grey';
