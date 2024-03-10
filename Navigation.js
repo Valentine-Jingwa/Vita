@@ -1,9 +1,8 @@
 // Navigation.js
-import { StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, useWindowDimensions} from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import { useWindowDimensions } from 'react-native';
 
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,8 +24,16 @@ import EditProfile from "./screens/Profilesc/EditProfile";
 import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
+//Bottom Tab animation
+import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
+
+
+
 //Icon Importation
 import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline} from "./assets/Icon";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+// import HomeIcon from "./assets/navicons/";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
@@ -100,17 +107,18 @@ function SettingsStackScreen() {
 
 function BottomTabs() {
   const dimensions = useWindowDimensions();
-  const tabBarHeight = dimensions.height * 0.06;
+  const tabBarHeight = dimensions.height * 0.1;
+
   return (
-    
+    <SafeAreaView style={{ flex: 1 }}>
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: { height: tabBarHeight },
+        tabBarShowLabel: false, // This line hides the label
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
 
-          // Determine the icon based on the route name
           if (route.name === 'Home') {
             IconComponent = IHomeOutline;
           } else if (route.name === 'Viewing') {
@@ -123,42 +131,39 @@ function BottomTabs() {
             IconComponent = ISettings2Outline;
           }
 
-          // Adjust icon color and background based on focus
           const iconColor = focused ? 'white' : color;
-          const backgroundColor = focused ? 'white' : 'transparent';
+          const animatedStyle = useAnimatedStyle(() => {
+            const scale = focused ? 1.2 : 1; // Scale icon up when focused
+            const translateY = focused ? -10 : 0; // Move icon up when focused
+            return {
+              transform: [
+                { scale: withSpring(scale) },
+                { translateY: withSpring(translateY) },
+              ],
+            };
+          });
 
           return (
-            <View style={{
+            <Animated.View style={[animatedStyle, {
               width: dimensions.width * 0.10,
               height: dimensions.height * 0.08,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: backgroundColor,
               borderRadius: 80,
-            }}>
+            }]}>
               <IconComponent color={iconColor} size={24} />
-            </View>
+            </Animated.View>
           );
-        },
-        tabBarLabel: ({ focused }) => {
-          // Only show label if focused, wrapped in a Text component
-          if (focused) {
-            return (
-              <Text style={{ color: 'black' }}>
-                {route.name}
-              </Text>
-            );
-          }
-          return null;
         },
       })}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Viewing" component={Viewing} />      
-      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
+      <Tab.Screen name="Viewing" component={Viewing} />
+      <Tab.Screen name="AddData" component={AddDataStackScreen} />
       <Tab.Screen name="Profile" component={Profile} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -210,3 +215,4 @@ export default function Navigation() {
   </NavigationContainer>
   );
 }
+

@@ -1,7 +1,6 @@
 // AddDataOptions.js
 import React from 'react';
 import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Button} from 'react-native';
-import global from '../../global.js';
 import globalStyles from '../../global.js';
 
 export default function AddDataOptions({ navigation }) {
@@ -38,28 +37,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
   },
-  button: {
-    backgroundColor: 'lightgrey', // Background color for buttons
-    padding: 20, // Padding inside the buttons
-    width: '45%', // Width of each button to sit side by side with space
-    marginVertical: 10, // Margin vertically to space out rows
-    borderRadius: 10, // Rounded corners
-    alignItems: 'center', // Center text horizontally
-    elevation: 3, // Shadow for Android
-    // Shadow for iOS
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  buttonText: {
-    color: 'black', // Text color
-    fontWeight: 'bold', // Bold text
-    textAlign: 'center', // Center text
-    fontSize: 16,
-  },
-}
-);
+});
