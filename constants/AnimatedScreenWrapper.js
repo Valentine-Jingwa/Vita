@@ -17,6 +17,9 @@ const AnimatedScreenWrapper = ({ children }) => {
 
   const firstShadeTranslateX = useSharedValue(screenWidth);
   const secondShadeTranslateX = useSharedValue(screenWidth);
+  const thirdShadeTranslateX = useSharedValue(screenWidth);
+
+  const backgroundColor = '#F2F2F2';
 
 
 
@@ -28,8 +31,8 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#1a1a1a', // First shade color
-    zIndex: 2, // Above the second shade but below the content
+    backgroundColor: '#93706E', // First shade color
+    zIndex: 3, // Above the second shade but below the content
   }));
 
   const secondShadeAnimatedStyle = useAnimatedStyle(() => ({
@@ -39,8 +42,19 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#141414', // Second shade color
-    zIndex: 1, // Below the first shade
+    backgroundColor: '#9B7977', // Second shade color
+    zIndex: 2, // Below the first shade
+  }));
+
+  const thirdShadeAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: thirdShadeTranslateX.value }],
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#A38280', // Third shade color
+    zIndex: 1, // Below the second shade
   }));
 
     // Animated style for children opacity
@@ -48,17 +62,18 @@ const AnimatedScreenWrapper = ({ children }) => {
       opacity: childrenOpacity.value,
     }));
 
-  const animateShades = () => {
-    firstShadeTranslateX.value = withTiming(0, { duration: 600 }, () => {
-      firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 600 });
-      secondShadeTranslateX.value = withTiming(0, { duration: 600 }, () => {
-        secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 600 }, () => {
-          childrenOpacity.value = withTiming(1, { duration: 1000 }); // Fade in the children
-          runOnJS(setShowContent)(true);
+    const animateShades = () => {
+      firstShadeTranslateX.value = withTiming(0, { duration: 500 }, () => {
+        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 500 });
+        secondShadeTranslateX.value = withTiming(0, { duration: 500 }, () => {
+          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 500 }, () => {
+            childrenOpacity.value = withTiming(1, { duration: 1000 }); // Fade in the children
+            runOnJS(setShowContent)(true);
+          });
         });
       });
-    });
-  };
+    };
+    
 
   useEffect(() => {
     if (isFocused) {
@@ -68,13 +83,14 @@ const AnimatedScreenWrapper = ({ children }) => {
     } else {
       firstShadeTranslateX.value = screenWidth;
       secondShadeTranslateX.value = screenWidth;
+      // thirdShadeTranslateX.value = screenWidth;
       setShowContent(false);
       childrenOpacity.value = 0; // Ensure children are hidden when not focused
     }
   }, [isFocused]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor }}>
       {showContent && (
         <Animated.View style={[{ flex: 1 }, childrenAnimatedStyle]}>
           {children}
@@ -82,6 +98,7 @@ const AnimatedScreenWrapper = ({ children }) => {
       )}
       <Animated.View style={firstShadeAnimatedStyle} />
       <Animated.View style={secondShadeAnimatedStyle} />
+      {/* <Animated.View style={thirdShadeAnimatedStyle} /> */}
     </View>
   );
 };
