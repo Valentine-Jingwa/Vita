@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
 import FadeInView from './constants/FadeInView';
+import SlideInView from './constants/SlideInView';
+import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,6 +30,7 @@ import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Bottom Tab animation
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
+
 
 
 
@@ -110,6 +113,7 @@ function SettingsStackScreen() {
 function BottomTabs() {
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
+  const [initialFadeDone, setInitialFadeDone] = useState(false);
 
   return (
     <Tab.Navigator 
@@ -157,43 +161,44 @@ function BottomTabs() {
         },
       })}
     >
-  <Tab.Screen name="Home" options={{ headerShown: false }}>
+  <Tab.Screen name="Home"  options={{ headerShown: false }}>
     {() => (
-      <FadeInView style={{ flex: 1 }}>
-        <Home />
-      </FadeInView>
+    <AnimatedScreenWrapper>
+    <Home />
+  </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
   
   <Tab.Screen name="Viewing" options={{ headerShown: false }}>
     {() => (
-      <FadeInView style={{ flex: 1 }}>
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
         <Viewing />
-      </FadeInView>
+
+      </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
   
   <Tab.Screen name="AddData" options={{ headerShown: false }}>
     {() => (
-      <FadeInView style={{ flex: 1 }}>
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
         <AddDataStackScreen />
-      </FadeInView>
+      </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
   
   <Tab.Screen name="Profile" options={{ headerShown: false }}>
     {() => (
-      <FadeInView style={{ flex: 1 }}>
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
         <Profile />
-      </FadeInView>
+      </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
   
   <Tab.Screen name="Settings" options={{ headerShown: false }}>
     {() => (
-      <FadeInView style={{ flex: 1 }}>
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
         <Settings />
-      </FadeInView>
+      </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
     </Tab.Navigator>
