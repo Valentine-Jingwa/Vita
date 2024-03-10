@@ -23,3 +23,4 @@
 - node server.js
 - npm install express mongoose bcryptjs jsonwebtoken cors
 - npm install axios
+- commit a day
