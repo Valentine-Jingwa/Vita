@@ -15,13 +15,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.vita"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/2.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.vita"
     },
     "web": {
       "favicon": "./assets/favicon.png"
