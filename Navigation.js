@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
+import FadeInView from './constants/FadeInView';
 
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -111,13 +112,12 @@ function BottomTabs() {
   const tabBarHeight = dimensions.height * 0.1;
 
   return (
-    // <SafeAreaView style={{ flex: 1 }}>
     <Tab.Navigator 
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
         tabBarShowLabel: false, // This line hides the label
-        tabBarIcon: ({ focused }) => {
+        tabBarIcon: ({ focused, color }) => {
           let IconComponent;
 
           if (route.name === 'Home') {
@@ -132,7 +132,6 @@ function BottomTabs() {
             IconComponent = Irealsetting2;
           }
 
-          const iconColor = focused ? 'blue' : 'grey';
           const animatedStyle = useAnimatedStyle(() => {
             const scale = focused ? 1.2 : 1; // Scale icon up when focused
             const translateY = focused ? -10 : 0; // Move icon up when focused
@@ -152,19 +151,52 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent color={iconColor} size={24} />
+              <IconComponent size={24}/>
             </Animated.View>
           );
         },
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Viewing" component={Viewing} />
-      <Tab.Screen name="AddData" component={AddDataStackScreen} />
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Settings" component={Settings} />
+  <Tab.Screen name="Home" options={{ headerShown: false }}>
+    {() => (
+      <FadeInView style={{ flex: 1 }}>
+        <Home />
+      </FadeInView>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Viewing" options={{ headerShown: false }}>
+    {() => (
+      <FadeInView style={{ flex: 1 }}>
+        <Viewing />
+      </FadeInView>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="AddData" options={{ headerShown: false }}>
+    {() => (
+      <FadeInView style={{ flex: 1 }}>
+        <AddDataStackScreen />
+      </FadeInView>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Profile" options={{ headerShown: false }}>
+    {() => (
+      <FadeInView style={{ flex: 1 }}>
+        <Profile />
+      </FadeInView>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Settings" options={{ headerShown: false }}>
+    {() => (
+      <FadeInView style={{ flex: 1 }}>
+        <Settings />
+      </FadeInView>
+    )}
+  </Tab.Screen>
     </Tab.Navigator>
-    // </SafeAreaView>
   );
 }
 
