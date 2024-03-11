@@ -25,13 +25,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 10,
         paddingHorizontal: 5,
-        backgroundColor: '#eaeaea',
         borderRadius: 10,
         marginVertical: 5,
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignContent: 'center',
+    
     },
     contentBox: {
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         flexDirection: 'row',
         width:'90%',
@@ -45,11 +48,11 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold',
         color: '#333',
-        width:'15%',
+        width:'20%',
         textAlign: 'center',
     },
     textunit: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#333',
         width:'15%',
 
@@ -58,7 +61,7 @@ const styles = StyleSheet.create({
     idcolor: {
         flex: 1,
         justifyContent: 'center', // Centers items vertically in the container
-        alignItems: 'center', // Centers items horizontally in the container
+        alignItems: 'start', // Centers items horizontally in the container
         fontSize: 18,
         width: '10%',
     },

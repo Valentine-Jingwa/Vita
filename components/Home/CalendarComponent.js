@@ -57,12 +57,14 @@ const CalendarComponent = ({ data, onDayPress }) => {
 
 const styles = StyleSheet.create({
   calendertest: {
-    height: 100,
+    alignItems: 'center', 'justifyContent': 'center', 'padding': 30,
+    height: 150,
+    justifyContent: 'space-between', 
   },
 
   calendar: {
     borderWidth: 1,
-    borderColor: '#e1a3a6',
+    borderColor: '#000',
     borderRadius: 10,
     width: '100%', // Maintains the calendar width relative to its parent
   },

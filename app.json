@@ -4,10 +4,10 @@
     "slug": "Vita",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo/2.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/logo/2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -15,13 +15,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.yourcompany.vita"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo/2.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.vita"
     },
     "web": {
       "favicon": "./assets/favicon.png"

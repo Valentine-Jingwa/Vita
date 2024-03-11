@@ -63,12 +63,13 @@ export default function Viewing() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FAF7F8',
   },
   subcategoryItem: {
     flex: 1,
     margin: 10,
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },

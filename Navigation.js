@@ -1,9 +1,10 @@
 // Navigation.js
-import { StyleSheet, View, Text, ActivityIndicator} from 'react-native';
+import { StyleSheet, View, Text, ActivityIndicator, useWindowDimensions} from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import { useWindowDimensions } from 'react-native';
+import globalStyles from './global.js';
+import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
 import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,7 +18,6 @@ import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settingsc/Settings";
 
 import Profiles from "./screens/Profilesc/Profiles";  
@@ -25,13 +25,25 @@ import EditProfile from "./screens/Profilesc/EditProfile";
 import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
 
+//Bottom Tab animation
+import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
+
+
+
+
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline} from "./assets/Icon";
+import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting, Irealsetting2} from "./assets/Icon";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+// import HomeIcon from "./assets/navicons/";
 
 const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
+
 
 
 function AddDataStackScreen() {
@@ -40,12 +52,7 @@ function AddDataStackScreen() {
       <AddDataStack.Screen
         name="AddDataOptions"
         component={AddDataOptions}
-        options={{ title: 'Add Data' }}
-      />
-      <AddDataStack.Screen
-        name="DataCategory"
-        component={DataCategory}
-        options={{ title: 'Data Category' }}
+        options={{ headerShown: false  }}
       />
     </AddDataStack.Navigator>
   );
@@ -100,64 +107,96 @@ function SettingsStackScreen() {
 
 function BottomTabs() {
   const dimensions = useWindowDimensions();
-  const tabBarHeight = dimensions.height * 0.06;
+  const tabBarHeight = dimensions.height * 0.1;
+
   return (
-    
-    <Tab.Navigator
+    <Tab.Navigator 
+    initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: { height: tabBarHeight },
+        tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
+        tabBarShowLabel: false, // This line hides the label
+        swipeEnabled: true,
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
 
-          // Determine the icon based on the route name
           if (route.name === 'Home') {
-            IconComponent = IHomeOutline;
+            IconComponent = Irealhome;
           } else if (route.name === 'Viewing') {
-            IconComponent = ITrendingUpOutline;
+            IconComponent = Irealview;
           } else if (route.name === 'AddData') {
-            IconComponent = IPlusOutline;
+            IconComponent = Irealadd;
           } else if (route.name === 'Profile') {
-            IconComponent = IPersonOutline;
+            IconComponent = Irealprofile;
           } else if (route.name === 'Settings') {
-            IconComponent = ISettings2Outline;
+            IconComponent = Irealsetting2;
           }
 
-          // Adjust icon color and background based on focus
-          const iconColor = focused ? 'white' : color;
-          const backgroundColor = focused ? 'white' : 'transparent';
+          const animatedStyle = useAnimatedStyle(() => {
+            const scale = focused ? 1.2 : 1; // Scale icon up when focused
+            const translateY = focused ? -10 : 0; // Move icon up when focused
+            return {
+              transform: [
+                { scale: withSpring(scale) },
+                { translateY: withSpring(translateY) },
+              ],
+            };
+          });
 
           return (
-            <View style={{
+            <Animated.View style={[animatedStyle, {
               width: dimensions.width * 0.10,
               height: dimensions.height * 0.08,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: backgroundColor,
               borderRadius: 80,
-            }}>
-              <IconComponent color={iconColor} size={24} />
-            </View>
+            }]}>
+              <IconComponent size={24}/>
+            </Animated.View>
           );
-        },
-        tabBarLabel: ({ focused }) => {
-          // Only show label if focused, wrapped in a Text component
-          if (focused) {
-            return (
-              <Text style={{ color: 'black' }}>
-                {route.name}
-              </Text>
-            );
-          }
-          return null;
         },
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Viewing" component={Viewing} />      
-      <Tab.Screen name="AddData" component={AddDataStackScreen} /> 
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Settings" component={Settings} />
+  <Tab.Screen name="Home"  options={{ headerShown: false }}>
+    {() => (
+    <AnimatedScreenWrapper>
+    <Home />
+  </AnimatedScreenWrapper>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Viewing" options={{ headerShown: false }}>
+    {() => (
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
+        <Viewing />
+
+      </AnimatedScreenWrapper>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="AddData" options={{ headerShown: false }}>
+    {() => (
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
+        <AddDataStackScreen />
+      </AnimatedScreenWrapper>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Profile" options={{ headerShown: false }}>
+    {() => (
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
+        <Profile />
+      </AnimatedScreenWrapper>
+    )}
+  </Tab.Screen>
+  
+  <Tab.Screen name="Settings" options={{ headerShown: false }}>
+    {() => (
+      <AnimatedScreenWrapper style={{ flex: 1 }}>
+        <Settings />
+      </AnimatedScreenWrapper>
+    )}
+  </Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -210,3 +249,4 @@ export default function Navigation() {
   </NavigationContainer>
   );
 }
+
