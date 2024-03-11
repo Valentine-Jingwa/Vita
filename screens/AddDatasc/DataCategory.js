@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated } from 'react-native';
+import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated, } from 'react-native';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
-import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
+import DataStorage from '../../components/Datahandling/DataStorage'; 
 
 export default function DataCategory({ navigation }) {
   const [data, setData] = useState([]);

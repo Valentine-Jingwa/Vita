@@ -13,18 +13,6 @@ export default function AddDataOptions({ navigation }) {
         >
           <Text style={globalStyles.buttonText}>Add New Data</Text>
         </TouchableOpacity>      
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => navigation.navigate('Viewing')}
-        >
-          <Text style={globalStyles.buttonText}>Remove Data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => navigation.navigate('Viewing')}
-        >
-          <Text style={globalStyles.buttonText}>Preview Print</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
