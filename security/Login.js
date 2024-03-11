@@ -31,7 +31,7 @@ export default function Login({ navigation }) {
       await AsyncStorage.setItem('@user_token', 'your_token_here');
       
       // Navigate to the Guest screen which seems to hold your BottomTabs navigation
-      navigation.navigate('LogHome');
+      navigation.navigate('LHome');
     }, 2000);
 };
 

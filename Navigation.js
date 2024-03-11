@@ -164,16 +164,23 @@ function BottomTabs() {
 export default function Navigation() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+
   useEffect(() => {
     const checkAuthState = async () => {
       const token = await AsyncStorage.getItem('@user_token');
-      if (token) {
-        setIsAuthenticated(true);
-      }
+      setIsAuthenticated(!!token); // Set to true if token exists, false otherwise
     };
 
-    checkAuthState();
-  }, []);
+    // Subscribe for the focus event on the navigation
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The screen is focused
+      // Call your method here
+      checkAuthState();
+    });
+
+    return unsubscribe; // Return the function to unsubscribe from the event so it gets removed on unmount
+  }, [navigation]); // Add navigation as a dependency
+
 
   return (
     <NavigationContainer>
@@ -181,7 +188,7 @@ export default function Navigation() {
         {isAuthenticated ? (
           <>
             <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="LogHome" component={BottomTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="LHome" component={BottomTabs} options={{ headerShown: false }} />
           </>
         ) : (
           <>

@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure 
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 
 
-export default function Settings() {
+export default function Settings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -12,6 +12,17 @@ export default function Settings() {
   const handleClearStorage = async () => {
     await DataStorage.Clear();
     setModalVisible(false); // Hide modal after clearing storage
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('@user_token');
+      // Here you navigate to the 'Welcome' screen after clearing the token
+      navigation.navigate('Welcome');
+    } catch (error) {
+      // Handle any errors that occur during logout
+      console.error("Logout failed", error);
+    }
   };
 
   const handleCancel = () => {
@@ -81,6 +92,10 @@ export default function Settings() {
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
+      
     </SafeAreaView>
   );
 }
@@ -158,5 +173,4 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#2196F3",
   },
-  // Add styles for other components
 });
