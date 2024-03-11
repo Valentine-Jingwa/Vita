@@ -136,15 +136,6 @@ useEffect(() => {
           ))
         }
 
-        {selectedCategory && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {/* Handle adding a new subcategory logic here */}}
-          >
-            <Text style={styles.buttonText}>+ Add New</Text>
-          </TouchableOpacity>
-        )}
-
         <DataEntryModal
           isVisible={modalVisible}
           onClose={() => setModalVisible(false)}
@@ -182,6 +173,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     margin: 10,
     marginLeft: 0,
+    backgroundColor: '#ffff',
+
   },
   vitalsButton: {
     alignSelf: 'flex-end', 
@@ -192,6 +185,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1,
     marginTop: 20,
+    backgroundColor: '#ffff',
+
   },
   nutritionButton: {
     alignSelf: 'flex-start',
@@ -204,6 +199,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     marginLeft: 0,
+    backgroundColor: '#ffff',
+
   },
   medicationButton: {
     alignSelf: 'flex-end', 
@@ -215,6 +212,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 15,
     marginBottom: 15,
+    backgroundColor: '#ffff',
+
     
   },
   othersButton: {
@@ -227,6 +226,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 45,
     marginLeft: 0,
+    backgroundColor: '#ffff',
+
   },
   fullScreenModal: {
     flex: 1,

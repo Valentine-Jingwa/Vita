@@ -88,7 +88,7 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FAF7F8',
     padding: 20,
   },
   headerContainer: {

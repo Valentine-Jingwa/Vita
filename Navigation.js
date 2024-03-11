@@ -4,8 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
-import FadeInView from './constants/FadeInView';
-import SlideInView from './constants/SlideInView';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
 import React, { useEffect, useState } from 'react';
@@ -20,7 +18,6 @@ import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settingsc/Settings";
 
 import Profiles from "./screens/Profilesc/Profiles";  
@@ -30,6 +27,8 @@ import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Bottom Tab animation
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 
 
 
@@ -44,6 +43,7 @@ const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
+
 
 
 function AddDataStackScreen() {
@@ -108,14 +108,15 @@ function SettingsStackScreen() {
 function BottomTabs() {
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
-  const [initialFadeDone, setInitialFadeDone] = useState(false);
 
   return (
     <Tab.Navigator 
+    initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
         tabBarShowLabel: false, // This line hides the label
+        swipeEnabled: true,
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
 
