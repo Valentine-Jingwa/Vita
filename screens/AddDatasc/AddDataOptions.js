@@ -136,15 +136,6 @@ useEffect(() => {
           ))
         }
 
-        {selectedCategory && (
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {/* Handle adding a new subcategory logic here */}}
-          >
-            <Text style={styles.buttonText}>+ Add New</Text>
-          </TouchableOpacity>
-        )}
-
         <DataEntryModal
           isVisible={modalVisible}
           onClose={() => setModalVisible(false)}

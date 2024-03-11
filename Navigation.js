@@ -30,6 +30,8 @@ import SupportUs from "./screens/Profilesc/SupportUs";
 
 //Bottom Tab animation
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 
 
 
@@ -44,6 +46,7 @@ const Tab = createBottomTabNavigator();
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
+
 
 
 function AddDataStackScreen() {
@@ -108,14 +111,15 @@ function SettingsStackScreen() {
 function BottomTabs() {
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
-  const [initialFadeDone, setInitialFadeDone] = useState(false);
 
   return (
     <Tab.Navigator 
+    initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
         tabBarShowLabel: false, // This line hides the label
+        swipeEnabled: true,
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
 
