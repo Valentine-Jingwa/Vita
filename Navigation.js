@@ -52,12 +52,7 @@ function AddDataStackScreen() {
       <AddDataStack.Screen
         name="AddDataOptions"
         component={AddDataOptions}
-        options={{ title: 'Add Data' }}
-      />
-      <AddDataStack.Screen
-        name="DataCategory"
-        component={DataCategory}
-        options={{ title: 'Data Category' }}
+        options={{ headerShown: false  }}
       />
     </AddDataStack.Navigator>
   );
