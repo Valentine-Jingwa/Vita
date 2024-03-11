@@ -9,8 +9,7 @@ import DataModal from '../../components/Datahandling/CalendarModal';
 import DataCard from '../../components/Home/DataCard';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from '../../global';
-import { Icalendar } from '../../assets/Icon';
-
+import { Icalendar1 } from '../../assets/Icon';
 
 
 const Home = () => {
@@ -21,10 +20,6 @@ const Home = () => {
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false); // Declare the state variable here
 
-    // Function to toggle the calendar view
-    const toggleCalendar = () => {
-      setCalendarModalVisible(!calendarModalVisible); // Use setCalendarModalVisible to toggle the calendar modal
-    };
 
 
   const fetchData = async () => {
@@ -54,8 +49,6 @@ const Home = () => {
     setModalVisible(true);
   };
   
-  
-  
 
   // Function to format the day information
   const getDayInfo = (dateString) => {
@@ -82,25 +75,35 @@ const Home = () => {
         style={styles.calendarIcon} 
         onPress={() => setCalendarModalVisible(true)}
       >
-        <Icon name="calendar-today" size={24} color="black" />
+      <Icalendar1 width={35} height={35} />
       </TouchableOpacity>
 
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={calendarModalVisible}
-        onRequestClose={() => setCalendarModalVisible(false)}
-      >
-        <TouchableWithoutFeedback onPress={() => setCalendarModalVisible(false)}>
-          <View style={styles.modalOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.calendarModal}>
-                <CalendarComponent data={data} onDayPress={handleDayPress} />
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+  animationType="slide"
+  transparent={true}
+  visible={calendarModalVisible}
+  onRequestClose={() => setCalendarModalVisible(false)}
+>
+  <TouchableWithoutFeedback onPress={() => setCalendarModalVisible(false)}>
+    <View style={styles.modalOverlay}>
+      <TouchableWithoutFeedback>
+        <View style={styles.calendarModal}>
+          <CalendarComponent data={data} onDayPress={handleDayPress} />
+          {/* Displaying data for the selected date */}
+          {dayData.length > 0 && (
+            <View style={styles.selectedDayDataContainer}>
+              <Text style={styles.selectedDayTitle}>Data for {getDayInfo(selectedDay)}:</Text>
+              {dayData.map((item, index) => (
+                // Assuming DataCard is a component that can display your data appropriately
+                <DataCard key={index} item={item} />
+              ))}
+            </View>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
 
       <View style={styles.borderedBox}>
         <Text>Inside the Box</Text>
@@ -137,12 +140,25 @@ const styles = StyleSheet.create({
   },
   calendarModal: {
     marginTop: '20%',
-    height: '100%',
     backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    overflow: 'hidden',
+    padding: 20, // Add padding for visual spacing
+    height: '100%', // You might adjust this based on your content
+    width: '100%', // Use the full width of the modal overlay
+    alignItems: 'center', // Center content horizontally
   },
+
+  selectedDayDataContainer: {
+    marginTop: 20, // Add some space between the calendar and the data list
+    width: '100%', // Use the full width available within the modal
+  },
+  selectedDayTitle: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 10, // Space before the list starts
+  },
+  
   homescroll: {
     width: '100%',
   },
