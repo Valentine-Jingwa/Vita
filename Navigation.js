@@ -4,8 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
-import FadeInView from './constants/FadeInView';
-import SlideInView from './constants/SlideInView';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
 import React, { useEffect, useState } from 'react';
@@ -20,7 +18,6 @@ import Home from "./screens/Homesc/Home";
 import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import DataCategory from "./screens/AddDatasc/DataCategory"; // The new screen you'll create
 import Settings from "./screens/Settingsc/Settings";
 
 import Profiles from "./screens/Profilesc/Profiles";  
