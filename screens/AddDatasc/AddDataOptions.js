@@ -6,6 +6,9 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage'; 
 
+// Icons
+import { Ibackbtn } from '../../assets/Icon.js';
+
 export default function AddDataOptions({ navigation }) {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,6 +80,7 @@ useEffect(() => {
   const mainCategories = ['Data','Others', 'Medication', 'Nutrition', 'Vitals'];
 
 
+
   return (
     <SafeAreaView style={styles.fullScreenModal}>
       <Animated.View
@@ -85,9 +89,22 @@ useEffect(() => {
         <Text style={styles.notificationText}>{notification}</Text>
       </Animated.View>
 
-      <View style={styles.topView}>
-      {/* Content for the top view goes here */}
-      </View>
+          <View style={styles.topView}>
+        {selectedCategory && (
+          <>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={() => setSelectedCategory('')}>
+              <View style={{ width: 35, height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                <Ibackbtn />
+              </View>
+            </TouchableOpacity>
+            <View style={styles.categoryNameWrapper}>
+              <Text style={styles.categoryName}>{selectedCategory}</Text>
+            </View>
+          </>
+        )}
+    </View>
 
       <View style={styles.bottomView}>
       {!selectedCategory && mainCategories.map((category, index) => {
@@ -123,18 +140,66 @@ useEffect(() => {
         );
       })}
 
-        {selectedCategory && subcategories
-          .filter(subcat => subcat.categoryname === selectedCategory)
-          .map(subcategory => (
-            <TouchableOpacity
-              key={subcategory.id}
-              style={styles.button}
-              onPress={() => openModal(subcategory)}
-            >
-              <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
-            </TouchableOpacity>
-          ))
-        }
+{selectedCategory && subcategories
+  .filter(subcat => subcat.categoryname === selectedCategory)
+  .map(subcategory => {
+    let subcategoryButtonStyle;
+
+    // Switch on subcategory name
+    switch (subcategory.subcategory) {
+      case 'Blood Pressure':
+        subcategoryButtonStyle = styles.bloodPressureButton; 
+        break;
+      case 'Heart Rate':
+        subcategoryButtonStyle = styles.heartRateButton; 
+        break;
+      case 'Temperature':
+        subcategoryButtonStyle = styles.temperatureButton;
+        break;
+      case 'Respiratory Rate':
+        subcategoryButtonStyle = styles.respiratoryRateButton; 
+        break;
+      case 'Oxygen Saturation':
+        subcategoryButtonStyle = styles.oxygenSaturationButton; 
+        break;
+      case 'Liquid-Intake':
+        subcategoryButtonStyle = styles.liquidIntakeButton; 
+        break;
+      case 'Solid-Intake':
+        subcategoryButtonStyle = styles.solidIntakeButton; 
+        break;
+      case 'Output':
+        subcategoryButtonStyle = styles.outputButton; 
+        break;
+      case 'Advil':
+        subcategoryButtonStyle = styles.advilButton; 
+        break;
+      case 'Tylenol':
+        subcategoryButtonStyle = styles.tylenolButton; 
+        break;
+      case 'Insulin':
+        subcategoryButtonStyle = styles.insulinButton; 
+        break;
+      case 'Aspirin':
+        subcategoryButtonStyle = styles.aspirinButton; 
+        break;
+
+      // Add more cases as needed for other subcategories
+      default:
+        subcategoryButtonStyle = styles.button; // Fallback to default style
+    }
+
+    return (
+      <TouchableOpacity
+        key={subcategory.id}
+        style={subcategoryButtonStyle}
+        onPress={() => openModal(subcategory)}
+      >
+        <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
+      </TouchableOpacity>
+    );
+  })
+}
 
         <DataEntryModal
           isVisible={modalVisible}
@@ -156,6 +221,31 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#ffff',
   },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+    padding: 10,
+  },
+  categoryName: {
+    color: '#000',
+    fontSize: 15,
+    padding: 20,
+  },
+  categoryNameWrapper: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    marginRight: 0,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+  },
+  backButtonText: {
+    color: '#000',
+    fontSize: 18,
+  },  
   bottomView: {
     flex: 7, // Takes up the rest of the screen (70%)
     width: '100%',
@@ -243,7 +333,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: 'lightgrey',
+    borderWidth: 1,
     padding: 20,
     width: '45%',
     marginVertical: 10,
