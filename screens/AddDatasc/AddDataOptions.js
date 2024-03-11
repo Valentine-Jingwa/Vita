@@ -107,6 +107,12 @@ useEffect(() => {
     </View>
 
       <View style={styles.bottomView}>
+        {selectedCategory && (
+          <View style={styles.circle}>
+            <Text style={styles.circleText}>+</Text>
+          </View>
+         )}
+
       {!selectedCategory && mainCategories.map((category, index) => {
         let buttonStyle;
         switch (category) {
@@ -253,6 +259,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     paddingTop: 10,
   },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    borderWidth: 1,
+  },
+  circleText: {
+    textAlign: 'center',
+    color: '#8e8aad',
+  },
   dataButton: {
     alignSelf: 'start', // You can use 'center', 'flex-start', or 'flex-end'
     padding: 20,
@@ -278,6 +297,65 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
 
   },
+  bloodPressureButton: {
+    alignSelf: 'flex-start',
+    width: '60%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "10%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  heartRateButton: {
+    alignSelf: 'flex-end',
+    width: '55%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  temperatureButton: {
+    alignSelf: 'flex-start',
+    width: '35%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  respiratoryRateButton: {
+    alignSelf: 'flex-end',
+    width: '65%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  oxygenSaturationButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+
   nutritionButton: {
     alignSelf: 'flex-start',
     width: '75%',
@@ -292,6 +370,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
 
   },
+  liquidIntakeButton: {
+    alignSelf: 'flex-start',
+    width: '75%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "30%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  solidIntakeButton: {
+    alignSelf: 'flex-end',
+    width: '55%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  outputButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+
   medicationButton: {
     alignSelf: 'flex-end', 
     padding: 20,
@@ -303,9 +417,54 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     backgroundColor: '#ffff',
-
-    
   },
+  advilButton: {
+    alignSelf: 'flex-start',
+    width: '60%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "20%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  tylenolButton: {
+    alignSelf: 'flex-end',
+    width: '35%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  insulinButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  aspirinButton: {
+    alignSelf: 'flex-end',
+    width: '70%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+
   othersButton: {
     alignSelf: 'flex-start',
     width: '40%',
