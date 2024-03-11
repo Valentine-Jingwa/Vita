@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'; // Import useCallback
-import { SafeAreaView, Text, StyleSheet, View, ScrollView } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import CalendarComponent from '../../components/Home/CalendarComponent';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
@@ -7,12 +7,24 @@ import ColorId from '../../constants/ColorId';
 import TimeCalculator from '../../components/Home/TimeCalculator';
 import DataModal from '../../components/Datahandling/CalendarModal';
 import DataCard from '../../components/Home/DataCard';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import globalStyles from '../../global';
+import { Icalendar } from '../../assets/Icon';
+
+
 
 const Home = () => {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState('');
   const [dayData, setDayData] = useState([]);
+
+  const [calendarModalVisible, setCalendarModalVisible] = useState(false); // Declare the state variable here
+
+    // Function to toggle the calendar view
+    const toggleCalendar = () => {
+      setCalendarModalVisible(!calendarModalVisible); // Use setCalendarModalVisible to toggle the calendar modal
+    };
 
 
   const fetchData = async () => {
@@ -35,7 +47,8 @@ const Home = () => {
   
     // Filter the data to match the selected day
     const filteredDayData = data.filter((item) => item.date && typeof item.date === 'string' && item.date.startsWith(formattedDateString));
-    
+    console.log("Filtered Data:", filteredDayData); // Debug logging to see filtered results
+
     setDayData(filteredDayData);
     setSelectedDay(formattedDateString);
     setModalVisible(true);
@@ -64,24 +77,42 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.calendarContainer}>
+    <SafeAreaView style={globalStyles.screenContainer}>
+      <TouchableOpacity 
+        style={styles.calendarIcon} 
+        onPress={() => setCalendarModalVisible(true)}
+      >
+        <Icon name="calendar-today" size={24} color="black" />
+      </TouchableOpacity>
 
-        <CalendarComponent data={data} onDayPress={handleDayPress} />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={calendarModalVisible}
+        onRequestClose={() => setCalendarModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setCalendarModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.calendarModal}>
+                <CalendarComponent data={data} onDayPress={handleDayPress} />
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <View style={styles.borderedBox}>
+        <Text>Inside the Box</Text>
       </View>
+
+
       <View style={styles.ListContainer}>
         <Text style={styles.summaryTitle}>Recent Data</Text>
         <ScrollView style={styles.homescroll}>
           {data.map((item, index) => (
-
             <DataCard key={index} item={item} />
           ))}
-          <DataModal
-            isVisible={modalVisible}
-            onClose={() => setModalVisible(false)}
-            dayData={dayData}
-            dayInfo={getDayInfo(selectedDay)}
-          />
         </ScrollView>
       </View>
     </SafeAreaView>
@@ -89,70 +120,28 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  borderedBox: {
+    borderWidth: 1,
+    borderColor: '#000', // Adjust the border color as needed
+    height: 300, // Adjust the height as needed
+    width: '95%', // Adjust the width as needed
     justifyContent: 'center',
-    backgroundColor: '#f8f8f8',
     alignItems: 'center',
-    paddingTop: 50,
+    marginTop: 50, // Adjust the margin as needed
   },
-  dataBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#eaeaea',
-    borderRadius: 10,
-    marginVertical: 5,
+  calendarIcon: {
+    position: 'absolute',
+    top: 35,
+    left: 30,
+    zIndex: 10,
   },
-  colorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#ff0000', 
-    marginRight: 10,
-  },
-  contentBox: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  subcatName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  valueunit: {
-    fontSize: 14,
-    color: '#333',
-  },
-  dataText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  calendarContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    width: '100%',
-    paddingTop: 10,
-    paddingHorizontal: 20,
-    height: 300,
-  },
-  headerContainer: {
-    marginBottom: 20,
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    padding: 10,
-  },
-  headerText: {
-    fontSize: 26,
-    color: '#4a4a4a',
-    fontWeight: 'bold',
-  },
-  ListContainer: {
-    marginVertical: 20,
-    padding: 5,
+  calendarModal: {
+    marginTop: '20%',
+    height: '100%',
     backgroundColor: 'white',
-    borderRadius: 10,
-    width: '90%',
-    height: '40%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'hidden',
   },
   homescroll: {
     width: '100%',
@@ -164,12 +153,27 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
   },
-  summaryText: {
-    fontSize: 16,
-    color: '#4a4a4a',
+
+  headerText: {
+    fontSize: 22,
+    fontWeight: 'bold',
   },
-  summaryTextContainer: {
-    marginBottom: 10,
+  colorDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#ff0000', 
+    marginRight: 10,
+  },
+  ListContainer: {
+    marginVertical: 20,
+    padding: 5,
+    borderRadius: 10,
+    width: '90%',
+    height: '48%',
+  },
+  homescroll: {
+    width: '100%',
   },
   // Add or adjust styles as needed
 });

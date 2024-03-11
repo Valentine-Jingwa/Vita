@@ -3,6 +3,13 @@ import {StyleSheet} from 'react-native';
 
 
 const globalStyles = StyleSheet.create({
+  
+  screenContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Adjust this as necessary
+    backgroundColor: '#f8f8f8', // Or any background color you prefer
+  },
     button: {
       backgroundColor: 'lightgrey',
       padding: 20,
@@ -18,7 +25,7 @@ const globalStyles = StyleSheet.create({
       color: 'black',
       fontWeight: 'bold',
       textAlign: 'center',
-      fontSize: 15,
+      fontSize: 16,
     },
     tabBarStyle: {
       backgroundColor: 'white',

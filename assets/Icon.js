@@ -53,6 +53,7 @@ import Irealadd from './icons/realadd.svg';
 import Irealprofile from './icons/realprofile.svg';
 import Irealsetting from './icons/realsetting.svg';
 import Irealsetting2 from './icons/realsetting2.svg';
+import Icalendar from './icons/calendar.svg';
 
 export {
   IAlertCircleOutline,
@@ -108,5 +109,6 @@ export {
   Irealadd,
   Irealprofile,
   Irealsetting,
-  Irealsetting2
+  Irealsetting2,
+  Icalendar,
 };
