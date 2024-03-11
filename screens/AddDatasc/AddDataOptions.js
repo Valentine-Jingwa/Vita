@@ -1,40 +1,281 @@
 // AddDataOptions.js
-import React from 'react';
-import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Button} from 'react-native';
 import globalStyles from '../../global.js';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated, } from 'react-native';
+import DataEntryModal from '../../components/Datahandling/DataEntryModal';
+import { subcategories } from '../../components/DataList';
+import DataStorage from '../../components/Datahandling/DataStorage'; 
 
 export default function AddDataOptions({ navigation }) {
+  const [data, setData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [notification, setNotification] = useState('');
+  const [notificationAnim] = useState(new Animated.Value(-60));
+
+   // Function to show notification
+   const showNotification = (message) => {
+    setNotification(message);
+
+    // Slide down animation
+    Animated.timing(notificationAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+
+    setTimeout(() => {
+      // Slide up animation
+      Animated.timing(notificationAnim, {
+        toValue: -60,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }, 3000); // Display for 3 seconds
+  };
+
+  const handleSave = async (id, value, unit, subcategory, categoryname) => {
+    if (value && unit) {
+      try {
+        // Here, adapt this to how your data should be structured
+        const newDataPoint = { id, value, unit, subcategory, categoryname ,timestamp: new Date().toISOString() };
+        await DataStorage.Store(newDataPoint);
+        setModalVisible(false); // Close the modal
+        showNotification('Data successfully saved');
+        // Optionally, fetch data again to update the list
+        fetchData();
+      } catch (error) {
+        console.error('Save error:', error);
+        showNotification('Failed to save data');
+      }
+    } else {
+      showNotification('Incorrect data');
+    }
+  };
+  // Ensure fetchData is defined outside of useEffect if you want to call it here
+const fetchData = async () => {
+  const storedData = await DataStorage.Retrieve();
+  if (storedData) {
+    setData(Array.isArray(storedData) ? storedData : [storedData]);
+  }
+};
+
+useEffect(() => {
+  fetchData();
+}, []);
+
+  const openModal = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    setModalVisible(true);
+  };
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const mainCategories = ['Data','Others', 'Medication', 'Nutrition', 'Vitals'];
+
+
   return (
-    <SafeAreaView style={styles.fullScreenModal} >
-      <View>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => navigation.navigate('DataCategory')}
-        >
-          <Text style={globalStyles.buttonText}>Add New Data</Text>
-        </TouchableOpacity>      
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => navigation.navigate('Viewing')}
-        >
-          <Text style={globalStyles.buttonText}>Remove Data</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={globalStyles.button}
-          onPress={() => navigation.navigate('Viewing')}
-        >
-          <Text style={globalStyles.buttonText}>Preview Print</Text>
-        </TouchableOpacity>
+    <SafeAreaView style={styles.fullScreenModal}>
+      <Animated.View
+        style={[styles.notification, { transform: [{ translateY: notificationAnim }] }]}
+      >
+        <Text style={styles.notificationText}>{notification}</Text>
+      </Animated.View>
+
+      <View style={styles.topView}>
+      {/* Content for the top view goes here */}
+      </View>
+
+      <View style={styles.bottomView}>
+      {!selectedCategory && mainCategories.map((category, index) => {
+        let buttonStyle;
+        switch (category) {
+          case 'Data':
+            buttonStyle = styles.dataButton;
+            break;
+          case 'Vitals':
+            buttonStyle = styles.vitalsButton;
+            break;
+          case 'Medication':
+            buttonStyle = styles.medicationButton;
+            break;
+          case 'Nutrition':
+            buttonStyle = styles.nutritionButton;
+            break;
+          case 'Others':
+            buttonStyle = styles.othersButton;
+            break;
+          default:
+            buttonStyle = styles.button; // Default style if category is not matched
+        }
+
+        return (
+          <TouchableOpacity
+            key={category}
+            style={buttonStyle}
+            onPress={() => handleCategorySelect(category)}
+          >
+            <Text style={styles.buttonText}>{category}</Text>
+          </TouchableOpacity>
+        );
+      })}
+
+        {selectedCategory && subcategories
+          .filter(subcat => subcat.categoryname === selectedCategory)
+          .map(subcategory => (
+            <TouchableOpacity
+              key={subcategory.id}
+              style={styles.button}
+              onPress={() => openModal(subcategory)}
+            >
+              <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
+            </TouchableOpacity>
+          ))
+        }
+
+        {selectedCategory && (
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {/* Handle adding a new subcategory logic here */}}
+          >
+            <Text style={styles.buttonText}>+ Add New</Text>
+          </TouchableOpacity>
+        )}
+
+        <DataEntryModal
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          subcategory={selectedSubcategory}
+          onSave={handleSave}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  topView: {
+    flex: 3, // Takes up 30% of the screen
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    backgroundColor: '#ffff',
+  },
+  bottomView: {
+    flex: 7, // Takes up the rest of the screen (70%)
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: 10,
+  },
+  dataButton: {
+    alignSelf: 'start', // You can use 'center', 'flex-start', or 'flex-end'
+    padding: 20,
+    width: '60%',
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    margin: 10,
+    marginLeft: 0,
+  },
+  vitalsButton: {
+    alignSelf: 'flex-end', 
+    padding: 20,
+    width: '65%',
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 20,
+  },
+  nutritionButton: {
+    alignSelf: 'flex-start',
+    width: '75%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    marginLeft: 0,
+  },
+  medicationButton: {
+    alignSelf: 'flex-end', 
+    padding: 20,
+    width: '50%',
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginBottom: 15,
+    
+  },
+  othersButton: {
+    alignSelf: 'flex-start',
+    width: '40%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 45,
+    marginLeft: 0,
+  },
   fullScreenModal: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'white',
+  },
+  container: {
+    width: '80%',
+    maxWidth: 600,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: 'lightgrey',
+    padding: 20,
+    width: '45%',
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+  },
+  notification: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#333',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  notificationText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });

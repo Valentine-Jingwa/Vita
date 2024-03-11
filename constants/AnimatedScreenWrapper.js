@@ -1,3 +1,5 @@
+//Screen animation
+
 import React, { useEffect, useState } from 'react';
 import { View, Dimensions } from 'react-native';
 import Animated, {
