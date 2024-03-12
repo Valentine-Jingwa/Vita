@@ -12,5 +12,3 @@ export const COLORS = {
 //  'primary': '#9d727c',
 //  'secondary': '#aec4c7',
 //  'accent': '#8e8aad',
-     
-  

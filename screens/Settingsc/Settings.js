@@ -30,14 +30,15 @@ export default function Settings() {
   return (
     <SafeAreaView style={styles.container}>
       <Modal
-        animationType="none" // No animation for the modal
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
+          
         }}
       >
-   <View style={styles.centeredView}>
+
+   <View style={styles.modalViewWrapper}>
       <View style={styles.modalView}>
       <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
         <View style={styles.modalButtons}>
@@ -51,35 +52,16 @@ export default function Settings() {
       </View>
     </View>
   </Modal>
+  <View style={styles.settingTopView}>
+  </View>
 
-      <View style={styles.headerContainer}>
-        <Text style={styles.headerText}>Settings</Text>
+      <View style={styles.settingBottomView}>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Text style={styles.wipebtn}>Wipe Storage</Text>
+        </TouchableOpacity>
       </View>
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Enable Notifications</Text>
-        <Switch
-          value={notificationsEnabled}
-          onValueChange={setNotificationsEnabled}
-          trackColor={{ false: "#767577", true: "#e1a3a6" }}
-          thumbColor={notificationsEnabled ? "#f8d7da" : "#f4f3f4"}
-        />
-      </View>
-      <View style={styles.settingItem}>
-        <Text style={styles.settingText}>Dark Mode</Text>
-        <Switch
-          value={darkModeEnabled}
-          onValueChange={setDarkModeEnabled}
-          trackColor={{ false: "#767577", true: "#e1a3a6" }}
-          thumbColor={darkModeEnabled ? "#f8d7da" : "#f4f3f4"}
-        />
-      <TouchableOpacity style={styles.button} onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>Wipe Storage</Text>
-      </TouchableOpacity>
 
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
+
 
     </SafeAreaView>
   );
@@ -91,14 +73,33 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF7F8',
     padding: 20,
   },
-  headerContainer: {
-    marginBottom: 20,
+  settingTopView: {
+    flex: 3, // Takes up 30% of the screen
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    backgroundColor: '#ffff',
   },
-  headerText: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#4a4a4a',
+  settingBottomView: {
+    flex: 7, // Takes up 70% of the screen
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+
+  wipebtnwrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wipebtn: {
+    borderWidth: 1,
+    padding: 20,
+    alignItems: 'center',
+    color: 'black',
+  },
+
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -119,27 +120,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: 'center',
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    marginHorizontal: 20,
-  },
-  centeredView: {
+
+  modalViewWrapper: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   modalView: {
-    margin: 20,
+    width: '100%',
+    height: '70%',
     backgroundColor: "white",
-    borderRadius: 20,
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: -2
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
