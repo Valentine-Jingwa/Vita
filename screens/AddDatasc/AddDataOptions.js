@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     margin: 10,
     marginLeft: 0,
-    backgroundColor: '#ffff',
+    backgroundColor: 'white',
 
   },
   vitalsButton: {
@@ -509,9 +509,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'black',
-    fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
+
   },
   notification: {
     position: 'absolute',
