@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
+import { useFocusEffect } from '@react-navigation/native';
+
 
 
 export default function Settings({ navigation }) {
@@ -37,14 +39,16 @@ export default function Settings({ navigation }) {
       // Handle error, could not save settings
     }
   };
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      // The Settings screen is focused
-      // Perform any necessary actions here
-    });
+  useFocusEffect(
+    React.useCallback(() => {
+      // Perform actions on screen focus
+      return () => {
+        // Optional: Perform actions on screen unfocus
+      };
+    }, [])
+  );
 
-    return unsubscribe; // Unsubscribe on unmount
-  }, [navigation]);
+
 
   // Rest of your component
   

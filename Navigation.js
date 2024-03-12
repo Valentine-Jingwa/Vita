@@ -219,7 +219,7 @@ export default function Navigation() {
         {isAuthenticated ? (
           <>
             <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="LHome" component={BottomTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="Home" component={BottomTabs} options={{ headerShown: false }} />
           </>
         ) : (
           <>
