@@ -138,6 +138,10 @@ const styles = StyleSheet.create({
     left: 30,
     zIndex: 10,
   },
+  modalOverlay: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the opacity as needed
+    alignItems: 'center',
+  },
   calendarModal: {
     marginTop: '20%',
     backgroundColor: 'white',
@@ -164,7 +168,6 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
     color: '#4a4a4a',
     marginBottom: 10,
     alignSelf: 'center',
@@ -191,7 +194,6 @@ const styles = StyleSheet.create({
   homescroll: {
     width: '100%',
   },
-  // Add or adjust styles as needed
 });
 
 export default Home;

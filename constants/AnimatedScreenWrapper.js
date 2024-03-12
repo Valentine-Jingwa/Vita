@@ -65,10 +65,10 @@ const AnimatedScreenWrapper = ({ children }) => {
     }));
 
     const animateShades = () => {
-      firstShadeTranslateX.value = withTiming(0, { duration: 500 }, () => {
-        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 500 });
-        secondShadeTranslateX.value = withTiming(0, { duration: 500 }, () => {
-          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 500 }, () => {
+      firstShadeTranslateX.value = withTiming(0, { duration: 300 }, () => {
+        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 300 });
+        secondShadeTranslateX.value = withTiming(0, { duration: 300 }, () => {
+          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 300 }, () => {
             childrenOpacity.value = withTiming(1, { duration: 1000 }); // Fade in the children
             runOnJS(setShowContent)(true);
           });

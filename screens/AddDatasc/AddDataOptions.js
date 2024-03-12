@@ -6,6 +6,9 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage'; 
 
+// Icons
+import { Ibackbtn } from '../../assets/Icon.js';
+
 export default function AddDataOptions({ navigation }) {
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -77,6 +80,7 @@ useEffect(() => {
   const mainCategories = ['Data','Others', 'Medication', 'Nutrition', 'Vitals'];
 
 
+
   return (
     <SafeAreaView style={styles.fullScreenModal}>
       <Animated.View
@@ -85,11 +89,30 @@ useEffect(() => {
         <Text style={styles.notificationText}>{notification}</Text>
       </Animated.View>
 
-      <View style={styles.topView}>
-      {/* Content for the top view goes here */}
-      </View>
+          <View style={styles.topView}>
+        {selectedCategory && (
+          <>
+            <TouchableOpacity 
+              style={styles.backButton} 
+              onPress={() => setSelectedCategory('')}>
+              <View style={{ width: 35, height: 35, justifyContent: 'center', alignItems: 'center' }}>
+                <Ibackbtn />
+              </View>
+            </TouchableOpacity>
+            <View style={styles.categoryNameWrapper}>
+              <Text style={styles.categoryName}>{selectedCategory}</Text>
+            </View>
+          </>
+        )}
+    </View>
 
       <View style={styles.bottomView}>
+        {selectedCategory && (
+          <View style={styles.circle}>
+            <Text style={styles.circleText}>+</Text>
+          </View>
+         )}
+
       {!selectedCategory && mainCategories.map((category, index) => {
         let buttonStyle;
         switch (category) {
@@ -123,18 +146,66 @@ useEffect(() => {
         );
       })}
 
-        {selectedCategory && subcategories
-          .filter(subcat => subcat.categoryname === selectedCategory)
-          .map(subcategory => (
-            <TouchableOpacity
-              key={subcategory.id}
-              style={styles.button}
-              onPress={() => openModal(subcategory)}
-            >
-              <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
-            </TouchableOpacity>
-          ))
-        }
+{selectedCategory && subcategories
+  .filter(subcat => subcat.categoryname === selectedCategory)
+  .map(subcategory => {
+    let subcategoryButtonStyle;
+
+    // Switch on subcategory name
+    switch (subcategory.subcategory) {
+      case 'Blood Pressure':
+        subcategoryButtonStyle = styles.bloodPressureButton; 
+        break;
+      case 'Heart Rate':
+        subcategoryButtonStyle = styles.heartRateButton; 
+        break;
+      case 'Temperature':
+        subcategoryButtonStyle = styles.temperatureButton;
+        break;
+      case 'Respiratory Rate':
+        subcategoryButtonStyle = styles.respiratoryRateButton; 
+        break;
+      case 'Oxygen Saturation':
+        subcategoryButtonStyle = styles.oxygenSaturationButton; 
+        break;
+      case 'Liquid-Intake':
+        subcategoryButtonStyle = styles.liquidIntakeButton; 
+        break;
+      case 'Solid-Intake':
+        subcategoryButtonStyle = styles.solidIntakeButton; 
+        break;
+      case 'Output':
+        subcategoryButtonStyle = styles.outputButton; 
+        break;
+      case 'Advil':
+        subcategoryButtonStyle = styles.advilButton; 
+        break;
+      case 'Tylenol':
+        subcategoryButtonStyle = styles.tylenolButton; 
+        break;
+      case 'Insulin':
+        subcategoryButtonStyle = styles.insulinButton; 
+        break;
+      case 'Aspirin':
+        subcategoryButtonStyle = styles.aspirinButton; 
+        break;
+
+      // Add more cases as needed for other subcategories
+      default:
+        subcategoryButtonStyle = styles.button; // Fallback to default style
+    }
+
+    return (
+      <TouchableOpacity
+        key={subcategory.id}
+        style={subcategoryButtonStyle}
+        onPress={() => openModal(subcategory)}
+      >
+        <Text style={styles.buttonText}>{subcategory.subcategory}</Text>
+      </TouchableOpacity>
+    );
+  })
+}
 
         <DataEntryModal
           isVisible={modalVisible}
@@ -156,12 +227,50 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#ffff',
   },
+  backButton: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+    padding: 10,
+  },
+  categoryName: {
+    color: '#000',
+    fontSize: 15,
+    padding: 20,
+  },
+  categoryNameWrapper: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    marginRight: 0,
+    borderLeftWidth: 1,
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+  },
+  backButtonText: {
+    color: '#000',
+    fontSize: 18,
+  },  
   bottomView: {
     flex: 7, // Takes up the rest of the screen (70%)
     width: '100%',
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingTop: 10,
+  },
+  circle: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    borderWidth: 1,
+  },
+  circleText: {
+    textAlign: 'center',
+    color: '#8e8aad',
   },
   dataButton: {
     alignSelf: 'start', // You can use 'center', 'flex-start', or 'flex-end'
@@ -173,7 +282,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     margin: 10,
     marginLeft: 0,
-    backgroundColor: '#ffff',
+    backgroundColor: 'white',
 
   },
   vitalsButton: {
@@ -188,6 +297,65 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
 
   },
+  bloodPressureButton: {
+    alignSelf: 'flex-start',
+    width: '60%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "10%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  heartRateButton: {
+    alignSelf: 'flex-end',
+    width: '55%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  temperatureButton: {
+    alignSelf: 'flex-start',
+    width: '35%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  respiratoryRateButton: {
+    alignSelf: 'flex-end',
+    width: '65%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  oxygenSaturationButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+
   nutritionButton: {
     alignSelf: 'flex-start',
     width: '75%',
@@ -202,6 +370,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
 
   },
+  liquidIntakeButton: {
+    alignSelf: 'flex-start',
+    width: '75%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "30%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  solidIntakeButton: {
+    alignSelf: 'flex-end',
+    width: '55%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  outputButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+
   medicationButton: {
     alignSelf: 'flex-end', 
     padding: 20,
@@ -213,9 +417,54 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     backgroundColor: '#ffff',
-
-    
   },
+  advilButton: {
+    alignSelf: 'flex-start',
+    width: '60%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: "20%",
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  tylenolButton: {
+    alignSelf: 'flex-end',
+    width: '35%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+  insulinButton: {
+    alignSelf: 'flex-start',
+    width: '50%',
+    padding: 20,
+    borderLeftWidth: 0,
+    borderRightWidth: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    marginLeft: 0,
+    backgroundColor: '#ffff',
+  },
+  aspirinButton: {
+    alignSelf: 'flex-end',
+    width: '70%',
+    padding: 20,
+    borderLeftWidth: 1,
+    borderRightWidth: 0,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 15,
+    backgroundColor: '#ffff',
+  },
+
   othersButton: {
     alignSelf: 'flex-start',
     width: '40%',
@@ -243,7 +492,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: 'lightgrey',
+    borderWidth: 1,
     padding: 20,
     width: '45%',
     marginVertical: 10,
@@ -260,9 +509,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'black',
-    fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
+
   },
   notification: {
     position: 'absolute',
