@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 
 
-export default function Settings() {
+export default function Settings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -12,6 +12,17 @@ export default function Settings() {
   const handleClearStorage = async () => {
     await DataStorage.Clear();
     setModalVisible(false); // Hide modal after clearing storage
+  };
+
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('@user_token');
+      // Here you navigate to the 'Welcome' screen after clearing the token
+      navigation.navigate('Welcome');
+    } catch (error) {
+      // Handle any errors that occur during logout
+      console.error("Logout failed", error);
+    }
   };
 
   const handleCancel = () => {
@@ -26,6 +37,16 @@ export default function Settings() {
       // Handle error, could not save settings
     }
   };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The Settings screen is focused
+      // Perform any necessary actions here
+    });
+
+    return unsubscribe; // Unsubscribe on unmount
+  }, [navigation]);
+
+  // Rest of your component
   
   return (
     <SafeAreaView style={styles.container}>
@@ -75,6 +96,10 @@ export default function Settings() {
 
 
 
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
+      
     </SafeAreaView>
   );
 }
@@ -186,5 +211,4 @@ const styles = StyleSheet.create({
   buttonClose: {
     backgroundColor: "#2196F3",
   },
-  // Add styles for other components
 });
