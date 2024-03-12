@@ -22,16 +22,12 @@ const Welcome = ({ navigation }) => {
                     onPress={() => navigation.navigate('Signup')}>
                     <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.button, styles.signupButton]}
-                    onPress={() => navigation.navigate('Guest')}
-                >
-                    <Text style={styles.buttonText}>Guest login</Text>
-                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
 };
 
+export default Welcome;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -90,4 +86,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Welcome;
+
