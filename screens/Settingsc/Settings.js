@@ -55,10 +55,22 @@ export default function Settings() {
   <View style={styles.settingTopView}>
   </View>
 
+
       <View style={styles.settingBottomView}>
+
+        <TouchableOpacity onPress={() => setDarkModeEnabled(!darkModeEnabled)}>
+          <Text style={styles.dakeLightMode}> Mode Thingy</Text>
+        </TouchableOpacity>
+
+
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Text style={styles.wipebtn}>Wipe Storage</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
+          <Text style={styles.notificationbtn}>Notification</Text>
+        </TouchableOpacity>
+
       </View>
 
 
@@ -87,6 +99,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  dakeLightMode: {
+    borderWidth: 1,
+    padding: 20,
+    alignItems: 'center',
+    color: 'black',
+    marginTop: 20,
+    marginLeft: 0,
+    marginBottom: 20,
+  },
 
   wipebtnwrapper: {
     flex: 1,
@@ -98,6 +119,14 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     color: 'black',
+  },
+  notificationbtn: {
+    borderWidth: 1,
+    padding: 20,
+    alignItems: 'center',
+    color: 'black',
+    marginTop: 20,
+    marginLeft: 0,
   },
 
   settingItem: {
