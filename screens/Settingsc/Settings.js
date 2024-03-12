@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
@@ -37,6 +37,16 @@ export default function Settings({ navigation }) {
       // Handle error, could not save settings
     }
   };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // The Settings screen is focused
+      // Perform any necessary actions here
+    });
+
+    return unsubscribe; // Unsubscribe on unmount
+  }, [navigation]);
+
+  // Rest of your component
   
   return (
     <SafeAreaView style={styles.container}>

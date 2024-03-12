@@ -30,7 +30,6 @@ export default function Login({ navigation }) {
       // For example, if using AsyncStorage to store a user token:
       await AsyncStorage.setItem('@user_token', 'your_token_here');
       
-      // Navigate to the Guest screen which seems to hold your BottomTabs navigation
       navigation.navigate('LHome');
     }, 2000);
 };
@@ -41,7 +40,7 @@ const handleGoogleLogin = async () => {
     const userInfo = await GoogleSignin.signIn();
     // Use userInfo to log in or sign up with your backend
     // Navigate to the main app on successful login
-    navigation.navigate('Guest');
+    navigation.navigate('LHome');
   } catch (error) {
     console.error(error);
     // Handle the error, e.g., show an error message
@@ -60,7 +59,7 @@ const handleFacebookLogin = async () => {
     }
     // Use data.accessToken to log in or sign up with your backend
     // Navigate to the main app on successful login
-    navigation.navigate('Guest');
+    navigation.navigate('LHome');
   } catch (error) {
     console.error(error);
     // Handle the error, e.g., show an error message

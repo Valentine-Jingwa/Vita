@@ -164,22 +164,14 @@ function BottomTabs() {
 export default function Navigation() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-
   useEffect(() => {
     const checkAuthState = async () => {
       const token = await AsyncStorage.getItem('@user_token');
       setIsAuthenticated(!!token); // Set to true if token exists, false otherwise
     };
 
-    // Subscribe for the focus event on the navigation
-    const unsubscribe = navigation.addListener('focus', () => {
-      // The screen is focused
-      // Call your method here
-      checkAuthState();
-    });
-
-    return unsubscribe; // Return the function to unsubscribe from the event so it gets removed on unmount
-  }, [navigation]); // Add navigation as a dependency
+    checkAuthState();
+  }, []);
 
 
   return (
