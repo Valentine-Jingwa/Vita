@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   fullScreenModal: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#FAF7F8',
   },
   container: {
     alignItems: 'center',
