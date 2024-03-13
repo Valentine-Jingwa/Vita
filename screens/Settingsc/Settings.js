@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure 
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
 
-
+// This ui is laggy asf
 
 export default function Settings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
