@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     width: '95%', // Adjust the width as needed
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 50, // Adjust the margin as needed
+    marginTop: '17%', // Adjust the margin as needed
   },
   calendarIcon: {
     position: 'absolute',
