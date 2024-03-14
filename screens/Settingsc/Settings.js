@@ -96,13 +96,15 @@ export default function Settings({ navigation }) {
           <Text style={styles.notificationbtn}>Notification</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={handleLogout}>
+          <Text style={styles.logoutbtn}>Logout</Text>
+      </TouchableOpacity>
+
       </View>
 
 
 
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
+
       
     </SafeAreaView>
   );
@@ -150,6 +152,14 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   notificationbtn: {
+    borderWidth: 1,
+    padding: 20,
+    alignItems: 'center',
+    color: 'black',
+    marginTop: 20,
+    marginLeft: 0,
+  },
+  logoutbtn: {
     borderWidth: 1,
     padding: 20,
     alignItems: 'center',
