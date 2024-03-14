@@ -6,7 +6,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function DataDetail() {
     return (
         <View style={styles.container}>
-        <Text>DataDetail</Text>
+            <Text>DataDetail</Text>
         </View>
     );
 }

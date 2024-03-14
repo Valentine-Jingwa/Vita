@@ -1,12 +1,13 @@
 import React from 'react';
 import { SafeAreaView, Text, TouchableOpacity, StyleSheet, View, Image } from 'react-native';
+import {Hlogo} from '../assets/Icon'
 
 const Welcome = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
-            <Image source={require('../assets/logo/2.png')} style={styles.image} />
-            <Text style={styles.brandName}>Health Tracker</Text>
+            <Image source={require('../assets/logo/logo12.png')}  />
+            {/* <Text style={styles.brandName}>Health Tracker</Text> */}
             <Text style={styles.slogan}>Extra ready for appointment</Text>
             <Text style={styles.description}>
                 Input data and get it processed for your next appointment
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#f9f6f7',
     },
     image: {
         marginTop: 50, // Adjust as needed
@@ -68,19 +69,19 @@ const styles = StyleSheet.create({
     button: {
         padding: 15,
         marginVertical: 10,
-        borderRadius: 25, // Rounded corners
+        borderWidth: 1,
         alignItems: 'center',
         width: '90%', // Adjust as needed
         alignSelf: 'center',
     },
     loginButton: {
-        backgroundColor: '#3E3047', // Deep purple for the login button
+        backgroundColor: 'white', // Deep purple for the login button
     },
     signupButton: {
-        backgroundColor: '#6081C2', // Soft blue for the register button
+        backgroundColor: 'white', // Soft blue for the register button
     },
     buttonText: {
-        color: 'white',
+        color: 'black',
         fontSize: 18,
         fontWeight: 'bold',
     },
