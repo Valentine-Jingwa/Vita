@@ -3,6 +3,9 @@ import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, 
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
+import * as d3 from 'd3';
+import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
+
 
 // This ui is laggy asf
 
