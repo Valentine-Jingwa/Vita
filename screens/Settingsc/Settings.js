@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure 
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
 
-
+// This ui is laggy asf
 
 export default function Settings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
@@ -16,10 +16,10 @@ export default function Settings({ navigation }) {
     setModalVisible(false); // Hide modal after clearing storage
   };
 
-  //TODO: Implement tokaen removal
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('@user_token');
+      // Here you navigate to the 'Welcome' screen after clearing the token
       navigation.navigate('Welcome');
     } catch (error) {
       // Handle any errors that occur during logout
@@ -84,24 +84,25 @@ export default function Settings({ navigation }) {
       <View style={styles.settingBottomView}>
 
         <TouchableOpacity onPress={() => setDarkModeEnabled(!darkModeEnabled)}>
-          <Text style={styles.dakeLightMode}> Dark/Light</Text>
+          <Text style={styles.dakeLightMode}> Mode Thingy</Text>
+        </TouchableOpacity>
+
+
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <Text style={styles.wipebtn}>Wipe Storage</Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
           <Text style={styles.notificationbtn}>Notification</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text style={styles.wipebtn}>Wipe Storage</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleLogout}>
-         <Text style={styles.logoutBtn}>Logout</Text>
-        </TouchableOpacity>
-
       </View>
 
 
+
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
+        <Text style={styles.buttonText}>Logout</Text>
+      </TouchableOpacity>
       
     </SafeAreaView>
   );
@@ -132,13 +133,15 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     color: 'black',
+    marginTop: 20,
+    marginLeft: 0,
+    marginBottom: 20,
   },
 
   wipebtnwrapper: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 20,
   },
   wipebtn: {
     borderWidth: 1,
@@ -151,14 +154,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     color: 'black',
-    margin: 20,
-  },
-  logoutBtn: {
-    borderWidth: 1,
-    padding: 20,
-    alignItems: 'center',
-    color: 'black',
-    margin: 20,
+    marginTop: 20,
+    marginLeft: 0,
   },
 
   settingItem: {
@@ -174,6 +171,7 @@ const styles = StyleSheet.create({
     color: '#4a4a4a',
   },
   button: {
+    marginTop: 20,
     backgroundColor: '#e1a3a6',
     padding: 10,
     borderRadius: 5,
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: '100%',
-    height: '100%',
+    height: '70%',
     backgroundColor: "white",
     borderTopLeftRadius: 20, 
     borderTopRightRadius: 20,

@@ -29,6 +29,10 @@ import SupportUs from "./screens/Profilesc/SupportUs";
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
+import { navigationRef } from './NavigationService';
+
+
+
 
 
 
@@ -214,7 +218,7 @@ export default function Navigation() {
 
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         {isAuthenticated ? (
           <>
