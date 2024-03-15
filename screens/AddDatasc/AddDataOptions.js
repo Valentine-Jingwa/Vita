@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     color: '#8e8aad',
   },
   dataButton: {
-    alignSelf: 'start', // You can use 'center', 'flex-start', or 'flex-end'
+    alignSelf: 'flex-start', // You can use 'center', 'flex-start', or 'flex-end'
     padding: 20,
     width: '60%',
     borderLeftWidth: 0,
@@ -355,7 +355,6 @@ const styles = StyleSheet.create({
     marginLeft: 0,
     backgroundColor: '#ffff',
   },
-
   nutritionButton: {
     alignSelf: 'flex-start',
     width: '75%',
@@ -367,8 +366,16 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 15,
     marginLeft: 0,
-    backgroundColor: '#ffff',
-
+    backgroundColor: '#aec4c7',
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 25, 
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 25, 
+    elevation: 20, 
+  
   },
   liquidIntakeButton: {
     alignSelf: 'flex-start',
