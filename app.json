@@ -4,12 +4,12 @@
     "slug": "Vita",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo/2.png",
+    "icon": "./assets/logo/logo12.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/logo/2.png",
+      "image": "./assets/logo/logo12.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#f9f6f7"
     },
     "assetBundlePatterns": [
       "**/*"

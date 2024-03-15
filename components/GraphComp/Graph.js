@@ -57,7 +57,6 @@ const calculatedChartWidth = Math.max(numberOfDataPoints * spacingBetweenPoints,
         <View style={styles.modalView}>
           <Text style={styles.modalText}>Graph for {selectedSubcategory}</Text>
           {dataPoints.datasets[0].data.length > 0 ? (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <LineChart
               data={dataPoints}
               width={calculatedChartWidth}
@@ -87,7 +86,6 @@ const calculatedChartWidth = Math.max(numberOfDataPoints * spacingBetweenPoints,
                 borderRadius: 16,
               }}
             />
-          </ScrollView>
           ) : (
             <View style={styles.placeholderGraph}>
               <Text>No Data Available</Text>
