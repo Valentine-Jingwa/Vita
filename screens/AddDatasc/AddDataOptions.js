@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     color: '#8e8aad',
   },
   dataButton: {
-    alignSelf: 'start', // You can use 'center', 'flex-start', or 'flex-end'
+    alignSelf: 'flex-start', // You can use 'center', 'flex-start', or 'flex-end'
     padding: 20,
     width: '60%',
     borderLeftWidth: 0,
