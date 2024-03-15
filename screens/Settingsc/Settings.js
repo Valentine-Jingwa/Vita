@@ -13,7 +13,7 @@ export default function Settings({ navigation }) {
 
   const handleClearStorage = async () => {
     await DataStorage.Clear();
-    setModalVisible(false);
+    setModalVisible(false);``
   };
 
   const handleLogout = async () => {
