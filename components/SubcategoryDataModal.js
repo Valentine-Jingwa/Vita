@@ -1,52 +1,32 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, Dimensions } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import GraphModal from './GraphComp/Graph';
 
-const SubcategoryDataModal = ({ visible, onClose, subcategoryName, graphData }) => {
+const SubcategoryDataModal = ({ visible, onClose, subcategoryName, subcategoryId }) => {
 
 
+  console.log(`Subcategory Data Modal: ${subcategoryName}, ID: ${subcategoryId}`);
   return (
     <Modal visible={visible} onRequestClose={onClose} transparent={true}>
       <View style={styles.modalView}>
         <Text style={styles.title}>{subcategoryName}</Text>
         
-        {/* Conditional rendering based on graphData */}
-        {graphData && graphData.datasets && graphData.datasets[0].data.length > 0 ? (
-          <LineChart
-            data={graphData}
-            width={Dimensions.get('window').width - 32} // Adjusted for modal padding
-            height={220}
-            chartConfig={{
-              backgroundColor: '#fff',
-              backgroundGradientFrom: '#fb8c00',
-              backgroundGradientTo: '#ffa726',
-              decimalPlaces: 2, // Adjust as necessary
-              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Adjusted for better visibility
-              style: {
-                borderRadius: 16,
-              },
-              propsForDots: {
-                r: '6',
-                strokeWidth: '2',
-                stroke: '#ffa726',
-              },
-            }}
-            bezier
-            style={{
-              marginVertical: 8,
-              borderRadius: 16,
-            }}
-          />
-        ) : (
-          <Text>No data available</Text>
-        )}
+        {/* Render the custom GraphModal here */}
+        <GraphModal
+        isVisible={visible}
+        onClose={onClose}
+        selectedSubcategory={subcategoryName} // Assuming subcategoryName is the name of the subcategory
+        />
 
-        <Text style={styles.closeButton} onPress={onClose}>Close</Text>
+
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Text>Close</Text>
+        </TouchableOpacity>
       </View>
     </Modal>
   );
-};
+}
+
     
 
 const styles = StyleSheet.create({

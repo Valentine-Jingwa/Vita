@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
 });
 
+
 ColorId.getColor = (id) => {
     return colors[(id - 1) % colors.length];
   };
