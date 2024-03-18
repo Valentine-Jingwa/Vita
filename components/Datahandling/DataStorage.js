@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEY = 'localData';
 
 const DataStorage = {
+  
   async Store(newData) {
     try {
       const existingDataJson = await AsyncStorage.getItem(STORAGE_KEY);

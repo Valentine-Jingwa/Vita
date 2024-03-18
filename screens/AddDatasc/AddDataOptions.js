@@ -41,12 +41,24 @@ export default function AddDataOptions({ navigation }) {
   const handleSave = async (id, value, unit, subcategory, categoryname) => {
     if (value && unit) {
       try {
-        // Here, adapt this to how your data should be structured
-        const newDataPoint = { id, value, unit, subcategory, categoryname ,timestamp: new Date().toISOString() };
+        // Construct the new data point with all necessary properties
+        const newDataPoint = {
+          id, 
+          value, 
+          unit, 
+          subcategory, 
+          categoryname,
+          timestamp: new Date().toISOString()
+        };
+        
+        // Save the new data point using the DataStorage module
         await DataStorage.Store(newDataPoint);
-        setModalVisible(false); // Close the modal
+  
+        // Close the modal and show a notification of success
+        setModalVisible(false);
         showNotification('Data successfully saved');
-        // Optionally, fetch data again to update the list
+        
+        // Optionally, refresh the data shown in your app
         fetchData();
       } catch (error) {
         console.error('Save error:', error);
@@ -56,6 +68,7 @@ export default function AddDataOptions({ navigation }) {
       showNotification('Incorrect data');
     }
   };
+  
   // Ensure fetchData is defined outside of useEffect if you want to call it here
 const fetchData = async () => {
   const storedData = await DataStorage.Retrieve();
