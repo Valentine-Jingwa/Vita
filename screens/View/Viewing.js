@@ -85,7 +85,7 @@ export default function Viewing() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
       <View style={styles.searchAndFilterContainer}>
         <TextInput
           style={styles.input}

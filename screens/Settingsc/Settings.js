@@ -6,6 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as d3 from 'd3';
 import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
+import ThemedText from './ThemedText';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -16,9 +17,14 @@ export default function Settings({ navigation }) {
   const { theme, toggleTheme } = useTheme();
 
   const themeStyles = {
-    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
-    color: theme === 'light' ? '#000000' : '#FFFFFF',
+    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
+    color: theme === 'light' ? '#120D0E' : '#F2EDEE',
   };
+
+  const buttonStyle = theme === 'dark' ? { backgroundColor: themeStyles.btnMainBackgroundColorDark } : {};
+
+
+
 
 
   const handleClearStorage = async () => {
@@ -77,8 +83,8 @@ export default function Settings({ navigation }) {
       <View style={styles.wipemodalView}>
       <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
         <View style={styles.modalButtons}>
-          <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={handleClearStorage}>
-            <Text style={styles.buttonText}>Wipe</Text>
+          <TouchableOpacity style={[styles.button, styles.buttonClose, buttonStyle]} onPress={handleClearStorage}>
+            <ThemedText style={styles.buttonText}>Wipe</ThemedText>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={handleCancel}>
             <Text style={styles.buttonText}>Cancel</Text>
@@ -89,30 +95,40 @@ export default function Settings({ navigation }) {
   </Modal>
   <View style={styles.settingTopView}>
      <View style={styles.SettingsTitleWrapper}>
-        <Text style={styles.SettingsTitle}>Settings</Text>
-      </View>
+      <TouchableOpacity>
+        <View style={styles.SettingsTitle}>
+          <ThemedText>Settings</ThemedText>
+        </View>
+      </TouchableOpacity>
+    </View>
   </View>
 
 
       <View style={styles.settingBottomView}>
         <View style={styles.ldbtnwrapper}>
         <TouchableOpacity onPress={toggleTheme}>
-          <Text style={[styles.dakeLightMode, {color: themeStyles.color}]}>Light/Dark</Text>
+          <ThemedText style={[styles.dakeLightMode, {color: themeStyles.color}]}>Light/Dark</ThemedText>
         </TouchableOpacity>
         </View>
         <View style={styles.wipebtnwrapper}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Text style={styles.wipebtn}>Wipe Storage</Text>
+            <View style={styles.wipebtn}>
+              <ThemedText>Wipe Storage</ThemedText>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.notificationbtnwrapper}>
           <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
-            <Text style={styles.notificationbtn}>Notification</Text>
+            <View style={styles.notificationbtn}>
+              <ThemedText>Notification</ThemedText>
+            </View>
           </TouchableOpacity>
         </View>
         <View style={styles.logoutButtonWrapper}>
           <TouchableOpacity onPress={handleLogout} style={styles.logoutbtn}>
-            <Text style={styles.buttonText}>Logout</Text>
+            <View style={styles.buttonText}>
+              <ThemedText >Logout</ThemedText>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -141,10 +157,11 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     marginRight: 0,
-    borderLeftWidth: 1,
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-    borderRightWidth: 0,
+    // borderLeftWidth: 1,
+    // borderBottomWidth: 1,
+    // borderTopWidth: 0,
+    // borderRightWidth: 0,
+    // borderRadius: 10,
   },
   SettingsTitle: {
     color: '#000',
@@ -180,8 +197,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 20,
     alignItems: 'center',
+    justifyContent: 'center',
     color: 'black',
     width: fullWidth - 40,
+    backgroundColor: '#AEC4C7',
+    borderRadius: 30,
   },
   notificationbtnwrapper: {
     justifyContent: 'center',
@@ -194,6 +214,8 @@ const styles = StyleSheet.create({
     color: 'black',
     marginTop: 20,
     width: fullWidth - 40,
+    backgroundColor: '#AEC4C7',
+    borderRadius: 30,
   },
   logoutButtonWrapper: {
     position: 'absolute',
@@ -208,7 +230,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 20,
     alignItems: 'center',
+    backgroundColor: '#9D727C',
     color: 'black',
+    borderRadius: 30,
   },
 
   settingItem: {
@@ -225,7 +249,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: '#e1a3a6',
+    backgroundColor: '#9D727C',
     padding: 10,
     borderRadius: 5,
     marginHorizontal: 20,
