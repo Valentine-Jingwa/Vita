@@ -9,3 +9,8 @@ Read the Guide below so as to follow proper conventions
 --Profile(Contains all profile Screens)
 --Settingsc(Contains all setting screens/Navigation Screens)
 '''
+the Brackets contain the color and the numbers are Black and Bold
+Vitals
+Blood Pressure         (999+)
+Heart Rate              (0)
+Temperature            (55)
