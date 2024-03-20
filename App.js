@@ -10,6 +10,7 @@ import { AuthProvider } from './security/AuthContext';
 import { navigationRef } from './NavigationService';
 import { name as appName } from './app.json';
 import 'react-native-gesture-handler';
+import { ThemeProvider } from './screens/Settingsc/Theme';
 
 export default function App() {
   return (
@@ -18,7 +19,9 @@ export default function App() {
       <ApplicationProvider {...eva} theme={eva.light}>
         <DataProvider>
           <AuthProvider>
-            <Navigation /> 
+          <ThemeProvider>
+             <Navigation /> 
+          </ThemeProvider>
           </AuthProvider>
         </DataProvider>
       </ApplicationProvider>

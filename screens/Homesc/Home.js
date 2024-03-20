@@ -10,7 +10,7 @@ import DataCard from '../../components/Home/DataCard';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import globalStyles from '../../global';
 import { Icalendar1 } from '../../assets/Icon';
-
+import { useTheme } from '../Settingsc/Theme';
 
 const Home = () => {
   const [data, setData] = useState([]);
@@ -19,6 +19,13 @@ const Home = () => {
   const [dayData, setDayData] = useState([]);
 
   const [calendarModalVisible, setCalendarModalVisible] = useState(false); // Declare the state variable here
+
+  const { theme, toggleTheme } = useTheme();
+
+  const themeStyles = {
+    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  };
 
 
 
@@ -70,7 +77,7 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={globalStyles.screenContainer}>
+    <SafeAreaView style={styles.screenContainer}>
       <TouchableOpacity 
         style={styles.calendarIcon} 
         onPress={() => setCalendarModalVisible(true)}
@@ -123,6 +130,12 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  screenContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-start', // Adjust this as necessary
+    backgroundColor: '#FAF7F8', // Or any background color you prefer
+  },
   borderedBox: {
     borderWidth: 1,
     borderColor: '#000', // Adjust the border color as needed
