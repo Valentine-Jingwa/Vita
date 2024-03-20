@@ -7,7 +7,7 @@ import * as d3 from 'd3';
 import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
 import ThemedText from './ThemedText';
-import {Day, Night} from '../../assets/Icon';
+import {Day, Night, RLogout} from '../../assets/Icon';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -24,7 +24,10 @@ export default function Settings({ navigation }) {
 
   const buttonStylemain = theme === 'dark' ? { backgroundColor: '#384E51' }: {};
 
-  const buttonStyleside = theme === 'dark' ? { backgroundColor: '#8D626C' }: {};
+
+  const buttonStyleside = {
+    backgroundColor: theme === 'light' ? '#0D1012' : '#ECEFF1',
+  }
 
 
 
@@ -138,7 +141,7 @@ export default function Settings({ navigation }) {
         <View style={styles.logoutButtonWrapper}>
           <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, buttonStyleside]}>
             <View style={[styles.buttonText]}>
-              <ThemedText >Logout</ThemedText>
+              < RLogout width={20} height={20}/>
             </View>
           </TouchableOpacity>
         </View>
@@ -234,8 +237,8 @@ const styles = StyleSheet.create({
   logoutbtn: {
     position: 'absolute',
     bottom: 15,
-    right: 0,
-    padding: 15,
+    right: 5,
+    padding: 6,
     alignItems: 'center',
     backgroundColor: '#9D727C',
     color: 'black',
