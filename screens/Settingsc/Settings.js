@@ -21,7 +21,9 @@ export default function Settings({ navigation }) {
     color: theme === 'light' ? '#120D0E' : '#F2EDEE',
   };
 
-  const buttonStyle = theme === 'dark' ? { backgroundColor: themeStyles.btnMainBackgroundColorDark } : {};
+  const buttonStylemain = theme === 'dark' ? { backgroundColor: '#384E51' }: {};
+
+  const buttonStyleside = theme === 'dark' ? { backgroundColor: '#8D626C' }: {};
 
 
 
@@ -83,9 +85,9 @@ export default function Settings({ navigation }) {
       <View style={styles.wipemodalView}>
       <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
         <View style={styles.modalButtons}>
-          <TouchableOpacity style={[styles.button, styles.buttonClose, buttonStyle]} onPress={handleClearStorage}>
-            <ThemedText style={styles.buttonText}>Wipe</ThemedText>
-          </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={handleClearStorage}>
+          <ThemedText style={styles.buttonText}>Wipe</ThemedText>
+        </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={handleCancel}>
             <Text style={styles.buttonText}>Cancel</Text>
           </TouchableOpacity>
@@ -112,21 +114,21 @@ export default function Settings({ navigation }) {
         </View>
         <View style={styles.wipebtnwrapper}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <View style={styles.wipebtn}>
+            <View style={[styles.wipebtn, buttonStylemain]}>
               <ThemedText>Wipe Storage</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.notificationbtnwrapper}>
           <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
-            <View style={styles.notificationbtn}>
+            <View style={[styles.notificationbtn, buttonStylemain]}>
               <ThemedText>Notification</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.logoutButtonWrapper}>
-          <TouchableOpacity onPress={handleLogout} style={styles.logoutbtn}>
-            <View style={styles.buttonText}>
+          <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, buttonStyleside]}>
+            <View style={[styles.buttonText]}>
               <ThemedText >Logout</ThemedText>
             </View>
           </TouchableOpacity>
@@ -194,7 +196,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   wipebtn: {
-    borderWidth: 1,
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -208,7 +209,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   notificationbtn: {
-    borderWidth: 1,
     padding: 20,
     alignItems: 'center',
     color: 'black',
@@ -227,7 +227,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 0,
-    borderWidth: 1,
     padding: 20,
     alignItems: 'center',
     backgroundColor: '#9D727C',
@@ -246,14 +245,6 @@ const styles = StyleSheet.create({
   settingText: {
     fontSize: 18,
     color: '#4a4a4a',
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: '#9D727C',
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 20,
-    alignItems: 'center',
   },
 
   wipemodalViewWrapper: {

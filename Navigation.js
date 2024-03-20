@@ -30,11 +30,7 @@ import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-nativ
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { navigationRef } from './NavigationService';
-
-
-
-
-
+import { useTheme } from './screens/Settingsc/Theme';
 
 
 //Icon Importation
@@ -110,19 +106,27 @@ function SettingsStackScreen() {
 }
 
 function BottomTabs() {
+  const { theme, themeStyles } = useTheme();
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
+  const tabBarBackground = theme === 'light' ? '#FFFFFF' : '#000000';
 
   return (
     <Tab.Navigator 
     initialRouteName="Home"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
+        tabBarStyle: 
+        [globalStyles.tabBarStyle,
+           { 
+            height: tabBarHeight,
+            backgroundColor: tabBarBackground,
+          }],
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
+
 
           if (route.name === 'Home') {
             IconComponent = Irealhome;
@@ -155,7 +159,7 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent size={24}/>
+              <IconComponent size={24} />
             </Animated.View>
           );
         },
