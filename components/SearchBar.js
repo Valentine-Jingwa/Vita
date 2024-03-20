@@ -25,7 +25,7 @@ const SearchBar = ({ onSearch }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
+    paddingTop: 50,
     color: 'black',
   },
   input: {
@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     backgroundColor: 'white',
+    borderRadius: 20,
+    borderColor: 'grey',
 
  },
 });
