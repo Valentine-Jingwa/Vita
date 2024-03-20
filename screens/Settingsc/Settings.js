@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   logoutbtn: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 15,
     right: 0,
     padding: 15,
     alignItems: 'center',
