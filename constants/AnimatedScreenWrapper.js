@@ -21,7 +21,7 @@ const AnimatedScreenWrapper = ({ children }) => {
   const secondShadeTranslateX = useSharedValue(screenWidth);
   const thirdShadeTranslateX = useSharedValue(screenWidth);
 
-  const backgroundColor = '#F2F2F2';
+  const backgroundColor = '#0E0E0E';
 
 
 
