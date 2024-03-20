@@ -21,7 +21,7 @@ const AnimatedScreenWrapper = ({ children }) => {
   const secondShadeTranslateX = useSharedValue(screenWidth);
   const thirdShadeTranslateX = useSharedValue(screenWidth);
 
-  const backgroundColor = '#F2F2F2';
+  const backgroundColor = '#0E0E0E';
 
 
 
@@ -33,7 +33,7 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#93706E', // First shade color
+    backgroundColor: '#141414', // First shade color
     zIndex: 3, // Above the second shade but below the content
   }));
 
@@ -44,7 +44,7 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#9B7977', // Second shade color
+    backgroundColor: '#1a1a1a', // Second shade color
     zIndex: 2, // Below the first shade
   }));
 

@@ -5,7 +5,7 @@ import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated, } fro
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage'; 
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from '../Settingsc/Theme';
 
 // Icons
 import { Ibackbtn } from '../../assets/Icon.js';
@@ -20,10 +20,10 @@ export default function AddDataOptions({ navigation }) {
 
   const { theme, toggleTheme } = useTheme();
 
-const themeStyles = {
-  backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
-  color: theme === 'light' ? '#000000' : '#FFFFFF',
-};
+  const themeStyles = {
+    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  };
 
    // Function to show notification
    const showNotification = (message) => {
