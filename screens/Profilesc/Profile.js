@@ -1,9 +1,18 @@
 import React from 'react';
 import { SafeAreaView, Text, View, Image, TouchableOpacity, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { useTheme } from '../Settingsc/Theme';
+
+
 
 const Profile = ({ navigation }) => {
+  const { theme, toggleTheme } = useTheme();
+
+const themeStyles = {
+  backgroundColor: theme === 'light' ? '#aec4c7' : '#000000',
+  color: theme === 'light' ? '#000000' : '#FFFFFF',
+};
   return (
-    <SafeAreaView style={styles.fullScreenModal}>
+    <SafeAreaView style={[styles.fullScreenModal, {backgroundColor: themeStyles.backgroundColor}]}>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.TopViewProfileContainer}>
         <View style={styles.profilePictureContainer}>

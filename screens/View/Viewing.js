@@ -3,13 +3,21 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList, SafeAreaView } from 'react-native';
 import SearchBar from '../../components/SearchBar';
 import GraphModal from '../../components/GraphComp/Graph';
-import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path for DataStorage
-import { subcategories } from '../../components/DataList'; // Adjust the import path for subcategories data
+import DataStorage from '../../components/Datahandling/DataStorage'; 
+import { subcategories } from '../../components/DataList'; 
+import { useTheme } from '../Settingsc/Theme';
 
 export default function Viewing() {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [filteredSubcategories, setFilteredSubcategories] = useState(subcategories);
+
+  const { theme, toggleTheme } = useTheme();
+
+  const themeStyles = {
+    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  };
 
   useEffect(() => {
     // Initial fetch or setup code if needed
@@ -43,7 +51,7 @@ export default function Viewing() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
       <SearchBar onSearch={handleSearch} />
       <FlatList
         data={filteredSubcategories}

@@ -1,18 +1,25 @@
 import React, { useEffect, useState, } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
 import * as d3 from 'd3';
 import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
+import { useTheme } from './Theme'; 
 
 
-// This ui is laggy asf
+const fullWidth = Dimensions.get('window').width;
 
 export default function Settings({ navigation }) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
-  const [darkModeEnabled, setDarkModeEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
+  const { theme, toggleTheme } = useTheme();
+
+  const themeStyles = {
+    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  };
+
 
   const handleClearStorage = async () => {
     await DataStorage.Clear();
@@ -56,7 +63,7 @@ export default function Settings({ navigation }) {
   // Rest of your component
   
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
       <Modal
         transparent={true}
         visible={modalVisible}
@@ -89,9 +96,9 @@ export default function Settings({ navigation }) {
 
       <View style={styles.settingBottomView}>
         <View style={styles.ldbtnwrapper}>
-          <TouchableOpacity onPress={() => setDarkModeEnabled(!darkModeEnabled)}>
-            <Text style={styles.dakeLightMode}> Light/Dark</Text>
-          </TouchableOpacity>
+        <TouchableOpacity onPress={toggleTheme}>
+          <Text style={[styles.dakeLightMode, {color: themeStyles.color}]}>Light/Dark</Text>
+        </TouchableOpacity>
         </View>
         <View style={styles.wipebtnwrapper}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -165,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   wipebtnwrapper: {
-    flex: 1,
+    marginTop: "45%",
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -174,6 +181,11 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     color: 'black',
+    width: fullWidth - 40,
+  },
+  notificationbtnwrapper: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   notificationbtn: {
     borderWidth: 1,
@@ -181,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: 'black',
     marginTop: 20,
-    marginLeft: 0,
+    width: fullWidth - 40,
   },
   logoutButtonWrapper: {
     position: 'absolute',
@@ -191,7 +203,7 @@ const styles = StyleSheet.create({
   },
   logoutbtn: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 10,
     right: 0,
     borderWidth: 1,
     padding: 20,

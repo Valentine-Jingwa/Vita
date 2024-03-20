@@ -4,12 +4,7 @@ import {StyleSheet} from 'react-native';
 
 const globalStyles = StyleSheet.create({
 
-  screenContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start', // Adjust this as necessary
-    backgroundColor: '#FAF7F8', // Or any background color you prefer
-  },
+
     button: {
       backgroundColor: 'lightgrey',
       padding: 20,
