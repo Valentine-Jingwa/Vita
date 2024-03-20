@@ -7,6 +7,7 @@ import * as d3 from 'd3';
 import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
 import ThemedText from './ThemedText';
+import {Day, Night} from '../../assets/Icon';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -107,10 +108,18 @@ export default function Settings({ navigation }) {
 
 
       <View style={styles.settingBottomView}>
-        <View style={styles.ldbtnwrapper}>
-        <TouchableOpacity onPress={toggleTheme}>
-          <ThemedText style={[styles.dakeLightMode, {color: themeStyles.color}]}>Light/Dark</ThemedText>
-        </TouchableOpacity>
+      <View style={styles.ldbtnwrapper}>
+          <TouchableOpacity onPress={toggleTheme}>
+            {theme === 'light' ? (
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Day width={35} height={35}/>
+              </View>
+            ) : (
+              <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <Night width={35} height={35}/>
+              </View>
+            )}
+          </TouchableOpacity>
         </View>
         <View style={styles.wipebtnwrapper}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -177,11 +186,10 @@ const styles = StyleSheet.create({
   },
   ldbtnwrapper: {
     position: 'absolute',
-    top: 0,
-    left: 5,
+    top: 5,
+    left: 10,
   },
   dakeLightMode: {
-    borderWidth: 1,
     padding: 20,
     alignItems: 'center',
     color: 'black',
@@ -227,11 +235,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 10,
     right: 0,
-    padding: 20,
+    padding: 15,
     alignItems: 'center',
     backgroundColor: '#9D727C',
     color: 'black',
-    borderRadius: 30,
+    borderRadius: 20,
   },
 
   settingItem: {
