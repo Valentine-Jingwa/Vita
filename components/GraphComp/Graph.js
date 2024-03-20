@@ -1,98 +1,97 @@
-//Graph.js 
+// GraphModal.js
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, } from 'react-native';
-import { LineChart } from 'react-native-chart-kit'; // Import LineChart from react-native-chart-kit
-import DataStorage from '../Datahandling/DataStorage'; // Adjust this import according to your project structure
-import ColorId from '../../constants/ColorId'; // Adjust the import path according to your project structure
-
-
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { LineChart } from 'react-native-chart-kit';
+import DataStorage from '../Datahandling/DataStorage';
 
 const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
-  const [dataPoints, setDataPoints] = useState({
-    labels: [],
-    datasets: [
-      {
-        data: [],
-      },
-    ],
-  });
+  const [content, setContent] = useState(null);
 
   useEffect(() => {
-    if (isVisible && selectedSubcategory) {
-      fetchDataForSubcategory(selectedSubcategory);
-    }
+    fetchDataForSubcategory();
   }, [isVisible, selectedSubcategory]);
 
-  const fetchDataForSubcategory = async (subcategory) => {
-    const data = await DataStorage.getDataForSubcategory(subcategory);
-    // Assume subcategory or a derived ID here can be used with ColorId.getColor
-    const dotColor = ColorId.getColor(subcategory.id); // Adjust this to get the correct ID
-    if (data.length > 0) {
-      const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-      const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
-      const datasets = [{ data: sortedData.map(item => Number(item.value) || 0) }];
-      setDataPoints({ labels, datasets, dotColor }); // Store dotColor in state for access in LineChart config
-    } else {
-      setDataPoints({
-        labels: [],
-        datasets: [{ data: [] }],
-        dotColor: '' // Default or fallback color could go here
-      });
-      console.log(dotColor); // Add this line after fetching the dotColor
+  const fetchDataForSubcategory = async () => {
+    if (!isVisible) return;
+    const data = await DataStorage.getDataForSubcategory(selectedSubcategory);
+    
+    if (!data || data.length === 0) {
+      setContent(<Text style={styles.noDataText}>No Data Available</Text>);
+      return;
     }
-};
 
-const numberOfDataPoints = dataPoints.labels.length;
-const spacingBetweenPoints = 50; // This can be adjusted based on your design
-const minimumChartWidth = Dimensions.get('window').width - 50; // Minimum width before scrolling is necessary
-const calculatedChartWidth = Math.max(numberOfDataPoints * spacingBetweenPoints, minimumChartWidth);
+    const isNumeric = data.every(item => !isNaN(item.value));
+    if (isNumeric) {
+      prepareChartData(data);
+    } else {
+      prepareTextualData(data);
+    }
+  };
+
+  const prepareChartData = (data) => {
+    const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
+    const chartData = {
+      labels,
+      datasets: [{ data: sortedData.map(item => parseFloat(item.value)) }],
+    };
+    setContent(
+      <LineChart
+        data={chartData}
+        width={Dimensions.get('window').width * 0.9}
+        height={220}
+        chartConfig={{
+          backgroundColor: '#ffffff',
+          backgroundGradientFrom: '#ffffff',
+          backgroundGradientTo: '#ffffff',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+          propsForDots: {
+            r: '6',
+            strokeWidth: '2',
+            stroke: '#ffa726',
+          },
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16,
+        }}
+      />
+    );
+  };
+
+  const prepareTextualData = (data) => {
+    const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    setContent(
+      <ScrollView style={{ maxHeight: 200 }}>
+        {sortedData.map((item, index) => (
+          <View key={index} style={styles.textItem}>
+            <Text>Date: {new Date(item.timestamp).toLocaleDateString()}</Text>
+            <Text>Data: {item.value}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    );
+  };
 
   return (
     <Modal
-      animationType="slide"
-      transparent={true}
       visible={isVisible}
-      onRequestClose={onClose}>
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
+    >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Graph for {selectedSubcategory}</Text>
-          {dataPoints.datasets[0].data.length > 0 ? (
-            <LineChart
-              data={dataPoints}
-              width={calculatedChartWidth}
-              height={220}
-              yAxisLabel=""
-              yAxisSuffix=""
-              yAxisInterval={1}
-              chartConfig={{
-                backgroundColor: '#e26a00',
-                backgroundGradientFrom: '#636373',
-                backgroundGradientTo: '#636363',
-                decimalPlaces: 2,
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 16,
-                },
-                propsForDots: {
-                  r: '6',
-                  strokeWidth: '2',
-                  stroke: dataPoints.dotColor || '#636464', // Use the dotColor from state, with a fallback
-                },
-              }}
-              bezier
-              style={{
-                marginVertical: 8,
-                borderRadius: 16,
-              }}
-            />
-          ) : (
-            <View style={styles.placeholderGraph}>
-              <Text>No Data Available</Text>
-            </View>
-          )}
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.closebtn}>Close</Text>
+          <Text style={styles.modalTitle}>Data for {selectedSubcategory}</Text>
+          {content}
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -108,41 +107,46 @@ const styles = StyleSheet.create({
     marginTop: 22,
   },
   modalView: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: '90%',
+    height: 'auto',
     backgroundColor: 'white',
-    padding: 0, // Remove padding for full-screen width and adjust as necessary for height
+    borderRadius: 20,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  placeholderGraph: {
-    width: 300,
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalTitle: {
     marginBottom: 15,
-    backgroundColor: '#f2f2f2',
-    borderRadius: 5,
-  },
-  closebtn: {
-    backgroundColor: 'white',
-    padding: 10,
-    width: 100,
-    marginTop: 15,
-    marginBottom: 40,
-    color: 'black',
-    fontWeight: 'bold',
     textAlign: 'center',
-    borderWidth: 1,
+    fontWeight: 'bold',
+    fontSize: 18,
   },
-  buttonText: {
+  closeButton: {
+    marginTop: 15,
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  textItem: {
+    padding: 10,
+    marginVertical: 4,
+    borderColor: '#cccccc',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  noDataText: {
+    fontSize: 18,
+    color: '#666',
   },
 });
 
