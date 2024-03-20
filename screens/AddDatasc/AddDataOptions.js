@@ -5,6 +5,7 @@ import { SafeAreaView, View, StyleSheet, Text, TouchableOpacity, Animated, } fro
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import { subcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage'; 
+import { useTheme } from '@react-navigation/native';
 
 // Icons
 import { Ibackbtn } from '../../assets/Icon.js';
@@ -16,6 +17,13 @@ export default function AddDataOptions({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [notification, setNotification] = useState('');
   const [notificationAnim] = useState(new Animated.Value(-60));
+
+  const { theme, toggleTheme } = useTheme();
+
+const themeStyles = {
+  backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+  color: theme === 'light' ? '#000000' : '#FFFFFF',
+};
 
    // Function to show notification
    const showNotification = (message) => {
@@ -82,7 +90,8 @@ useEffect(() => {
 
 
   return (
-    <SafeAreaView style={styles.fullScreenModal}>
+    
+    <SafeAreaView style={[styles.fullScreenModal, {backgroundColor: themeStyles.backgroundColor}]}>
       <Animated.View
         style={[styles.notification, { transform: [{ translateY: notificationAnim }] }]}
       >

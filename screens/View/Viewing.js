@@ -4,6 +4,9 @@ import GraphModal from '../../components/GraphComp/Graph';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { subcategories as initialSubcategories } from '../../components/DataList';
 import ColorId from '../../constants/ColorId';
+import { subcategories } from '../../components/DataList'; 
+import { useTheme } from '../Settingsc/Theme';
+
 
 export default function Viewing() {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
@@ -11,6 +14,13 @@ export default function Viewing() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('categoryname');
   const [groupedSubcategories, setGroupedSubcategories] = useState({});
+
+  const { theme, toggleTheme } = useTheme();
+
+  const themeStyles = {
+    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  };
 
   useEffect(() => {
     applyFilters();
@@ -98,6 +108,7 @@ export default function Viewing() {
           selectedSubcategory={selectedSubcategory.subcategory}
         />
       )}
+
     </SafeAreaView>
   );
 }
