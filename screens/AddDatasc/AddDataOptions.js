@@ -21,8 +21,8 @@ export default function AddDataOptions({ navigation }) {
   const { theme, toggleTheme } = useTheme();
 
 const themeStyles = {
-  backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
-  color: theme === 'light' ? '#000000' : '#FFFFFF',
+  backgroundColor: theme === 'light' ? '#000' : '#fff',
+  color: theme === 'light' ? '#FFFFFF' : '#000000',
 };
 
    // Function to show notification
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: 15,
     marginBottom: 15,
-    backgroundColor: '#ffff',
+    backgroundColor: '#fff',
   },
   advilButton: {
     alignSelf: 'flex-start',
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginTop: "20%",
     marginLeft: 0,
-    backgroundColor: '#ffff',
+    backgroundColor: '#fff',
   },
   tylenolButton: {
     alignSelf: 'flex-end',
@@ -476,7 +476,6 @@ const styles = StyleSheet.create({
 
   othersButton: {
     alignSelf: 'flex-start',
-    width: '40%',
     padding: 20,
     borderLeftWidth: 0,
     borderRightWidth: 1,
