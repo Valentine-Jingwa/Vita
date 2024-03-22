@@ -63,7 +63,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
               style={styles.input}
               value={inputValue}
               onChangeText={setInputValue}
-              keyboardType="numeric"
+              keyboardType="default"
               placeholder="Enter value"
             />
             {unitsArray.length > 0 && (
