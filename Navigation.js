@@ -106,19 +106,27 @@ function SettingsStackScreen() {
 }
 
 function BottomTabs() {
+  const { theme, themeStyles } = useTheme();
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
+  const tabBarBackground = theme === 'light' ? '#ECEFF1' : '#0D1012';
 
   return (
     <Tab.Navigator 
     initialRouteName="AddData"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: [globalStyles.tabBarStyle, { height: tabBarHeight }],
+        tabBarStyle: 
+        [globalStyles.tabBarStyle,
+           { 
+            height: tabBarHeight,
+            backgroundColor: tabBarBackground,
+          }],
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
         tabBarIcon: ({ focused, color }) => {
           let IconComponent;
+
 
           if (route.name === 'Home') {
             IconComponent = Irealhome;
@@ -151,7 +159,7 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent size={24}/>
+              <IconComponent size={24} />
             </Animated.View>
           );
         },

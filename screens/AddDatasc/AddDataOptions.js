@@ -15,11 +15,13 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm'; // Ensure you import the NewSubForm
 import { subcategories as allSubcategories } from '../../components/DataList.js';
 
+
 const { width } = Dimensions.get('window');
 
 const AddDataOptions = ({ navigation }) => {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
+
   const [formVisible, setFormVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
@@ -30,6 +32,7 @@ const handleSubcategorySelect = (subcategory) => {
   setSelectedSubcategory(subcategory); // Set the selected subcategory
   setModalVisible(true); // Show the DataEntryModal
 };
+
 
 
   useEffect(() => {

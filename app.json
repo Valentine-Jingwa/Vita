@@ -21,7 +21,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo/2.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#f9f6f7"
       },
       "package": "com.yourcompany.vita"
     },

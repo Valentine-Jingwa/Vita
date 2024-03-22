@@ -77,7 +77,7 @@ const Home = () => {
   );
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
+    <SafeAreaView style={[styles.screenContainer, {backgroundColor: themeStyles.backgroundColor}]}>
       <TouchableOpacity 
         style={styles.calendarIcon} 
         onPress={() => setCalendarModalVisible(true)}

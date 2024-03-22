@@ -9,8 +9,14 @@ export const ThemeProvider = ({ children }) => {
     setTheme(current => (current === 'light' ? 'dark' : 'light'));
   };
 
+  const themeStyles = {
+    color: theme === 'light' ? '#120D0E' : '#F2EDEE',
+    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
+    btnMainBackgroundColorDark: '#384E51'
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme, themeStyles }}>
       {children}
     </ThemeContext.Provider>
   );
