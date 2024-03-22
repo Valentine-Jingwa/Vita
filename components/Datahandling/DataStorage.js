@@ -1,3 +1,5 @@
+// DataStorage.js
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = 'localData';

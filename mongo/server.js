@@ -1,15 +1,19 @@
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const UserData = require('./models/user-data.model');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/yourdbname', {
+mongoose.connect('mongodb+srv://jean-pierre:JPsDatabasePassword1@vits.sz3dhex.mongodb.net/yourDatabaseName?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true
 });
 
 // Test Route
@@ -23,3 +27,15 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
+
+
+app.post('/api/saveUserData', async (req, res) => {
+  const { userId, data } = req.body;
+  // Find the user by ID and update their data
+  try {
+    const updatedData = await UserData.findOneAndUpdate({ userId: userId }, { $set: { data: data } }, { new: true, upsert: true });
+    res.status(200).json(updatedData);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
