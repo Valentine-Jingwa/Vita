@@ -3,13 +3,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const UserData = require('./models/user-data.model');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb+srv://jean-pierre:JPsDatabasePassword1@vits.sz3dhex.mongodb.net/yourDatabaseName?retryWrites=true&w=majority', {
+mongoose.connect(mongoUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
