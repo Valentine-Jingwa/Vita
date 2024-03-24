@@ -6,8 +6,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from './screens/Settingsc/Theme'; 
 
 import Welcome from './security/Welcome';
 import Login from "./security/Login";
