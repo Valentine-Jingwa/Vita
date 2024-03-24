@@ -59,6 +59,8 @@ import Hlogo from './logo/logo11.svg';
 import Day from './icons/reallight.svg';
 import Night from './icons/realdark.svg';
 import RLogout from './icons/reallogout.svg';
+import Iclock from './icons/clock.svg';
+
 
 export {
   IAlertCircleOutline,
@@ -121,4 +123,5 @@ export {
   Day,
   Night,
   RLogout,
+  Iclock,
 };
