@@ -4,11 +4,14 @@ import { AntDesign } from '@expo/vector-icons';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   
-  const [notificationAnim] = useState(new Animated.Value(-60)); 
-  if (!subcategory) return null;
-
+  const [notificationOpacity] = useState(new Animated.Value(0));
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
+
+
+  if (!subcategory) return null;
+
+
 
   const handleSave = () => {
     const value = Number(inputValue);
@@ -24,26 +27,26 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     // Show notification with animation
     const showNotification = (message) => {
       // Slide down
-      Animated.timing(notificationAnim, {
+      Animated.timing(notificationOpacity, {
         toValue: 50,
         duration: 300,
         useNativeDriver: true,
       }).start(() => {
         // Stay for a bit and slide up
         setTimeout(() => {
-          Animated.timing(notificationAnim, {
+          Animated.timing(notificationOpacity, {
             toValue: -60,
             duration: 300,
             useNativeDriver: true,
           }).start();
-        }, 3000); // Show for 3 seconds
+        }, 2000); // Show for "" seconds
       });
     };
 
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <View style={styles.modalOverlay}>
-        <Animated.View style={[styles.notification, { transform: [{ translateY: notificationAnim }] }]}>
+      <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
           <Text style={styles.notificationText}>Data saved successfully!</Text>
         </Animated.View>
         <View style={styles.modalView}>
@@ -121,17 +124,17 @@ const styles = StyleSheet.create({
   },
   notification: {
     position: 'absolute',
-    top: 0,
+    top: 50,
     left: 0,
     right: 0,
-    backgroundColor: 'transperent',
+    backgroundColor: '#4CAF50',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1000,
   },
   notificationText: {
-    color: 'black',
+    color: 'white',
     fontSize: 16,
   },
 });
