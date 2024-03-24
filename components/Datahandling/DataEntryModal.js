@@ -1,53 +1,28 @@
 // DataEntryModal.js
 
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { subcategories } from '../DataList';
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
-  if (!subcategory) return null;
+  if (!subcategory) return null; // Prevents the modal from rendering if no subcategory is selected
 
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
 
-  // const handleSave = () => {
-  //   if (!inputValue || !selectedUnit) {
-  //     alert('Invalid data');
-  //     return;
-  //   }
-  //   onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory);
-  //   onClose(); // Close modal only on valid save
-  //   setInputValue('');
-  // };
-
-  // const handleSaveAndAddMore = () => {
-  //   if (!inputValue || !selectedUnit) {
-  //     alert('Invalid data');
-  //     return;
-  //   }
-  //   onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory);
-  //   setInputValue(''); // Reset input value for next entry
-  // };
-
-   // Validate input before saving
-   const validateAndSave = (shouldCloseAfterSave) => {
-    if (!inputValue || !selectedUnit) {
-      alert('Invalid data');
-      return false; // Indicate invalid data
+  const validateAndSave = (shouldCloseAfterSave) => {
+    const trimmedInput = inputValue.trim();
+    if (!trimmedInput || !selectedUnit) {
+      Alert.alert('Invalid data', 'Please ensure all fields are correctly filled.');
+      return;
     }
-    onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory, subcategory.categoryname);
-    if (shouldCloseAfterSave) {
-      setInputValue(''); // Reset for next entry
-      onClose(); // Close modal after save
-    } else {
-      setInputValue(''); // Just reset the input for adding more
-    }
-    return true; // Indicate success
+    onSave(subcategory.id, trimmedInput, selectedUnit, subcategory.subcategory, subcategory.categoryname);
+    setInputValue('');
+    if (shouldCloseAfterSave) onClose();
   };
 
-  // Ensure subcategory.units is an array before mapping
-  const unitsArray = Array.isArray(subcategory.units) ? subcategory.units : [];
+  const unitsArray = Array.isArray(subcategory.units) ? subcategory.units : [subcategory.units];
   const handleSave = () => validateAndSave(true);
   const handleSaveAndAddMore = () => validateAndSave(false);
 
@@ -59,23 +34,20 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             <Text style={styles.closeButtonText}>Exit</Text>
           </TouchableOpacity>
           <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
-            <TextInput
-              style={styles.input}
-              value={inputValue}
-              onChangeText={setInputValue}
-              keyboardType="default"
-              placeholder="Enter value"
-            />
-            {unitsArray.length > 0 && (
-              <Picker
-                selectedValue={selectedUnit}
-                onValueChange={setSelectedUnit}
-                style={styles.picker}>
-                {unitsArray.map((unit, index) => (
-                  <Picker.Item key={index} label={unit} value={unit} />
-                ))}
-              </Picker>
-            )}
+          <TextInput
+            style={styles.input}
+            value={inputValue}
+            onChangeText={setInputValue}
+            keyboardType="default"
+            placeholder="Enter value"
+          />
+          {unitsArray.length > 0 && (
+            <Picker selectedValue={selectedUnit} onValueChange={setSelectedUnit} style={styles.picker}>
+              {unitsArray.map((unit, index) => (
+                <Picker.Item key={index} label={unit} value={unit} />
+              ))}
+            </Picker>
+          )}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
               <Text style={styles.buttonText}>Save</Text>
@@ -89,6 +61,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
