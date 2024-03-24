@@ -1,94 +1,73 @@
-// DataEntryModal.js
-
-import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { subcategories } from '../DataList';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { AntDesign } from '@expo/vector-icons'; 
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
+  
+  const [notificationAnim] = useState(new Animated.Value(-60)); 
   if (!subcategory) return null;
 
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
 
-  // const handleSave = () => {
-  //   if (!inputValue || !selectedUnit) {
-  //     alert('Invalid data');
-  //     return;
-  //   }
-  //   onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory);
-  //   onClose(); // Close modal only on valid save
-  //   setInputValue('');
-  // };
-
-  // const handleSaveAndAddMore = () => {
-  //   if (!inputValue || !selectedUnit) {
-  //     alert('Invalid data');
-  //     return;
-  //   }
-  //   onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory);
-  //   setInputValue(''); // Reset input value for next entry
-  // };
-
-   // Validate input before saving
-   const validateAndSave = (shouldCloseAfterSave) => {
-    if (!inputValue || !selectedUnit) {
-      alert('Invalid data');
-      return false; // Indicate invalid data
+  const handleSave = () => {
+    const value = Number(inputValue);
+    if (!inputValue || isNaN(value) || value > 999) {
+      showNotification('Please enter a valid number (0-999)');
+      return;
     }
-    onSave(subcategory.id, inputValue, selectedUnit, subcategory.subcategory, subcategory.categoryname);
-    if (shouldCloseAfterSave) {
-      setInputValue(''); // Reset for next entry
-      onClose(); // Close modal after save
-    } else {
-      setInputValue(''); // Just reset the input for adding more
-    }
-    return true; // Indicate success
+    onSave(subcategory.id, value.toString(), subcategory.unit, subcategory.subcategory, subcategory.categoryname);
+    setInputValue(''); // Clear input field after save
+    showNotification('Data successfully saved');
   };
 
-  // Ensure subcategory.units is an array before mapping
-  const unitsArray = Array.isArray(subcategory.units) ? subcategory.units : [];
-  const handleSave = () => validateAndSave(true);
-  const handleSaveAndAddMore = () => validateAndSave(false);
+    // Show notification with animation
+    const showNotification = (message) => {
+      // Slide down
+      Animated.timing(notificationAnim, {
+        toValue: 50,
+        duration: 300,
+        useNativeDriver: true,
+      }).start(() => {
+        // Stay for a bit and slide up
+        setTimeout(() => {
+          Animated.timing(notificationAnim, {
+            toValue: -60,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }, 3000); // Show for 3 seconds
+      });
+    };
 
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <View style={styles.modalOverlay}>
+        <Animated.View style={[styles.notification, { transform: [{ translateY: notificationAnim }] }]}>
+          <Text style={styles.notificationText}>Data saved successfully!</Text>
+        </Animated.View>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Exit</Text>
+            <AntDesign name="close" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
-            <TextInput
-              style={styles.input}
-              value={inputValue}
-              onChangeText={setInputValue}
-              keyboardType="default"
-              placeholder="Enter value"
-            />
-            {unitsArray.length > 0 && (
-              <Picker
-                selectedValue={selectedUnit}
-                onValueChange={setSelectedUnit}
-                style={styles.picker}>
-                {unitsArray.map((unit, index) => (
-                  <Picker.Item key={index} label={unit} value={unit} />
-                ))}
-              </Picker>
-            )}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-              <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.saveAddMoreButton} onPress={handleSaveAndAddMore}>
-              <Text style={styles.buttonText}>Save and Add More</Text>
-            </TouchableOpacity>
-          </View>
+          <TextInput
+            style={styles.input}
+            value={inputValue}
+            onChangeText={text => setInputValue(text.replace(/[^0-9]/g, ''))} // Allow only numbers
+            keyboardType="numeric"
+            maxLength={3} // Restrict input length
+            placeholder="Enter value (0-999)"
+          />
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -97,7 +76,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: '#fff',
     borderRadius: 20,
     padding: 25,
     alignItems: 'center',
@@ -113,72 +92,47 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: 'flex-end',
-    padding: 8,
-  },
-  closeButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    marginBottom: 10,
   },
   subcategoryTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#000',
+    marginBottom: 20,
   },
   input: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F0F0F0',
     borderRadius: 10,
     fontSize: 16,
     padding: 10,
-    marginVertical: 10,
-    width: '100%',
-    elevation: 2,
-  },
-  picker: {
     width: '100%',
     marginBottom: 20,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: 10,
-  },
   saveButton: {
-    backgroundColor: '#fff',
+    backgroundColor: '#4CAF50',
     padding: 10,
     borderRadius: 10,
-    elevation: 2,
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  saveAddMoreButton: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    elevation: 2,
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  cancelButton: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    elevation: 2,
     width: '100%',
   },
   buttonText: {
+    color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  addButton: {
-    backgroundColor: '#fff',
+  notification: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transperent',
     padding: 10,
-    marginTop: 10,
-    borderRadius: 10,
-    elevation: 2,
-    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  notificationText: {
+    color: 'black',
+    fontSize: 16,
   },
 });
 

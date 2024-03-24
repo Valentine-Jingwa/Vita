@@ -39,8 +39,11 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
       datasets: [{ data: sortedData.map(item => parseFloat(item.value)) }],
     };
 
+    const chartWidth = sortedData.length > 10 ? Dimensions.get('window').width * (sortedData.length / 10) : Dimensions.get('window').width * 0.9;
+
 
     setContent(
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{width: Dimensions.get('window').width * 0.9}}>
       <LineChart
         data={chartData}
         width={Dimensions.get('window').width * 0.9}
@@ -70,6 +73,7 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
           borderRadius: 16,
         }}
       />
+      </ScrollView>
     );
   };
 
@@ -94,16 +98,22 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
       animationType="slide"
       onRequestClose={onClose}
     >
-      
-      <View style={styles.overlay}>
-        <View style={styles.modalView}>
+    <TouchableOpacity
+      style={styles.overlay}
+      activeOpacity={1} // Maintain the overlay's visibility when pressed
+      onPressOut={onClose} // Close the modal when the overlay is pressed
+      >
+      <View
+      style={styles.modalView}
+      onStartShouldSetResponder={() => true} // Prevents the overlay's onPress event from triggering when the modal view is interacted with
+      >
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
           <AntDesign name="close" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>Data for {selectedSubcategory}</Text>
           {content}
         </View>
-      </View>
+    </TouchableOpacity>
     </Modal>
   );
 };
