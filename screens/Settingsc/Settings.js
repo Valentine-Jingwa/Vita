@@ -8,13 +8,33 @@ import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
 import ThemedText from './ThemedText';
 import {Day, Night, RLogout} from '../../assets/Icon';
+import { saveUserData } from '../../mongo/services/mongodbService';
+
+
+const transferDataToDatabase = async () => {
+  try {
+    const userId = 'user-id'; // Replace with actual logic to retrieve user ID
+    const localData = await DataStorage.Retrieve();
+
+    console.log('Data to be sent:', { userId, data: localData }); // Log the data to be sent
+
+    const response = await saveUserData(userId, localData);
+    console.log('Response from server:', response); // Log the server response
+
+    alert('Data successfully transferred to the database.');
+  } catch (error) {
+    console.error('Failed to transfer data', error);
+    alert('Failed to transfer data.');
+  }
+};
 
 
 const fullWidth = Dimensions.get('window').width;
 
 export default function Settings({ navigation }) {
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
-  const [modalVisible, setModalVisible] = React.useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [wipeModalVisible, setWipeModalVisible] = useState(false);
+  const [transferModalVisible, setTransferModalVisible] = useState(false); 
   const { theme, toggleTheme } = useTheme();
 
   const themeStyles = {
@@ -35,7 +55,7 @@ export default function Settings({ navigation }) {
 
   const handleClearStorage = async () => {
     await DataStorage.Clear();
-    setModalVisible(false);``
+    setWipeModalVisible(false);``
   };
 
   const handleLogout = async () => {
@@ -50,7 +70,7 @@ export default function Settings({ navigation }) {
   };
 
   const handleCancel = () => {
-    setModalVisible(false); // Just hide the modal
+    setWipeModalVisible(false); // Just hide the modal
   };
   const handleSaveChanges = async () => {
     try {
@@ -78,27 +98,26 @@ export default function Settings({ navigation }) {
     <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
       <Modal
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-          
-        }}
+        visible={wipeModalVisible}
+        onRequestClose={() => setWipeModalVisible(!wipeModalVisible)}
       >
+        {/* Modal Content for Wipe Data */}
 
-   <View style={styles.wipemodalViewWrapper}>
-      <View style={styles.wipemodalView}>
-      <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
-        <View style={styles.modalButtons}>
-        <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={handleClearStorage}>
-          <ThemedText style={styles.buttonText}>Wipe</ThemedText>
-        </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={handleCancel}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  </Modal>
+        <View style={styles.wipemodalViewWrapper}>
+           <View style={styles.wipemodalView}>
+           <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
+             <View style={styles.modalButtons}>
+             <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={handleClearStorage}>
+               <ThemedText style={styles.buttonText}>Wipe</ThemedText>
+             </TouchableOpacity>
+               <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={handleCancel}>
+                 <Text style={styles.buttonText}>Cancel</Text>
+               </TouchableOpacity>
+             </View>
+           </View>
+         </View>
+      </Modal>
+
   <View style={styles.settingTopView}>
      <View style={styles.SettingsTitleWrapper}>
       <TouchableOpacity>
@@ -124,8 +143,39 @@ export default function Settings({ navigation }) {
             )}
           </TouchableOpacity>
         </View>
+
+        <View style={styles.transferButtonWrapper}>
+          <TouchableOpacity onPress={() => setTransferModalVisible(true)}>
+            <View style={[styles.transferBtn, buttonStylemain]}>
+              <ThemedText>Transfer Data to Database</ThemedText>
+            </View>
+          </TouchableOpacity>
+        </View>
+
+            {/* Confirmation modal for transferring data */}
+          <Modal
+            transparent={true}
+            visible={transferModalVisible}
+            onRequestClose={() => setTransferModalVisible(!transferModalVisible)}
+          >
+            {/* ... (modal layout) */}
+            <Text style={styles.modalText}>Transfer data to database?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={() => {
+                transferDataToDatabase();
+                setTransferModalVisible(false); // Close modal after initiating transfer
+              }}>
+
+                <ThemedText style={styles.buttonText}>Transfer</ThemedText>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={() => setTransferModalVisible(false)}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
         <View style={styles.wipebtnwrapper}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => setWipeModalVisible(true)}>
             <View style={[styles.wipebtn, buttonStylemain]}>
               <ThemedText>Wipe Storage</ThemedText>
             </View>
