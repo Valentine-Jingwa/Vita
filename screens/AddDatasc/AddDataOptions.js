@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   Modal,
   Dimensions,
+  Animated,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Irealhome, Irealadd, Irealview, Irealsetting } from '../../assets/Icon.js';
@@ -15,6 +16,7 @@ import UserHead from '../../components/UserHead';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm'; // Ensure you import the NewSubForm
 import { subcategories as allSubcategories } from '../../components/DataList.js';
+import DataStorage from '../../components/Datahandling/DataStorage';
 
 
 const { width } = Dimensions.get('window');
@@ -22,11 +24,68 @@ const { width } = Dimensions.get('window');
 const AddDataOptions = ({ navigation }) => {
   const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
+  const [notificationAnim] = useState(new Animated.Value(-60));
 
+
+  const [data, setData] = useState([]);
   const [formVisible, setFormVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState({});
+  const [notification, setNotification] = useState('');
+  const [notificationOpacity] = useState(new Animated.Value(0)); // Initial opacity set to 0
+
+
+   // Function to show notification
+   const showNotification = (message) => {
+    setNotification(message);
+  
+    // First, make the notification visible and slide in
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(notificationAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(notificationOpacity, {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        })
+      ]),
+      Animated.delay(2000), // Keep the notification visible for 3000 milliseconds
+      // Then, slide the notification out and make it invisible
+      Animated.parallel([
+        Animated.timing(notificationAnim, {
+          toValue: -60,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(notificationOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        })
+      ])
+    ]).start(() => {
+      // Optionally reset the notification message
+      setNotification('');
+    });
+  };
+  
+  
+
+  // Ensure fetchData is defined outside of useEffect if you want to call it here
+  const fetchData = async () => {
+    const storedData = await DataStorage.Retrieve();
+    setData(Array.isArray(storedData) ? storedData : [storedData]);
+  };
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
+  
 
 // In your AddDataOptions component, when handling subcategory selection:
 const handleSubcategorySelect = (subcategory) => {
@@ -34,14 +93,28 @@ const handleSubcategorySelect = (subcategory) => {
   setModalVisible(true); // Show the DataEntryModal
 };
 
-
+const handleSave = async (id, value, unit, subcategory, categoryname) => {
+  if (value && unit) {
+    try {
+      const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
+      await DataStorage.Store(newDataPoint);
+      setModalVisible(false);
+      showNotification('Data successfully saved');
+      fetchData();
+    } catch (error) {
+      console.error('Save error:', error);
+      showNotification('Failed to save data');
+    }
+  } else {
+    showNotification('Incorrect data');
+  }
+};
 
   useEffect(() => {
     if (selectedCategory) {
-      const filteredSubcategories = allSubcategories.filter(
+      setSubcategories(allSubcategories.filter(
         subcat => subcat.categoryname === selectedCategory
-      );
-      setSubcategories(filteredSubcategories);
+      ));
     }
   }, [selectedCategory]);
 
@@ -67,6 +140,14 @@ const handleSubcategorySelect = (subcategory) => {
         // Second Page - Subcategories
         <View style={styles.subcategoryContainer}>
           <View style={styles.subcategoryContainerHeader}>
+          <Animated.View
+            style={[
+              styles.notification,
+              { transform: [{ translateY: notificationAnim }], opacity: notificationOpacity }
+            ]}
+          >
+            <Text style={styles.notificationText}>{notification}</Text>
+          </Animated.View>
             <TouchableOpacity style={styles.backButton} onPress={() => setSelectedCategory(null)}>
               <Text style={styles.backButtonText}>{"< Back"}</Text>
             </TouchableOpacity>
@@ -95,14 +176,11 @@ const handleSubcategorySelect = (subcategory) => {
       </Modal>
 
       <DataEntryModal
-        isVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        subcategory={selectedSubcategory}
-        onSave={(id, value, unit, subcategoryName, categoryName) => {
-          // Implement save functionality here
-          console.log(`Saving ${value} ${unit} for ${subcategoryName} in ${categoryName}`);
-        }}
-      />
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          subcategory={selectedSubcategory}
+          onSave={handleSave}
+        />
     </SafeAreaView>
   );
 };
@@ -270,7 +348,21 @@ const styles = StyleSheet.create({
     color: '#000', // Black text
     fontWeight: '500', // Medium font weight
   },
-  
+  notification: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#333',
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  notificationText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
   // Add any additional styles as needed
 });
 
