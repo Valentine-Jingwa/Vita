@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; 
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
@@ -14,34 +14,44 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
 
 
   const handleSave = () => {
-    const value = Number(inputValue);
-    if (!inputValue || isNaN(value) || value > 999) {
-      showNotification('Please enter a valid number (0-999)');
-      return;
-    }
+  // Check if inputValue is empty or only contains whitespace
+  if (!inputValue.trim()) {
+    alert('Please input a value before saving'); // Use alert for input errors
+    return; // Exit the function early
+  }
+  
+  const value = Number(inputValue);
+  // Further checks for value validity
+  if (isNaN(value) || value > 999) {
+    alert('Please enter a valid number (0-999)'); // Use alert for input errors
+    return; // Exit the function early
+  }
+    
+    // If all checks pass, then proceed to save
     onSave(subcategory.id, value.toString(), subcategory.unit, subcategory.subcategory, subcategory.categoryname);
     setInputValue(''); // Clear input field after save
+    
+    // Only now we know for sure the data is valid and saved, so we show the success message
     showNotification('Data successfully saved');
   };
 
-    // Show notification with animation
-    const showNotification = (message) => {
-      // Slide down
-      Animated.timing(notificationOpacity, {
-        toValue: 50,
-        duration: 300,
-        useNativeDriver: true,
-      }).start(() => {
-        // Stay for a bit and slide up
-        setTimeout(() => {
-          Animated.timing(notificationOpacity, {
-            toValue: -60,
-            duration: 300,
-            useNativeDriver: true,
-          }).start();
-        }, 2000); // Show for "" seconds
-      });
-    };
+  const showNotification = (message) => {
+    // Slide down
+    Animated.timing(notificationOpacity, {
+      toValue: 1, // Ensure this is set to 1 for full opacity
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      // Stay for a bit and slide up
+      setTimeout(() => {
+        Animated.timing(notificationOpacity, {
+          toValue: 0, // Fade out the notification
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      }, 500); // Show for seconds
+    });
+  };
 
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
