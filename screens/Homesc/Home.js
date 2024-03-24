@@ -9,19 +9,23 @@ const Home = () => {
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+
   const [items, setItems] = useState([
     { id: '1', text: 'Swipe Me 1' },
     { id: '2', text: 'Swipe Me 2' },
     { id: '3', text: 'Swipe Me 3' },
     { id: '4', text: 'Swipe Me 4' },
     { id: '5', text: 'Swipe Me 5' },
-  ]);
+  ].sort((a, b) => parseInt(a.id) - parseInt(b.id)));
+
 
   const onSwiped = (cardIndex) => {
     console.log("Swiped card at index", cardIndex);
-    const swipedItem = items[cardIndex];
-    setItems([...items.filter((_, index) => index !== cardIndex), swipedItem]);
-  };
+    let swipedItem = items[cardIndex];
+    // Remove the swiped item and add it at the end
+    let newItems = [...items.filter((_, index) => index !== cardIndex), swipedItem];
+    setItems(newItems);
+};
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -91,7 +95,7 @@ const Home = () => {
           onSwipedAll={() => console.log('OnSwipedAll')}
           cardIndex={0}
           backgroundColor={'transparent'}
-          stackSize={5}
+          stackSize={3}
           infinite={true}
         />
       </View>
@@ -132,7 +136,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     shadowOpacity: 0.3,
-    elevation: 8,
+    elevation: 4,
+    zIndex: 100,
   },
   cardText: {
     fontSize: 22,
@@ -163,6 +168,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
+    zIndex: 1,
   },
   dateText: {
     fontSize: 18,
