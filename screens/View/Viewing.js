@@ -18,7 +18,7 @@ export default function Viewing() {
   const { theme, toggleTheme } = useTheme();
 
   const themeStyles = {
-    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
+    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
     color: theme === 'light' ? '#000000' : '#FFFFFF',
   };
 
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   },
   filterButton: {
     marginLeft: 12,
-    backgroundColor: '#4F8EF7',
+    backgroundColor: '#fff',
     borderRadius: 24,
     padding: 12,
     shadowColor: '#000',
