@@ -21,6 +21,7 @@ export const subcategories = [
         {id: 3, categoryname: 'Vitals', subcategory: 'Temperature', units: '°C', dunit: '°C', datatype: 'number', max: 999, min: 0},
         {id: 4, categoryname: 'Vitals', subcategory: 'Respiratory Rate', units: 'bpm', dunit: 'bpm', datatype: 'number', max: 999, min: 0},
         {id: 5, categoryname: 'Vitals', subcategory: 'Oxygen Saturation', units: '%', dunit: '%', datatype: 'number', max: 100, min: 0},
+        // {id: 10, categoryname: 'Vitals', subcategory: 'Pulse Oximeter', units: '%', dunit: '%', datatype: 'number', max: 100, min: 0},
 
         //Medication Default
 

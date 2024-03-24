@@ -6,8 +6,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from './screens/Settingsc/Theme'; 
 
 import Welcome from './security/Welcome';
 import Login from "./security/Login";
@@ -30,8 +31,6 @@ import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-nativ
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import { navigationRef } from './NavigationService';
-import { useTheme } from './screens/Settingsc/Theme';
-
 
 //Icon Importation
 import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting, Irealsetting2} from "./assets/Icon";
@@ -40,6 +39,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // import HomeIcon from "./assets/navicons/";
 
 const Tab = createBottomTabNavigator();
+// const Tab = createMaterialTopTabNavigator();
+
 const AddDataStack = createStackNavigator(); // This section if for the add data stack
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
@@ -113,7 +114,7 @@ function BottomTabs() {
 
   return (
     <Tab.Navigator 
-    initialRouteName="Home"
+    initialRouteName="AddData"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: 
