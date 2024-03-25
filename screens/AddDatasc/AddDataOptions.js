@@ -11,7 +11,7 @@ import {
   Animated,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { Irealhome, Irealadd, Irealview, Irealsetting } from '../../assets/Icon.js';
+import { Irealhome, Imed, Ihealth, Irealview, Ibandaid, Ibackbtn, IPill, Ifood } from '../../assets/Icon.js';
 import UserHead from '../../components/UserHead';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm'; // Ensure you import the NewSubForm
@@ -19,7 +19,7 @@ import { subcategories as allSubcategories } from '../../components/DataList.js'
 import DataStorage from '../../components/Datahandling/DataStorage';
 
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const AddDataOptions = ({ navigation }) => {
   const { colors } = useTheme();
@@ -33,7 +33,7 @@ const AddDataOptions = ({ navigation }) => {
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState({});
   const [notification, setNotification] = useState('');
-  const [notificationOpacity] = useState(new Animated.Value(0)); // Initial opacity set to 0
+  const [notificationOpacity] = useState(new Animated.Value(-1)); // Initial opacity set to 0
 
 
    // Function to show notification
@@ -129,10 +129,10 @@ const handleSave = async (id, value, unit, subcategory, categoryname) => {
           {categories.map((category, index) => (
             <TouchableOpacity key={index} onPress={() => setSelectedCategory(category)} style={styles.categoryBox}>
               <Text style={styles.categoryText}>{category}</Text>
-              {category === 'Vitals' && <Irealview width={30} height={30} />}
-              {category === 'Medication' && <Irealadd width={30} height={30} />}
-              {category === 'Nutrition' && <Irealhome width={30} height={30} />}
-              {category === 'Others' && <Irealsetting width={30} height={30} />}
+              {category === 'Vitals' && <Ihealth width={30} height={30} />}
+              {category === 'Medication' && <Imed width={30} height={30} />}
+              {category === 'Nutrition' && <Ifood width={30} height={30} />}
+              {category === 'Others' && <Ibandaid width={30} height={30} />}
             </TouchableOpacity>
           ))}
         </View>
@@ -149,9 +149,16 @@ const handleSave = async (id, value, unit, subcategory, categoryname) => {
             <Text style={styles.notificationText}>{notification}</Text>
           </Animated.View>
             <TouchableOpacity style={styles.backButton} onPress={() => setSelectedCategory(null)}>
-              <Text style={styles.backButtonText}>{"< Back"}</Text>
+              <Text style={styles.backButtonText}><Ibackbtn width={30} height={30} /></Text>
             </TouchableOpacity>
-            <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>  
+            <View style={styles.selectedTitleIcon}>
+                <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>
+                {/* Matching Icon */}
+                {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
+                {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
+                {selectedCategory === 'Nutrition' && <Ifood width={30} height={30} />}
+                {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
+            </View>
           </View>        
           <View style={styles.BentoBoxlayout}>
           {subcategories.map((subcategory, index) => (
@@ -171,10 +178,10 @@ const handleSave = async (id, value, unit, subcategory, categoryname) => {
       )}
 
       {/* Modal for New Subcategory Form */}
-      <Modal visible={formVisible} animationType="slide" onRequestClose={() => setFormVisible(false)}>
-        <NewSubForm onClose={() => setFormVisible(false)} />
-      </Modal>
-
+      <NewSubForm 
+        isVisible={formVisible}
+        onClose={() => setFormVisible(false)}
+          />
       <DataEntryModal
           isVisible={modalVisible}
           onClose={() => setModalVisible(false)}
@@ -191,6 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingTop: 20,
   },
+
   categoryContainerHeader: {
     fontSize: 14, // Increase font size for category header
     margin: 10, // Add margin around the header
@@ -273,11 +281,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, // Horizontal padding
     borderRadius: 30, // Rounder corners
   },
-  selectedCategoryTitle: {
-    textAlign: 'center',
-    fontSize: 24,
-    margin: 10,
-  },
   modalContent: {
     marginTop: 50,
     backgroundColor: 'white',
@@ -319,15 +322,6 @@ const styles = StyleSheet.create({
     fontSize: 16, // Slightly larger text
     fontWeight: 'bold', // Bold text
   },
-  selectedCategoryTitle: {
-    fontSize: 24, // Larger font size
-    color: 'black', // Use primary color from theme
-    fontWeight: 'bold', // Bold font weight
-    marginBottom: 30, // Add some bottom margin
-    backgroundColor: '#f5f5f5', // Light grey background
-    paddingHorizontal: 20, // Add padding around the text
-    borderRadius: 20, // Rounder corners
-  },
   subcategoryBox: {
     width: width * 0.4, // Approximately 40% of the screen width
     aspectRatio: 1, // Keep the boxes square-shaped
@@ -363,7 +357,22 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  // Add any additional styles as needed
+  selectedTitleIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    margin: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 25,
+    marginBottom: 20, // Add some bottom margin
+    paddingHorizontal: 20, // Add padding around the text
+  },
+  selectedCategoryTitle: {
+    fontSize: 24, // Larger font size
+    color: 'black', // Use primary color from theme
+    fontWeight: 'bold', // Bold font weight
+    paddingHorizontal: 10, 
+  },
 });
 
 export default AddDataOptions;
