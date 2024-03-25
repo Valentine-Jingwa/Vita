@@ -35,25 +35,8 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     setInputValue('');
     onClose();
     showNotification();
-    onClose();
-    showNotification();
   };
 
-  const showNotification = () => {
-    Animated.sequence([
-      Animated.timing(notificationOpacity, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.delay(3000),
-      Animated.timing(notificationOpacity, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
   const showNotification = () => {
     Animated.sequence([
       Animated.timing(notificationOpacity, {
@@ -76,7 +59,6 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <AntDesign name="close" size={24} color="black" />
-            <AntDesign name="close" size={24} color="black" />
           </TouchableOpacity>
           <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
           <TextInput
@@ -86,37 +68,27 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             keyboardType="numeric"
             maxLength={3}
             placeholder="Enter value (0-999)"
-            onChangeText={text => setInputValue(text.replace(/[^0-9]/g, ''))}
-            keyboardType="numeric"
-            maxLength={3}
-            placeholder="Enter value (0-999)"
           />
           {subcategory.units && (
-          {subcategory.units && (
             <Picker selectedValue={selectedUnit} onValueChange={setSelectedUnit} style={styles.picker}>
-              {subcategory.units.map((unit, index) => (
               {subcategory.units.map((unit, index) => (
                 <Picker.Item key={index} label={unit} value={unit} />
               ))}
             </Picker>
           )}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveAddMoreButton} onPress={validateAndSave}>
+            <TouchableOpacity style={styles.saveAddMoreButton} onPress={handleSaveAndAddMore}>
               <Text style={styles.buttonText}>Save and Add More</Text>
             </TouchableOpacity>
           </View>
-          <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
-            <Text style={styles.notificationText}>Data saved successfully!</Text>
-          </Animated.View>
         </View>
       </View>
     </Modal>
   );
 };
-
 
 
 const styles = StyleSheet.create({
