@@ -2,10 +2,7 @@
 
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { AntDesign } from '@expo/vector-icons';
-import { subcategories } from '../DataList'; // Make sure this import path is correct
 import { AntDesign } from '@expo/vector-icons';
 import { subcategories } from '../DataList'; // Make sure this import path is correct
 
@@ -16,12 +13,11 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
   const [notificationOpacity] = useState(new Animated.Value(0));
-  const [notificationOpacity] = useState(new Animated.Value(0));
 
-  const validateAndSave = () => {
-    const value = Number(inputValue.trim());
-    if (isNaN(value) || value < 0 || value > 999) {
-      Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
+  // const validateAndSave = () => {
+  //   const value = Number(inputValue.trim());
+  //   if (isNaN(value) || value < 0 || value > 999) {
+  //     Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
   const validateAndSave = () => {
     const value = Number(inputValue.trim());
     if (isNaN(value) || value < 0 || value > 999) {
@@ -77,12 +73,12 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             </Picker>
           )}
           <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.saveAddMoreButton} onPress={handleSaveAndAddMore}>
+            {/* <TouchableOpacity style={styles.saveAddMoreButton} onPress={handleSaveAndAddMore}>
               <Text style={styles.buttonText}>Save and Add More</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>
