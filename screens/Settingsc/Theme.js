@@ -12,7 +12,10 @@ export const ThemeProvider = ({ children }) => {
   const themeStyles = {
     color: theme === 'light' ? '#120D0E' : '#F2EDEE',
     backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
-    btnMainBackgroundColorDark: '#384E51'
+    btnMainBackgroundColorDark: '#384E51', 
+    btnMainBackgroundColorLight: '#26f',
+    lighttext: '#FFFFFF',
+    darktext: '#000000',
   };
 
   return (
