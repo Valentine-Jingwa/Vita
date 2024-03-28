@@ -78,6 +78,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             <Text style={styles.notificationText}>Data saved successfully!</Text>
           </Animated.View>
         </View>
+        <View>
 
       </View>
     </Modal>
