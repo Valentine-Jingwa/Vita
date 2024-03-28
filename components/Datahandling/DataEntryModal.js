@@ -8,24 +8,17 @@ import { subcategories } from '../DataList'; // Make sure this import path is co
 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   if (!subcategory) return null;
-  if (!subcategory) return null;
 
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
   const [notificationOpacity] = useState(new Animated.Value(0));
 
-  // const validateAndSave = () => {
-  //   const value = Number(inputValue.trim());
-  //   if (isNaN(value) || value < 0 || value > 999) {
-  //     Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
   const validateAndSave = () => {
     const value = Number(inputValue.trim());
     if (isNaN(value) || value < 0 || value > 999) {
       Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
       return;
     }
-
-    onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
 
     onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
     setInputValue('');
@@ -77,10 +70,15 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity style={styles.saveAddMoreButton} onPress={handleSaveAndAddMore}>
+            <TouchableOpacity style={styles.saveAddMoreButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save and Add More</Text>
-            </TouchableOpacity> */}
+            </TouchableOpacity>
           </View>
+          <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
+            <Text style={styles.notificationText}>Data saved successfully!</Text>
+          </Animated.View>
+        </View>
+
       </View>
     </Modal>
   );
@@ -95,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    backgroundColor: '#fff',
+    backgroundColor: 'lightgrey',
     borderRadius: 20,
     padding: 25,
     alignItems: 'center',
@@ -112,47 +110,73 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: 'flex-end',
-    marginBottom: 10,
+    padding: 25,
+    position: 'absolute',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   subcategoryTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
+    color: '#000',
   },
   input: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#fff',
     borderRadius: 10,
     fontSize: 16,
     padding: 10,
+    marginVertical: 10,
+    width: '100%',
+    elevation: 2,
+  },
+  picker: {
     width: '100%',
     marginBottom: 20,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  saveAddMoreButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
     width: '100%',
   },
   buttonText: {
-    color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  notification: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    backgroundColor: '#4CAF50',
+  addButton: {
+    backgroundColor: '#fff',
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  notificationText: {
-    color: 'white',
-    fontSize: 16,
+    marginTop: 10,
+    borderRadius: 10,
+    elevation: 2,
+    width: '100%',
   },
 });
 

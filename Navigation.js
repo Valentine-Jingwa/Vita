@@ -21,7 +21,7 @@ import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import Settings from "./screens/Settingsc/Settings";
 
-import Profiles from "./screens/Profilesc/Profiles";  
+import Profiles from "./screens/Profilesc/ProfileSelect.js";  
 import EditProfile from "./screens/Profilesc/EditProfile";
 import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";

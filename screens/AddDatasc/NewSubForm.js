@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { subcategories as localSubcategories } from '../../components/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
 import DropDownPicker from 'react-native-dropdown-picker';
+import { AntDesign } from '@expo/vector-icons';
 
 const NewSubForm = ({ isVisible, onClose,}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
@@ -70,8 +71,10 @@ try {
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <View style={styles.modalOverlay}> 
       <View style={styles.formContainer}>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
         <Text style={styles.formTitle}>Add New Subcategory</Text>
-
         <TextInput
           style={styles.input}
           placeholder="Enter subcategory name"
@@ -188,6 +191,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
     fontWeight: 'bold',
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    padding: 25,
+    position: 'absolute',
   },
 });
 export default NewSubForm;

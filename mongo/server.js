@@ -7,14 +7,14 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/yourdbname', {
+mongoose.connect('mongodb://localhost:27017/vita', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 // Test Route
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Vita Works');
 });
 
 const PORT = process.env.PORT || 5000;
