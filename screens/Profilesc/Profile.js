@@ -4,6 +4,7 @@ import { useTheme } from '../Settingsc/Theme';
 import ProfileSelect from './ProfileSelect';
 
 const screenHeight = Dimensions.get('window').height;
+
 const profileImageMaxHeight = 150; // Maximum profile image height
 
 const Profile = ({ navigation }) => {
@@ -60,7 +61,7 @@ const Profile = ({ navigation }) => {
   );
 };
 
-const screenHeight = Dimensions.get('window').height;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -117,92 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#000',
   },
-});
-
-To optimize your Profile component for better performance and cleaner code, you can follow these steps:
-
-Extract inline styles: Move any inline styles to the styles object to avoid unnecessary re-renders and improve readability.
-
-Use useCallback for handlers: Wrap your PanResponder handlers with useCallback to prevent them from being recreated on every render.
-
-Consolidate Animated Values: If multiple animations are always triggered together, consider using a single Animated.Value and interpolate it for related styles.
-
-Optimize Performance of Animations: Use the useNativeDriver property where possible to offload animations to the native side and improve performance.
-
-Debounce Rapid Interactions: If necessary, debounce rapid swipe gestures to prevent excessive animation triggers.
-
-Memoize Components: Use React.memo for components that don't need to re-render often.
-
-Remove Redundant Code: Any code or imports that aren't used should be removed to keep the component clean.
-
-Here’s an example of an optimized version of your Profile component:
-
-jsx
-Copy code
-import React, { useState, useRef, useCallback } from 'react';
-import { Animated, Dimensions, PanResponder, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useTheme } from '../Settingsc/Theme';
-import ProfileSelect from './ProfileSelect';
-
-const screenHeight = Dimensions.get('window').height;
-const profileImageMaxHeight = 150; // Maximum profile image height
-
-const Profile = ({ navigation }) => {
-  const { theme } = useTheme();
-  const themeStyles = {
-    backgroundColor: theme === 'light' ? '#aec4c7' : '#000000',
-    color: theme === 'light' ? '#000000' : '#FFFFFF',
-  };
-
-  const menuHeight = useRef(new Animated.Value(screenHeight * 0.5)).current;
-  const profileImageHeight = useRef(new Animated.Value(profileImageMaxHeight)).current;
-  const ageOpacity = useRef(new Animated.Value(1)).current;
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: useCallback((event, gestureState) => {
-        if (gestureState.dy < 0) {
-          // Swipe up
-          Animated.parallel([
-            Animated.timing(menuHeight, {
-              toValue: screenHeight * 0.7,
-              duration: 300,
-              useNativeDriver: false,
-            }),
-            Animated.timing(profileImageHeight, {
-              toValue: profileImageMaxHeight * 0.5,
-              duration: 300,
-              useNativeDriver: false,
-            }),
-            Animated.timing(ageOpacity, {
-              toValue: 0,
-              duration: 300,
-              useNativeDriver: true,
-            }),
-          ]).start();
-        }
-        // Implement swiping down logic if needed
-      }, [menuHeight, profileImageHeight, ageOpacity]), // Dependencies for useCallback
-    })
-  ).current;
-
-  return (
-    <View style={styles.container}>
-      <ProfileSelect themeStyles={themeStyles} />
-      <Animated.View style={[styles.menuSection, { height: menuHeight }]}>
-        {['Edit Profile', 'Sync With Others', 'View logs', 'Notification', 'User Theme'].map((item, index) => (
-          <TouchableOpacity key={index} style={styles.menuItem}>
-            <Text style={[styles.menuItemText, themeStyles]}>{item}</Text>
-          </TouchableOpacity>
-        ))}
-      </Animated.View>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  // ... your styles here
 });
 
 export default React.memo(Profile);
