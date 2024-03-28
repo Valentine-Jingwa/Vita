@@ -65,7 +65,8 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
               ))}
             </Picker>
           )}
-          <View style={styles.buttonContainer}>
+        </View>
+        <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
@@ -77,6 +78,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             <Text style={styles.notificationText}>Data saved successfully!</Text>
           </Animated.View>
         </View>
+
       </View>
     </Modal>
   );
@@ -96,6 +98,7 @@ const styles = StyleSheet.create({
     padding: 25,
     alignItems: 'center',
     width: '90%',
+    height: '20%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
