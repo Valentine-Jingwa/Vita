@@ -1,64 +1,50 @@
-import React, { useState, useEffect } from 'react';
+// DataEntryModal.js
+ 
+import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
-import { AntDesign } from '@expo/vector-icons'; 
-
+import { Picker } from '@react-native-picker/picker';
+import { AntDesign } from '@expo/vector-icons';
+import { subcategories } from '../DataList'; // Make sure this import path is correct
+ 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
-  
-  const [notificationOpacity] = useState(new Animated.Value(0));
+  if (!subcategory) return null;
+ 
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
-
-
-  if (!subcategory) return null;
-
-
-
-  const handleSave = () => {
-  // Check if inputValue is empty or only contains whitespace
-  if (!inputValue.trim()) {
-    alert('Please input a value before saving'); // Use alert for input errors
-    return; // Exit the function early
-  }
-  
-  const value = Number(inputValue);
-  // Further checks for value validity
-  if (isNaN(value) || value > 999) {
-    alert('Please enter a valid number (0-999)'); // Use alert for input errors
-    return; // Exit the function early
-  }
-    
-    // If all checks pass, then proceed to save
-    onSave(subcategory.id, value.toString(), subcategory.unit, subcategory.subcategory, subcategory.categoryname);
-    setInputValue(''); // Clear input field after save
-    
-    // Only now we know for sure the data is valid and saved, so we show the success message
-    showNotification('Data successfully saved');
+  const [notificationOpacity] = useState(new Animated.Value(0));
+ 
+  const validateAndSave = () => {
+    const value = Number(inputValue.trim());
+    if (isNaN(value) || value < 0 || value > 999) {
+      Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
+      return;
+    }
+ 
+    onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
+    setInputValue('');
+    onClose();
+    showNotification();
   };
-
-  const showNotification = (message) => {
-    // Slide down
-    Animated.timing(notificationOpacity, {
-      toValue: 1, // Ensure this is set to 1 for full opacity
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {
-      // Stay for a bit and slide up
-      setTimeout(() => {
-        Animated.timing(notificationOpacity, {
-          toValue: 0, // Fade out the notification
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
-      }, 500); // Show for seconds
-    });
+ 
+  const showNotification = () => {
+    Animated.sequence([
+      Animated.timing(notificationOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(3000),
+      Animated.timing(notificationOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
-
+ 
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <View style={styles.modalOverlay}>
-      <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
-          <Text style={styles.notificationText}>Data saved successfully!</Text>
-        </Animated.View>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <AntDesign name="close" size={24} color="black" />
@@ -67,20 +53,36 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
           <TextInput
             style={styles.input}
             value={inputValue}
-            onChangeText={text => setInputValue(text.replace(/[^0-9]/g, ''))} // Allow only numbers
+            onChangeText={text => setInputValue(text.replace(/[^0-9]/g, ''))}
             keyboardType="numeric"
-            maxLength={3} // Restrict input length
+            maxLength={3}
             placeholder="Enter value (0-999)"
           />
-          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
+          {subcategory.units && (
+            <Picker selectedValue={selectedUnit} onValueChange={setSelectedUnit} style={styles.picker}>
+              {subcategory.units.map((unit, index) => (
+                <Picker.Item key={index} label={unit} value={unit} />
+              ))}
+            </Picker>
+          )}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
+              <Text style={styles.buttonText}>Save</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.saveAddMoreButton} onPress={validateAndSave}>
+              <Text style={styles.buttonText}>Save and Add More</Text>
+            </TouchableOpacity>
+          </View>
+          <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
+            <Text style={styles.notificationText}>Data saved successfully!</Text>
+          </Animated.View>
         </View>
       </View>
     </Modal>
   );
 };
-
+ 
+ 
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -89,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    backgroundColor: '#fff',
+    backgroundColor: 'lightgrey',
     borderRadius: 20,
     padding: 25,
     alignItems: 'center',
@@ -105,48 +107,74 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: 'flex-end',
-    marginBottom: 10,
+    padding: 25,
+    position: 'absolute',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   subcategoryTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
+    color: '#000',
   },
   input: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#fff',
     borderRadius: 10,
     fontSize: 16,
     padding: 10,
+    marginVertical: 10,
+    width: '100%',
+    elevation: 2,
+  },
+  picker: {
     width: '100%',
     marginBottom: 20,
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  saveAddMoreButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
+    flex: 1,
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
     width: '100%',
   },
   buttonText: {
-    color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 16,
   },
-  notification: {
-    position: 'absolute',
-    top: 50,
-    left: 0,
-    right: 0,
-    backgroundColor: '#4CAF50',
+  addButton: {
+    backgroundColor: '#fff',
     padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000,
-  },
-  notificationText: {
-    color: 'white',
-    fontSize: 16,
+    marginTop: 10,
+    borderRadius: 10,
+    elevation: 2,
+    width: '100%',
   },
 });
-
+ 
 export default DataEntryModal;

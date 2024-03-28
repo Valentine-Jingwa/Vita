@@ -24,3 +24,4 @@
 - npm install express mongoose bcryptjs jsonwebtoken cors
 - npm install axios
 - npm install @react-navigation/native @react-navigation/material-top-tabs react-native-tab-view react-native-pager-view
+- npm install react-native-dropdown-picker --save

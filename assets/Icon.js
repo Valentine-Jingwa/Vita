@@ -4,6 +4,7 @@ import IAlertCircle from './icons/alert-circle.svg';
 import IBellOffOutline from './icons/bell-off-outline.svg';
 import IBellOutline from './icons/bell-outline.svg';
 import IBell from './icons/bell.svg';
+import Ibandaid from './icons/bandaid.svg';
 import ICalendarOutline from './icons/calendar-outline.svg';
 import ICalendar from './icons/calendar.svg';
 import ICameraOutline from './icons/camera-outline.svg';
@@ -13,8 +14,11 @@ import ICloudUpload from './icons/cloud-upload.svg';
 import IGlobe2Outline from './icons/globe-2-outline.svg';
 import IGlobe2 from './icons/globe-2.svg';
 import IGlobeOutline from './icons/globe-outline.svg';
+import Ihealth from './icons/health.svg';
+import Imed from './icons/drug.svg';
 import IHomeOutline from './icons/home-outline.svg';
 import IHome from './icons/home.svg';
+import Ifood from './icons/kanji-vadas-nutrition-svgrepo-com.svg';
 import IMessageCircleOutline from './icons/message-circle-outline.svg';
 import IMessageCircle from './icons/message-circle.svg';
 import IMicOff from './icons/mic-off.svg';
@@ -45,6 +49,7 @@ import ISettings from './icons/settings.svg';
 import IShare from './icons/share.svg';
 import ISlashOutline from './icons/slash-outline.svg';
 import ISlash from './icons/slash.svg';
+import IPill from './icons/pill-capsule-svgrepo-com.svg';
 import ITrendingDownOutline from './icons/trending-down-outline.svg';
 import ITrendingUpOutline from './icons/trending-up-outline.svg';
 import Irealhome from './icons/realhome.svg';
@@ -79,6 +84,10 @@ export {
   IGlobeOutline,
   IHomeOutline,
   IHome,
+  Ihealth,
+  Imed,
+  Ibandaid,
+  Ifood,
   IMessageCircleOutline,
   IMessageCircle,
   IMicOff,
@@ -102,6 +111,7 @@ export {
   IPlusSquare,
   IPrinterOutline,
   IPrinter,
+  IPill,
   ISettings2Outline,
   ISettings2,
   ISettingsOutline,

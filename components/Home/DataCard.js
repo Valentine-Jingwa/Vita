@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     idcolor: {
         flex: 1,
         justifyContent: 'center', // Centers items vertically in the container
-        alignItems: 'start', // Centers items horizontally in the container
+        alignItems: 'flex-start', // Centers items horizontally in the container
         fontSize: 18,
         width: '10%',
     },
