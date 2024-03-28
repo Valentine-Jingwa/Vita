@@ -1,31 +1,31 @@
 // DataEntryModal.js
-
+ 
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { subcategories } from '../DataList'; // Make sure this import path is correct
-
+ 
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   if (!subcategory) return null;
-
+ 
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
   const [notificationOpacity] = useState(new Animated.Value(0));
-
+ 
   const validateAndSave = () => {
     const value = Number(inputValue.trim());
     if (isNaN(value) || value < 0 || value > 999) {
       Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
       return;
     }
-
+ 
     onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
     setInputValue('');
     onClose();
     showNotification();
   };
-
+ 
   const showNotification = () => {
     Animated.sequence([
       Animated.timing(notificationOpacity, {
@@ -41,7 +41,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       }),
     ]).start();
   };
-
+ 
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <View style={styles.modalOverlay}>
@@ -65,8 +65,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
               ))}
             </Picker>
           )}
-        </View>
-        <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
@@ -78,14 +77,12 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             <Text style={styles.notificationText}>Data saved successfully!</Text>
           </Animated.View>
         </View>
-        <View>
-
       </View>
     </Modal>
   );
 };
-
-
+ 
+ 
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -99,7 +96,6 @@ const styles = StyleSheet.create({
     padding: 25,
     alignItems: 'center',
     width: '90%',
-    height: '20%',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -180,5 +176,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
+ 
 export default DataEntryModal;
