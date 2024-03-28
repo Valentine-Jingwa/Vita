@@ -58,8 +58,7 @@ export default function ProfileSelect({userSwippedup, userSwippeddown, userSwipp
           />
         </View>
         <Text style={styles.nameText}>Markus</Text>
-        <Text style={styles.ageText}>Age: 34</Text>
-        <Animated.Text style={[styles.age, { opacity: ageOpacity }]}>Age: 34</Animated.Text>
+        <Animated.Text style={[styles.ageText, { opacity: ageOpacity }]}>Age: 34</Animated.Text>
     </SafeAreaView>
     );
 }

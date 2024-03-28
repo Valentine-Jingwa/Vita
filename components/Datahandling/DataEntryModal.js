@@ -67,7 +67,6 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
           )}
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
-            <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
               <Text style={styles.buttonText}>Save</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.saveAddMoreButton} onPress={validateAndSave}>
