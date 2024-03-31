@@ -1,95 +1,85 @@
-// T03-05-2023
-// ProfileSelect.js
-import { useTheme } from '../Settingsc/Theme';
-import React, { useState, useRef } from 'react';
-import {SafeAreaView, Animated, Dimensions, PanResponder, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
+import profileStorage from '../../components/ProfileComp/profileKey';
 
+export default function ProfileSelect() {
+  const [profiles, setProfiles] = useState([]);
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
 
-export default function ProfileSelect({userSwippedup, userSwippeddown, userSwippedleft, userSwippedright, selectedProfile}) {
-    const { theme, toggleTheme } = useTheme();
-
-    const themeStyles = {
-    backgroundColor: theme === 'light' ? '#aec4c7' : '#000000',
-    color: theme === 'light' ? '#000000' : '#FFFFFF',
+  useEffect(() => {
+    const init = async () => {
+      const loadedProfiles = await profileStorage.loadProfiles();
+      setProfiles(Object.values(loadedProfiles)); // Convert object to array if necessary
     };
 
-      // Screen dimensions
-  const screenHeight = Dimensions.get('window').height;
-  const profileImageMaxHeight = 150; // Maximum profile image height
+    init();
+  }, []);
+  
+  // Handles swiping left to view the next profile
+  const handleSwipeLeft = () => {
+    setCurrentProfileIndex((prevIndex) => (prevIndex + 1) % profiles.length);
+  };
 
-  // Animated values
-  const menuHeight = useRef(new Animated.Value(screenHeight * 0.5)).current;
-  const profileImageHeight = useRef(new Animated.Value(profileImageMaxHeight)).current;
-  const ageOpacity = useRef(new Animated.Value(1)).current;
+  // Handles swiping right to view the previous profile
+  const handleSwipeRight = () => {
+    setCurrentProfileIndex((prevIndex) => (prevIndex - 1 + profiles.length) % profiles.length);
+  };
 
-  // PanResponder to handle swipe gesture
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => {
-        if (gestureState.dy < 0) {
-          // Swipe up
-          Animated.parallel([
-            Animated.timing(menuHeight, {
-              toValue: screenHeight * 0.7, // New height: 70% of the screen
-              useNativeDriver: false, // Height does not support native driver
-            }),
-            Animated.timing(profileImageHeight, {
-              toValue: profileImageMaxHeight * 0.5, // Reduce profile image height by 50%
-              useNativeDriver: false, // Height does not support native driver
-            }),
-            Animated.timing(ageOpacity, {
-              toValue: 0, // Fade out the age
-              useNativeDriver: true,
-            }),
-          ]).start();
-        }
-      },
-    })
-  ).current;
+  // Simple touch detection for swipe left/right - for demonstration
+  const onTouchEnd = (e) => {
+    if (e.nativeEvent.locationX > 150) { // Assuming a rightward swipe
+      handleSwipeRight();
+    } else { // Assuming a leftward swipe
+      handleSwipeLeft();
+    }
+  };
 
   return (
-    <SafeAreaView>
-        <View style={styles.profileImagePlaceholder}>
-          {/* <Image style={styles.profileImage} source={require('./path-to-your-image.png')} /> */}
-          <Animated.Image
-            style={[styles.profileImage, { height: profileImageHeight }]}
-            source={{ uri: 'path_to_profile_image' }}
-          />
-        </View>
-        <Text style={styles.nameText}>Markus</Text>
-        <Animated.Text style={[styles.ageText, { opacity: ageOpacity }]}>Age: 34</Animated.Text>
+    <SafeAreaView style={styles.container}>
+      {profiles.length > 0 && (
+        <>
+          <TouchableOpacity onPress={onTouchEnd} style={styles.profileImagePlaceholder}>
+            <Image
+              style={styles.profileImage}
+              source={{ uri: profiles[currentProfileIndex].imageUri || '/path/to/default/image' }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.nameText}>{profiles[currentProfileIndex].username || 'Username'}</Text>
+          <Text style={styles.ageText}>Age: {profiles[currentProfileIndex].age || 'Age'}</Text>
+        </>
+      )}
     </SafeAreaView>
-    );
+  );
 }
 
 const styles = StyleSheet.create({
-    profileSection: {
-        alignItems: 'center',
-        marginBottom: 30, // Spacing between profile and menu
-      },
-      profileImagePlaceholder: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: '#000', // This would be your placeholder color
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-      },
-      profileImage: {
-        width: 110,
-        height: 110,
-        borderRadius: 55,
-      },
-      nameText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginVertical: 4,
-      },
-      ageText: {
-        fontSize: 18,
-        color: 'gray',
-        marginBottom: 20,
-      },
-})
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileImagePlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#000', // Placeholder color
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  profileImage: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+  },
+  nameText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginVertical: 4,
+  },
+  ageText: {
+    fontSize: 18,
+    color: 'gray',
+    marginBottom: 20,
+  },
+});
