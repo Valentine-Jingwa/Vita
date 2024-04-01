@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
@@ -18,6 +18,8 @@ const Home = () => {
     { id: '5', text: 'Swipe Me 5' },
   ].sort((a, b) => parseInt(a.id) - parseInt(b.id)));
 
+
+  const swiperRef = useRef(null);
 
   const onSwiped = (cardIndex) => {
     console.log("Swiped card at index", cardIndex);
@@ -85,6 +87,7 @@ const Home = () => {
       {/* DeckSwiper */}
       <View style={styles.deckContainer}>
         <DeckSwiper
+          ref={swiperRef}
           cards={items}
           renderCard={(cardData) => (
             <View style={styles.card}>
@@ -92,12 +95,19 @@ const Home = () => {
             </View>
           )}
           onSwiped={onSwiped}
-          onSwipedAll={() => console.log('OnSwipedAll')}
-          cardIndex={0}
-          backgroundColor={'transparent'}
-          stackSize={3}
+          stackSize={1} // Ensure only one card is visible
           infinite={true}
         />
+      </View>
+
+            {/* Navigation Arrows */}
+            <View style={styles.arrowContainer}>
+        <TouchableOpacity onPress={() => swiperRef.current.swipeLeft()}>
+          <Icon name="chevron-left" size={40} color="#007AFF" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => swiperRef.current.swipeRight()}>
+          <Icon name="chevron-right" size={40} color="#007AFF" />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -125,6 +135,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  arrowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 60,
+    paddingBottom: 60, 
+    backgroundColor: 'red',
+  },
   card: {
     height: 200,
     width: '90%',
@@ -133,9 +150,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.3,
     elevation: 4,
     zIndex: 100,
   },
