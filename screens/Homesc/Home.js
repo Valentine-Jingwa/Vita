@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
 import DeckSwiper from 'react-native-deck-swiper';
 import { Iclock } from '../../assets/Icon';
 import DataCard from '../../components/Home/DataCard';
+import CompactDataCard from '../../components/Home/CompactDataCard';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
@@ -22,13 +23,40 @@ const debounce = (func, delay) => {
 
 
 const Home = () => {
-  const [calendarModalVisible, setCalendarModalVisible] = useState(false);
+  const [calendarModalVisible, setTimeModalVisible] = useState(false);
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
 
+   // Function to handle day press on the calendar
+   const handleDayPress = (day) => {
+    console.log("Selected Day:", day);
+    setSelectedDate(day.dateString);
+    setSelectedDateModalVisible(true);
+  };
+
+
+   // Function to filter data for the selected date
+   const getDataForSelectedDate = () => {
+    return data.filter((item) => {
+      const itemDate = new Date(item.timestamp).toDateString();
+      const selectedDayDate = new Date(selectedDate).toDateString();
+      return itemDate === selectedDayDate;
+    });
+  };
+
+    const getMarkedDates = () => {
+      const marked = {};
+      data.forEach((item) => {
+        const dateKey = new Date(item.timestamp).toISOString().split('T')[0]; // Converts timestamp to 'YYYY-MM-DD'
+        if (!marked[dateKey]) {
+          marked[dateKey] = { marked: true, dotColor: 'blue' };
+        }
+      });
+      return marked;
+    };
 
 
 
@@ -81,7 +109,7 @@ const Home = () => {
 
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <TouchableOpacity style={styles.iconButton} onPress={() => setCalendarModalVisible(true)}>
+      <TouchableOpacity style={styles.iconButton} onPress={() => setTimeModalVisible(true)}>
         <Iclock width={35} height={35} />
       </TouchableOpacity>
 
@@ -90,10 +118,10 @@ const Home = () => {
         animationType="fade"
         transparent={true}
         visible={calendarModalVisible}
-        onRequestClose={() => setCalendarModalVisible(false)}>
+        onRequestClose={() => setTimeModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.modalView}>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setCalendarModalVisible(false)}>
+            <TouchableOpacity style={styles.closeButton} onPress={() => setTimeModalVisible(false)}>
               <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
             <Text>Blank Modal Content</Text>
@@ -101,33 +129,38 @@ const Home = () => {
         </View>
       </Modal>
 
-      {/* Modal for selected date */}
+      {/* Modal for Selected Date */}
       <Modal
         animationType="slide"
         transparent={true}
         visible={selectedDateModalVisible}
-        onRequestClose={() => setSelectedDateModalVisible(false)}>
+        onRequestClose={() => setSelectedDateModalVisible(false)}
+      >
         <View style={styles.modalOverlay}>
-          <View style={styles.modalView}>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setSelectedDateModalVisible(false)}>
+          <View style={styles.selectedDateModalView}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setSelectedDateModalVisible(false)}
+            >
               <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
-            <Text style={styles.dateText}>{selectedDate}</Text>
+            <ScrollView horizontal={false} style={{ width: '100%' }}>
+              {getDataForSelectedDate().map((item, index) => (
+                <CompactDataCard key={index} item={item} />
+              ))}
+            </ScrollView>
           </View>
         </View>
       </Modal>
 
       {/* Calendar Component */}
       <Calendar
-        onDayPress={(day) => {
-          console.log(day);
-          setSelectedDate(day.dateString);
-          setSelectedDateModalVisible(true);
-        }}
-        theme={{
-          arrowColor: '#007AFF', 
-          todayTextColor: '#007AFF', 
-        }}
+  onDayPress={handleDayPress}
+  markedDates={getMarkedDates()}
+  theme={{
+    arrowColor: '#007AFF',
+    todayTextColor: '#007AFF',
+  }}
         // Add style to ensure calendar doesn't change the layout size dynamically
         style={{
           ...styles.calendar, // Spread existing styles from your styles.calendar
@@ -171,6 +204,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: '#f5f5f5',
+  },
+  selectedDateModalView: {
+    width: '100%', 
+    position: 'absolute',
+    bottom: 0, 
+    left: 0,
+    right: 0, 
+    height: '70%', 
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    alignItems: 'center', // Centers the content horizontally
+  },
+  closeButton: {
+    alignSelf: 'flex-end', // Move close button to the right
+    marginBottom: 10, // Space from the top content
   },
   iconButton: {
     position: 'absolute',
@@ -221,7 +276,8 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
