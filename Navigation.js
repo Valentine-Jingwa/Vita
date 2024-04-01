@@ -110,7 +110,7 @@ function BottomTabs() {
   const { theme, themeStyles } = useTheme();
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
-  const tabBarBackground = theme === 'light' ? '#ECEFF1' : '#0D1012';
+  const tabBarBackground = theme === 'light' ? '#ECEFF1' : '#0D1019';
 
   return (
     <Tab.Navigator 
