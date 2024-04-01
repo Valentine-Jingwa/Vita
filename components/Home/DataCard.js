@@ -4,19 +4,25 @@ import { View, Text, StyleSheet } from 'react-native';
 import ColorId from '../../constants/ColorId';
 import TimeCalculator from './TimeCalculator';
 
-const DataCard = ({index, item}) => {
+const DataCard = ({ item }) => {
+    if (!item) {
+        // Optionally, render nothing or some placeholder
+        return null; // or <View><Text>Loading...</Text></View> for a placeholder
+    }
+
     return (
-        <View key={index} style={styles.dataBox}>
+        <View style={styles.dataBox}>
             <View style={styles.contentBox}>
                 <Text style={styles.idcolor}><ColorId id={item.id}/></Text>
-                <Text style={styles.subcatName}>{item.subcategory} </Text>
+                <Text style={styles.subcatName}>{item.subcategory}</Text>
                 <Text style={styles.textvalue}>{item.value}</Text>
                 <Text style={styles.textunit}>{item.unit}</Text>  
             </View>
             <Text><TimeCalculator timestamp={item.timestamp} /></Text>
-       </View>
+        </View>
     );
 };
+
 export default DataCard;
 
 const styles = StyleSheet.create({

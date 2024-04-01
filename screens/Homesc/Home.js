@@ -1,32 +1,54 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
 import DeckSwiper from 'react-native-deck-swiper';
 import { Iclock } from '../../assets/Icon';
+import DataCard from '../../components/Home/DataCard';
+import DataStorage from '../../components/Datahandling/DataStorage';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const Home = () => {
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+  const [data, setData] = useState([]);
 
-  const [items, setItems] = useState([
-    { id: '1', text: 'Swipe Me 1' },
-    { id: '2', text: 'Swipe Me 2' },
-    { id: '3', text: 'Swipe Me 3' },
-    { id: '4', text: 'Swipe Me 4' },
-    { id: '5', text: 'Swipe Me 5' },
-  ].sort((a, b) => parseInt(a.id) - parseInt(b.id)));
+
 
 
   const swiperRef = useRef(null);
 
+  const fetchData = async () => {
+    const storedData = await DataStorage.Retrieve();
+    if (storedData && Array.isArray(storedData)) {
+        const formattedData = storedData.map(item => ({
+            ...item,
+            id: item.id || 'default-id', // Provide a default ID if missing
+        })).sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        setData(formattedData);
+    } else {
+        setData([]); // Ensure data is always an array
+    }
+};
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
   const onSwiped = (cardIndex) => {
     console.log("Swiped card at index", cardIndex);
-    let swipedItem = items[cardIndex];
+    let swipedItem = data[cardIndex];
     // Remove the swiped item and add it at the end
-    let newItems = [...items.filter((_, index) => index !== cardIndex), swipedItem];
-    setItems(newItems);
+    let newItems = [...data.filter((_, index) => index !== cardIndex), swipedItem];
+    setData(newItems); // Update `data` instead of `items`
 };
 
   return (
@@ -88,14 +110,12 @@ const Home = () => {
       <View style={styles.deckContainer}>
         <DeckSwiper
           ref={swiperRef}
-          cards={items}
-          renderCard={(cardData) => (
-            <View style={styles.card}>
-              <Text style={styles.cardText}>{cardData.text}</Text>
-            </View>
+          cards={data} // Use the fetched data
+          renderCard={(cardData, cardIndex) => (
+            <DataCard key={cardIndex} item={cardData} />
           )}
           onSwiped={onSwiped}
-          stackSize={1} // Ensure only one card is visible
+          stackSize={3}
           infinite={true}
         />
       </View>
