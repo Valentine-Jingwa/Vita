@@ -7,6 +7,18 @@ import { Iclock } from '../../assets/Icon';
 import DataCard from '../../components/Home/DataCard';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+
+const debounce = (func, delay) => {
+  let inDebounce;
+  return function() {
+    const context = this;
+    const args = arguments;
+    clearTimeout(inDebounce);
+    inDebounce = setTimeout(() => func.apply(context, args), delay);
+  };
+};
+
 
 
 const Home = () => {
@@ -14,19 +26,17 @@ const Home = () => {
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [data, setData] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
 
 
 
-  const swiperRef = useRef(null);
 
   const fetchData = async () => {
     const storedData = await DataStorage.Retrieve();
     if (storedData && Array.isArray(storedData)) {
-        const formattedData = storedData.map(item => ({
-            ...item,
-            id: item.id || 'default-id', // Provide a default ID if missing
-        })).sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        // Assuming `timestamp` is in a format that can be directly compared
+        const formattedData = storedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setData(formattedData);
     } else {
         setData([]); // Ensure data is always an array
@@ -43,13 +53,31 @@ const Home = () => {
     }, [])
   );
 
-  const onSwiped = (cardIndex) => {
-    console.log("Swiped card at index", cardIndex);
-    let swipedItem = data[cardIndex];
-    // Remove the swiped item and add it at the end
-    let newItems = [...data.filter((_, index) => index !== cardIndex), swipedItem];
-    setData(newItems); // Update `data` instead of `items`
-};
+   // Function to go to the next card
+   const goToNextCard = () => {
+    setCurrentIndex(prevIndex => (prevIndex + 1) % data.length); // Loop back to the first card after reaching the end
+  };
+
+  // Function to go to the previous card
+  const goToPrevCard = () => {
+    setCurrentIndex(prevIndex => (prevIndex - 1 + data.length) % data.length); // Loop to the last card when reaching the first one
+  };
+
+  const handleSwipe = ({ nativeEvent }) => {
+    if (nativeEvent.translationX < 0) {
+      goToNextCard(); // Swiped Left, go to next card
+    } else if (nativeEvent.translationX > 0) {
+      goToPrevCard(); // Swiped Right, go to previous card
+    }
+  };
+
+    // Debounce the swipe handler to prevent multiple calls
+  const onSwipe = debounce(handleSwipe, 200);
+
+
+  
+
+
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -106,29 +134,34 @@ const Home = () => {
         }}
       />
 
-      {/* DeckSwiper */}
-      <View style={styles.deckContainer}>
-        <DeckSwiper
-          ref={swiperRef}
-          cards={data} // Use the fetched data
-          renderCard={(cardData, cardIndex) => (
-            <DataCard key={cardIndex} item={cardData} />
+      {/* Simplified Card Viewer */}
+      <PanGestureHandler
+        onGestureEvent={onSwipe}
+        onHandlerStateChange={({ nativeEvent }) => {
+          if (nativeEvent.state === State.END) {
+            onSwipe({ nativeEvent });
+          }
+        }}>
+        <View style={styles.cardViewer}>
+          {data.length > 0 && currentIndex < data.length ? (
+            <DataCard item={data[currentIndex]} />
+          ) : (
+            <Text style={styles.noDataText}>No Data Available</Text>
           )}
-          onSwiped={onSwiped}
-          stackSize={3}
-          infinite={true}
-        />
+        </View>
+      </PanGestureHandler>
+
+
+      {/* Navigation Arrows */}
+      <View style={styles.arrowContainer}>
+        <TouchableOpacity onPress={goToPrevCard}>
+          <Icon name="chevron-left" size={30} color="#000" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={goToNextCard}>
+          <Icon name="chevron-right" size={30} color="#000" />
+        </TouchableOpacity>
       </View>
 
-            {/* Navigation Arrows */}
-            <View style={styles.arrowContainer}>
-        <TouchableOpacity onPress={() => swiperRef.current.swipeLeft()}>
-          <Icon name="chevron-left" size={40} color="#007AFF" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => swiperRef.current.swipeRight()}>
-          <Icon name="chevron-right" size={40} color="#007AFF" />
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
@@ -154,13 +187,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 50,
+  },
+  cardViewer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20, // Add some padding
   },
   arrowContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 60,
-    paddingBottom: 60, 
-    backgroundColor: 'red',
+    justifyContent: 'space-around',
+    marginBottom: 65, 
+  },
+  noDataText: {
+    fontSize: 18,
+    color: '#666',
   },
   card: {
     height: 200,

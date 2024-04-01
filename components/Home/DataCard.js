@@ -29,47 +29,39 @@ const styles = StyleSheet.create({
     dataBox: {
         flexDirection: 'column',
         alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 5,
-        borderRadius: 10,
-        marginVertical: 5,
-        borderWidth: 1,
         justifyContent: 'center',
-        alignContent: 'center',
-    
+        padding: 20,
+        borderRadius: 15,
+        backgroundColor: '#FFFFFF', // Neutral background color
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 2,
+        marginVertical: 10,
+        width: '95%', // Make cards wide
+        height: 300, // Make cards tall
+        alignSelf: 'center', // Center cards
     },
     contentBox: {
-        display: 'flex',
+        flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        flexDirection: 'row',
-        width:'90%',
+        width: '100%', // Use full width of the card
     },
     subcatName: {
-        fontSize: 25,
-        width:'60%',
-        textAlign: 'center',
-    },
-    textvalue: {
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-        width:'20%',
-        textAlign: 'center',
+    },
+    textvalue: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
     },
     textunit: {
-        fontSize: 12,
-        color: '#333',
-        width:'15%',
-
-    },
-
-    idcolor: {
-        flex: 1,
-        justifyContent: 'center', // Centers items vertically in the container
-        alignItems: 'flex-start', // Centers items horizontally in the container
         fontSize: 18,
-        width: '10%',
+        color: '#777', // Slightly lighter for the unit
     },
     
 });
