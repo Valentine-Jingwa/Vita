@@ -1,7 +1,7 @@
 // DataEntryModal.js
  
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert } from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert, Platform, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { subcategories } from '../DataList'; // Make sure this import path is correct
@@ -41,9 +41,22 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       }),
     ]).start();
   };
+
+  const handleOnClose = () => {
+    onClose();
+    setInputValue('');
+  }
  
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
+      <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      >
+      <TouchableWithoutFeedback onPress={handleOnClose}>
+
+
       <View style={styles.modalOverlay}>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -78,6 +91,8 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
           </Animated.View>
         </View>
       </View>
+      </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };
@@ -95,7 +110,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     alignItems: 'center',
-    height: '40%',
     width: '90%',
     shadowColor: '#000',
     shadowOffset: {
