@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         marginVertical: 10,
         width: '95%', // Make cards wide
-        height: 300, // Make cards tall
+        height: 250, // Make cards tall
         alignSelf: 'center', // Center cards
     },
     contentBox: {

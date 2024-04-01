@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
 import DeckSwiper from 'react-native-deck-swiper';
@@ -56,6 +56,20 @@ const Home = () => {
         }
       });
       return marked;
+    };
+
+    const CustomDay = ({ date, state, marking }) => {
+      const isMarked = marking.marked;
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 5 }}>
+          <Text style={{ 
+              textDecorationLine: isMarked ? 'underline' : 'none',
+              color: state === 'disabled' ? 'gray' : 'black',
+          }}>
+            {date.day}
+          </Text>
+        </View>
+      );
     };
 
 
@@ -136,6 +150,7 @@ const Home = () => {
         visible={selectedDateModalVisible}
         onRequestClose={() => setSelectedDateModalVisible(false)}
       >
+      <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
         <View style={styles.modalOverlay}>
           <View style={styles.selectedDateModalView}>
             <TouchableOpacity
@@ -145,12 +160,17 @@ const Home = () => {
               <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
             <ScrollView horizontal={false} style={{ width: '100%' }}>
-              {getDataForSelectedDate().map((item, index) => (
-                <CompactDataCard key={index} item={item} />
-              ))}
-            </ScrollView>
+                  {getDataForSelectedDate(selectedDate).length > 0 ? (
+                    getDataForSelectedDate(selectedDate).map((item, index) => (
+                      <CompactDataCard key={index} item={item} />
+                    ))
+                  ) : (
+                    <Text style={styles.noDataText}>No data inputted for {selectedDate} </Text>
+                  )}
+                </ScrollView>
           </View>
         </View>
+      </TouchableWithoutFeedback>
       </Modal>
 
       {/* Calendar Component */}
@@ -222,6 +242,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     alignItems: 'center', // Centers the content horizontally
+    ustifyContent: 'center',
+    flex: 1,
   },
   closeButton: {
     alignSelf: 'flex-end', // Move close button to the right
@@ -307,6 +329,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+  },
+  noDataText: {
+    fontSize: 30,
+    color: '#000',
+    textAlign: 'center',
+    marginTop: '50%',
+    marginBottom: 'auto',
+
   },
 });
 
