@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const BASE_URL = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`;
 
+
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -70,6 +71,7 @@ export const createUser = async (userData) => {
   
       // Determine if 'loginId' is an email or a username
       const key = loginId.includes('@') ? 'email' : 'username';
+
   
       // Form the payload based on what key we're using
       const payload = {
