@@ -8,14 +8,17 @@ import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
 import ThemedText from './ThemedText';
 import {Day, Night, RLogout} from '../../assets/Icon';
+import { useNavigation } from '@react-navigation/native';
+import { navigationRef } from '../../NavigationService';
 
 
 const fullWidth = Dimensions.get('window').width;
 
-export default function Settings({ navigation }) {
+export default function Settings({navigation}) {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const { theme, toggleTheme } = useTheme();
+  // const navigation = useNavigation();
 
   const themeStyles = {
     backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
@@ -40,14 +43,17 @@ export default function Settings({ navigation }) {
 
   const handleLogout = async () => {
     try {
-      await AsyncStorage.removeItem('@user_token');
-      // Here you navigate to the 'Welcome' screen after clearing the token
-      navigation.navigate('Welcome');
+        await AsyncStorage.removeItem('@user_token');
+        // Reset navigation state
+        navigationRef.current?.reset({
+            index: 0,
+            routes: [{ name: 'Welcome' }],
+        });
     } catch (error) {
-      // Handle any errors that occur during logout
-      console.error("Logout failed", error);
+        console.error("Logout failed", error);
     }
-  };
+};
+
 
   const handleCancel = () => {
     setModalVisible(false); // Just hide the modal
@@ -138,6 +144,14 @@ export default function Settings({ navigation }) {
             </View>
           </TouchableOpacity>
         </View>
+        <View style={styles.notificationbtnwrapper}>
+          <TouchableOpacity onPress={handleLogout}>
+            <View style={[styles.notificationbtn, buttonStylemain]}>
+              <ThemedText>Logout</ThemedText>
+            </View>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.logoutButtonWrapper}>
           <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, buttonStyleside]}>
             <View style={[styles.buttonText]}>

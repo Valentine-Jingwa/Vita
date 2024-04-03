@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
-import * as Keychain from 'react-native-keychain';
+import { useAuth } from './AuthContext'; // Make sure this path matches your AuthContext file location
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
 
 const loginValidationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -16,59 +13,19 @@ const loginValidationSchema = Yup.object().shape({
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [rememberUser, setRememberUser] = useState(false);
-
+  const { login } = useAuth(); // Using the login function from AuthContext
 
   const handleLogin = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Implement your actual login logic here
-    // For demonstration, after a fake delay, navigate to the main app
+    // Simulate login logic, e.g., API call to authenticate user
     setTimeout(async () => {
       setLoading(false);
-      
-      // Here, instead of just stopping the loader, navigate to the main part of your app
-      // For example, if using AsyncStorage to store a user token:
-      await AsyncStorage.setItem('@user_token', 'your_token_here');
-      
-      navigation.navigate('Home');
+      await login('Token'); // Here, 'Token' should ideally be the result of your authentication API call
+      // Navigation is handled inside AuthProvider after changing isAuthenticated state
     }, 2000);
-};
+  };
 
-const handleGoogleLogin = async () => {
-  try {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    // Use userInfo to log in or sign up with your backend
-    // Navigate to the main app on successful login
-    navigation.navigate('Home');
-  } catch (error) {
-    console.error(error);
-    // Handle the error, e.g., show an error message
-  }
-};
-
-const handleFacebookLogin = async () => {
-  try {
-    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-    if (result.isCancelled) {
-      throw new Error('User cancelled the login process');
-    }
-    const data = await AccessToken.getCurrentAccessToken();
-    if (!data) {
-      throw new Error('Something went wrong obtaining access token');
-    }
-    // Use data.accessToken to log in or sign up with your backend
-    // Navigate to the main app on successful login
-    navigation.navigate('Home');
-  } catch (error) {
-    console.error(error);
-    // Handle the error, e.g., show an error message
-  }
-};
-
-  
   const navigateToPasswordRecovery = () => {
-    // Navigate to Password Recovery Screen
     navigation.navigate('PasswordRecovery');
   };
 
@@ -82,7 +39,7 @@ const handleFacebookLogin = async () => {
           initialValues={{ email: '', password: '' }}
           onSubmit={values => handleLogin(values)}
         >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
               <TextInput
                 name="email"
@@ -110,15 +67,6 @@ const handleFacebookLogin = async () => {
               <TouchableOpacity onPress={handleSubmit} style={styles.button} disabled={loading}>
                 <Text style={styles.buttonText}>Login</Text>
               </TouchableOpacity>
-              <Text style={styles.orText}>Or login with</Text>
-              <View style={styles.socialLoginButtons}>
-                <TouchableOpacity onPress={handleGoogleLogin} style={[styles.socialButton, styles.googleButton]}>
-                  <Text style={styles.socialButtonText}>G</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleFacebookLogin} style={[styles.socialButton, styles.facebookButton]}>
-                  <Text style={styles.socialButtonText}>f</Text>
-                </TouchableOpacity>
-              </View>
               <View style={styles.switchContainer}>
                 <Switch
                   value={rememberUser}

@@ -5,7 +5,7 @@ import { Calendar } from 'react-native-calendars';
 import DeckSwiper from 'react-native-deck-swiper';
 import { Iclock } from '../../assets/Icon';
 
-const Home = () => {
+const Home = (navigate) => {
   const [calendarModalVisible, setCalendarModalVisible] = useState(false);
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
