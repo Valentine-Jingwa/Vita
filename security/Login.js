@@ -2,43 +2,37 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useAuth } from './AuthContext'; // Make sure this path matches your AuthContext file location
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
 
-
 const loginValidationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
+  loginId: Yup.string().required('Email or Username is required'),
   password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
 });
 
 export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [rememberUser, setRememberUser] = useState(false);
-  const { login } = useAuth(); // Using the login function from AuthContext
+  const { login } = useAuth();
 
-
-const handleLogin = async (values) => {
-  setLoading(true);
-  try {
-    // Authenticate the user with MongoDB
-    const authResponse = await authenticateUser(values.email || values.username , values.password);
-    if (authResponse.authenticated) {
-      // Use the login function from useAuth context, passing in the auth token
-      await login(authResponse.token);
-      // Navigate to your app's dashboard or home screen
-      navigation.navigate('BottomTabNavigator');
-    } else {
-      // Handle failed login
-      alert('Login failed. Please check your credentials.');
+  const handleLogin = async (values) => {
+    setLoading(true);
+    try {
+      // Authenticate the user with MongoDB
+      const authResponse = await authenticateUser(values.loginId, values.password);
+      if (authResponse.access_token) {
+        await login(authResponse.access_token);
+        navigation.navigate('BottomTabNavigator'); // Replace with your main authenticated route
+      } else {
+        alert('Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      alert('An error occurred during login.');
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Authentication error:', error);
-    alert('An error occurred during login.');
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const navigateToPasswordRecovery = () => {
     navigation.navigate('PasswordRecovery');
@@ -51,20 +45,22 @@ const handleLogin = async (values) => {
         <Text style={styles.subtitle}>Login to continue using the app</Text>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{ email: '', password: '' }}
+          initialValues={{ loginId: '', password: '' }}
           onSubmit={values => handleLogin(values)}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <>
               <TextInput
-                name="email"
-                placeholder="Email/Username"
+                name="loginId"
+                placeholder="Email or Username"
                 style={styles.textInput}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email || values.username}
+                onChangeText={handleChange('loginId')}
+                onBlur={handleBlur('loginId')}
+                value={values.loginId}
+                autoCapitalize="none"
                 keyboardType="default"
               />
+              {errors.loginId && touched.loginId && <Text style={styles.errorText}>{errors.loginId}</Text>}
               <TextInput
                 name="password"
                 placeholder="Password"
@@ -99,6 +95,7 @@ const handleLogin = async (values) => {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
