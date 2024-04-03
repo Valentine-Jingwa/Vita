@@ -106,13 +106,13 @@ export default function Settings({navigation}) {
     </View>
   </Modal>
   <View style={styles.settingTopView}>
-     <View style={styles.SettingsTitleWrapper}>
+     {/* <View style={styles.SettingsTitleWrapper}>
       <TouchableOpacity>
         <View style={styles.SettingsTitle}>
           <ThemedText>Settings</ThemedText>
         </View>
       </TouchableOpacity>
-    </View>
+    </View> */}
   </View>
 
 
