@@ -1,8 +1,22 @@
 import React from 'react';
-import { SafeAreaView, Text, TouchableOpacity, StyleSheet, View, Image } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    SafeAreaView,
+    Modal,
+    Dimensions,
+    Animated,
+    Image,
+    Button,
+  } from 'react-native';
 import {Hlogo} from '../assets/Icon'
 
+const { width, height } = Dimensions.get('window');
+
 const Welcome = ({ navigation }) => {
+    
     return (
         <SafeAreaView style={styles.container}>
             {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
