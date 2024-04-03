@@ -62,29 +62,29 @@ export const createUser = async (userData) => {
       'Accept': 'application/ejson',
     },
   });
-  export const authenticateUser = async (email, password) => {
-    try {
-      // Replace 'data-hjhah' with your actual MongoDB Realm App ID
-      const url = `https://realm.mongodb.com/api/client/v2.0/app/data-hjhah/auth/providers/local-userpass/login`;
-  
-      const response = await axios.post(url, {
-        // Use the correct field name expected by your MongoDB Realm configuration
-        // It could be 'email' or 'username' depending on your setup
-        email: email,
-        password: password,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          // Remove the 'api-key' from the headers if not required for this endpoint
-        },
-      });
-  
-      console.log('Authentication successful:', response.data);
-      return response.data; // Should contain authentication tokens
-    } catch (error) {
-      console.error('Error during authentication:', error.response?.data || error.message);
-      throw error;
-    }
-  };
+export const authenticateUser = async (email, password) => {
+  try {
+    // Replace this URL with the new format using your App ID
+    const url = `https://realm.mongodb.com/api/client/v2.0/app/data-hjhah/auth/providers/local-userpass/login`;
+    const response = await axios.post(url, {
+      // MongoDB Atlas App Services typically uses 'email' field, but if you've set it up to use 'username', use that instead
+      email: email, // or 'username': email if that's what your app expects
+      password: password,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        // The 'api-key' header is likely not necessary for user authentication requests
+        // Remove it if that's the case
+      },
+    });
+
+    console.log('Authentication successful:', response.data);
+    return response.data; // This should contain authentication tokens
+  } catch (error) {
+    console.error('Error during authentication:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
   
   
