@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
 import globalStyles from './global.js';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
+import { CommonActions } from '@react-navigation/native';
 
 import React, { useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,11 +21,14 @@ import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import Settings from "./screens/Settingsc/Settings";
+import { useAuth } from './security/AuthContext'; 
+
 
 import Profiles from "./screens/Profilesc/ProfileSelect.js";  
 import EditProfile from "./screens/Profilesc/EditProfile";
 import ProfileSettings from "./screens/Profilesc/ProfileSettings";
 import SupportUs from "./screens/Profilesc/SupportUs";
+
 
 //Bottom Tab animation
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
@@ -60,51 +64,7 @@ function AddDataStackScreen() {
 }
 
 
-function ProfileStackScreen() {
-  return (
-    <ProfileStack.Navigator
-      screenOptions={{
-        headerShown: true, // This will hide the header bar on all screens within this stack
-      }}
-    >
-      <ProfileStack.Screen
-        name="Profiles"
-        component={Profiles}
-      />
-      <ProfileStack.Screen
-        name="EditProfile"
-        component={EditProfile} // You need to create this component
-      />
-      <ProfileStack.Screen
-        name="ProfileSettings"
-        component={ProfileSettings} // You need to create this component
-      />
-      <ProfileStack.Screen
-        name="SharePrint"
-        component={SharePrint} // You need to create this component
-      />
-      <ProfileStack.Screen
-        name="SupportUs"
-        component={SupportUs} // You need to create this component
-      />
-      {/* Add any additional screens related to Profile */}
-    </ProfileStack.Navigator>
-  );
-}
-
 const SettingsStack = createStackNavigator();
-
-function SettingsStackScreen() {
-  return (
-    <SettingsStack.Navigator>
-      <SettingsStack.Screen name="SettingsHome" component={Settings} options={{ title: 'Settings' }} />
-      <SettingsStack.Screen name="EditProfile" component={EditProfile} />
-      <SettingsStack.Screen name="ProfileSettings" component={ProfileSettings} />
-      <SettingsStack.Screen name="SupportUs" component={SupportUs} />
-      {/* Add more settings screens as needed */}
-    </SettingsStack.Navigator>
-  );
-}
 
 function BottomTabs() {
   const { theme, themeStyles } = useTheme();
@@ -209,36 +169,27 @@ function BottomTabs() {
     </Tab.Navigator>
   );
 }
+
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Welcome" component={Welcome} />
+    <Stack.Screen name="Login" component={Login}/>
+    <Stack.Screen name="Signup" component={Signup} />
+    <Stack.Screen name="PasswordRecovery" component={PasswordRecovery} />
+  </Stack.Navigator>
+);
+
+const AppStack = () => (
+  <BottomTabs />
+);
+
+
 export default function Navigation() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const checkAuthState = async () => {
-      const token = await AsyncStorage.getItem('@user_token');
-      setIsAuthenticated(!!token); // Set to true if token exists, false otherwise
-    };
-
-    checkAuthState();
-  }, []);
-
+  const { isAuthenticated } = useAuth(); // Using the isAuthenticated flag from AuthContext
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator>
-        {isAuthenticated ? (
-          <>
-            <Stack.Screen name="Guest" component={BottomTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="Home" component={BottomTabs} options={{ headerShown: false }} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
-            <Stack.Screen name="Login" component={Login}/>
-            <Stack.Screen name="Signup" component={Signup} />
-            <Stack.Screen name="PasswordRecovery" component={PasswordRecovery}  />
-          </>
-        )}
-      </Stack.Navigator>
+      {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }

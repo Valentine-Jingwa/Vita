@@ -4,6 +4,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Make sure this path matches your AuthContext file location
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+
 
 const loginValidationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
@@ -15,15 +17,28 @@ export default function Login({ navigation }) {
   const [rememberUser, setRememberUser] = useState(false);
   const { login } = useAuth(); // Using the login function from AuthContext
 
-  const handleLogin = async (values) => {
-    setLoading(true);
-    // Simulate login logic, e.g., API call to authenticate user
-    setTimeout(async () => {
-      setLoading(false);
-      await login('Token'); // Here, 'Token' should ideally be the result of your authentication API call
-      // Navigation is handled inside AuthProvider after changing isAuthenticated state
-    }, 2000);
-  };
+
+const handleLogin = async (values) => {
+  setLoading(true);
+  try {
+    // Authenticate the user with MongoDB
+    const authResponse = await authenticateUser(values.email, values.password);
+    if (authResponse.authenticated) {
+      // Use the login function from useAuth context, passing in the auth token
+      await login(authResponse.token);
+      // Navigate to your app's dashboard or home screen
+      navigation.navigate('BottomTabNavigator');
+    } else {
+      // Handle failed login
+      alert('Login failed. Please check your credentials.');
+    }
+  } catch (error) {
+    console.error('Authentication error:', error);
+    alert('An error occurred during login.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const navigateToPasswordRecovery = () => {
     navigation.navigate('PasswordRecovery');

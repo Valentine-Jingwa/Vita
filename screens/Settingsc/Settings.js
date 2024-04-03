@@ -10,15 +10,17 @@ import ThemedText from './ThemedText';
 import {Day, Night, RLogout} from '../../assets/Icon';
 import { useNavigation } from '@react-navigation/native';
 import { navigationRef } from '../../NavigationService';
+import { useAuth } from '../../security/AuthContext';
 
 
 const fullWidth = Dimensions.get('window').width;
 
-export default function Settings({navigation}) {
+export default function Settings() {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const { theme, toggleTheme } = useTheme();
-  // const navigation = useNavigation();
+  const { logout } = useAuth();
+  const navigation = useNavigation();
 
   const themeStyles = {
     backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
@@ -43,18 +45,13 @@ export default function Settings({navigation}) {
 
   const handleLogout = async () => {
     try {
-        await AsyncStorage.removeItem('@user_token');
-        // Reset navigation state
-        navigationRef.current?.reset({
-            index: 0,
-            routes: [{ name: 'Welcome' }],
-        });
+      await logout(); // Clears the user token and updates isAuthenticated state. This function from AuthContext
+
     } catch (error) {
-        console.error("Logout failed", error);
+      console.error("Logout failed", error);
     }
-};
-
-
+  };
+  
   const handleCancel = () => {
     setModalVisible(false); // Just hide the modal
   };
@@ -76,9 +73,6 @@ export default function Settings({navigation}) {
     }, [])
   );
 
-
-
-  // Rest of your component
   
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
@@ -146,7 +140,7 @@ export default function Settings({navigation}) {
         </View>
         <View style={styles.notificationbtnwrapper}>
           <TouchableOpacity onPress={handleLogout}>
-            <View style={[styles.notificationbtn, buttonStylemain]}>
+            <View style={[styles.logoutButton, buttonStylemain]}>
               <ThemedText>Logout</ThemedText>
             </View>
           </TouchableOpacity>
@@ -185,11 +179,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     marginRight: 0,
-    // borderLeftWidth: 1,
-    // borderBottomWidth: 1,
-    // borderTopWidth: 0,
-    // borderRightWidth: 0,
-    // borderRadius: 10,
   },
   SettingsTitle: {
     color: '#000',
@@ -205,6 +194,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     left: 10,
+  },
+  logoutButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    backgroundColor: 'lightgray',
+    borderRadius: 5,
   },
   dakeLightMode: {
     padding: 20,

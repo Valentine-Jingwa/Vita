@@ -32,12 +32,11 @@ export const findOne = async (collectionName, databaseName) => {
     throw error;
   }
 };
-// Add this to your mongodbService.js
 
 export const createUser = async (userData) => {
     const data = JSON.stringify({
       collection: "users", // Assuming your collection name is "users"
-      database: "yourDatabaseName", // Put your actual database name here
+      database: "Vita_user", // Put your actual database name here
       dataSource: DATA_SOURCE,
       document: userData, // This contains the new user data
     });
@@ -48,6 +47,40 @@ export const createUser = async (userData) => {
       return response.data;
     } catch (error) {
       console.error('Error creating user: ', error);
+      throw error;
+    }
+  };
+  
+
+//This is for authentication of the our user
+  const authClient = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Request-Headers': '*',
+      'api-key': API_KEY, // Using the API_KEY from .env
+      'Accept': 'application/ejson',
+    },
+  });
+  
+  export const authenticateUser = async (email, password) => {
+    try {
+      // Ensure this URL matches the format provided by MongoDB Atlas App Services documentation
+      const url = 'https://realm.mongodb.com/api/client/v2.0/app/<Your-App-Id>/auth/providers/local-userpass/login';
+      const response = await axios.post(url, {
+        username: email,
+        password: password,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+
+          'api-key': API_KEY,
+        },
+      });
+      console.log('Authentication successful:', response.data);
+      return response.data; // Should contain authentication tokens
+    } catch (error) {
+      console.error('Error during authentication:', error.response.data);
       throw error;
     }
   };
