@@ -1,7 +1,7 @@
-import { API_KEY, DATA_SOURCE } from '@env';
+import { API_KEY, DATA_SOURCE, APP_ID } from '@env';
 import axios from 'axios';
 
-const BASE_URL = 'https://us-west-2.aws.data.mongodb-api.com/app/data-hjhah/endpoint/data/v1/action';
+const BASE_URL = 'https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -63,11 +63,10 @@ export const createUser = async (userData) => {
     },
   });
 
-  
   export const authenticateUser = async (loginId, password) => {
     try {
       // Construct the correct URL from the MongoDB Realm documentation
-      const url = `https://realm.mongodb.com/api/client/v2.0/app/${APP_ID}/auth/providers/local-userpass/login`;
+      const url = `https://us-west-2.aws.services.cloud.mongodb.com/api/client/v2.0/app/${APP_ID}/auth/providers/local-userpass/login`;
   
       // Determine if 'loginId' is an email or a username
       const key = loginId.includes('@') ? 'email' : 'username';
