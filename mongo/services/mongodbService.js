@@ -62,29 +62,39 @@ export const createUser = async (userData) => {
       'Accept': 'application/ejson',
     },
   });
-export const authenticateUser = async (email, password) => {
-  try {
-    // Replace this URL with the new format using your App ID
-    const url = `https://realm.mongodb.com/api/client/v2.0/app/data-hjhah/auth/providers/local-userpass/login`;
-    const response = await axios.post(url, {
-      // MongoDB Atlas App Services typically uses 'email' field, but if you've set it up to use 'username', use that instead
-      email: email, // or 'username': email if that's what your app expects
-      password: password,
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        // The 'api-key' header is likely not necessary for user authentication requests
-        // Remove it if that's the case
-      },
-    });
 
-    console.log('Authentication successful:', response.data);
-    return response.data; // This should contain authentication tokens
-  } catch (error) {
-    console.error('Error during authentication:', error.response?.data || error.message);
-    throw error;
-  }
-};
+  
+  export const authenticateUser = async (loginId, password) => {
+    try {
+      // Construct the correct URL from the MongoDB Realm documentation
+      const url = `https://realm.mongodb.com/api/client/v2.0/app/${APP_ID}/auth/providers/local-userpass/login`;
+  
+      // Determine if 'loginId' is an email or a username
+      const key = loginId.includes('@') ? 'email' : 'username';
+  
+      // Form the payload based on what key we're using
+      const payload = {
+        [key]: loginId,
+        password: password,
+      };
+  
+      // Make the POST request to the MongoDB Realm authentication endpoint
+      const response = await axios.post(url, payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          // If you have an API key for some reason, include it here, otherwise you may not need this
+          'api-key': API_KEY, // Note: This is typically not needed for login requests
+        },
+      });
+  
+      console.log('Authentication successful:', response.data);
+      return response.data; // This should contain the access token and refresh token
+    } catch (error) {
+      console.error('Error during authentication:', error.response?.data || error.message);
+      throw error;
+    }
+  };
+  
 
   
   
