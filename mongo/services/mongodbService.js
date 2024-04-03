@@ -62,26 +62,29 @@ export const createUser = async (userData) => {
       'Accept': 'application/ejson',
     },
   });
-  
   export const authenticateUser = async (email, password) => {
     try {
-      // Ensure this URL matches the format provided by MongoDB Atlas App Services documentation
-      const url = 'https://realm.mongodb.com/api/client/v2.0/app/<Your-App-Id>/auth/providers/local-userpass/login';
+      // Replace 'data-hjhah' with your actual MongoDB Realm App ID
+      const url = `https://realm.mongodb.com/api/client/v2.0/app/data-hjhah/auth/providers/local-userpass/login`;
+  
       const response = await axios.post(url, {
-        username: email,
+        // Use the correct field name expected by your MongoDB Realm configuration
+        // It could be 'email' or 'username' depending on your setup
+        email: email,
         password: password,
       }, {
         headers: {
           'Content-Type': 'application/json',
-
-          'api-key': API_KEY,
+          // Remove the 'api-key' from the headers if not required for this endpoint
         },
       });
+  
       console.log('Authentication successful:', response.data);
       return response.data; // Should contain authentication tokens
     } catch (error) {
-      console.error('Error during authentication:', error.response.data);
+      console.error('Error during authentication:', error.response?.data || error.message);
       throw error;
     }
   };
+  
   
