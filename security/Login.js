@@ -22,7 +22,7 @@ const handleLogin = async (values) => {
   setLoading(true);
   try {
     // Authenticate the user with MongoDB
-    const authResponse = await authenticateUser(values.email, values.password);
+    const authResponse = await authenticateUser(values.email || values.username , values.password);
     if (authResponse.authenticated) {
       // Use the login function from useAuth context, passing in the auth token
       await login(authResponse.token);
@@ -58,14 +58,13 @@ const handleLogin = async (values) => {
             <>
               <TextInput
                 name="email"
-                placeholder="Email"
+                placeholder="Email/Username"
                 style={styles.textInput}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
+                value={values.email || values.username}
+                keyboardType="default"
               />
-              {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
               <TextInput
                 name="password"
                 placeholder="Password"
