@@ -1,7 +1,8 @@
 import { API_KEY, DATA_SOURCE, APP_ID } from '@env';
 import axios from 'axios';
 
-const BASE_URL = `https://us-west-2.aws.data.mongodb-api.com/app/data-hjhah/endpoint/data/v1/action`;
+const BASE_URL = `https://us-west-2.aws.data.mongodb-api.com/app/${APP_ID}/endpoint/data/v1/action`;
+
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -62,30 +63,39 @@ export const createUser = async (userData) => {
       'Accept': 'application/ejson',
     },
   });
-  export const authenticateUser = async (email, password) => {
+
+  export const authenticateUser = async (loginId, password) => {
     try {
-      // Replace 'data-hjhah' with your actual MongoDB Realm App ID
       // Construct the correct URL from the MongoDB Realm documentation
-      const url = `https://realm.mongodb.com/api/client/v2.0/app/data-hjhah/auth/providers/local-userpass/login`;
+      const url = `https://us-west-2.aws.services.cloud.mongodb.com/api/client/v2.0/app/${APP_ID}/auth/providers/local-userpass/login`;
   
-      const response = await axios.post(url, {
-        // Use the correct field name expected by your MongoDB Realm configuration
-        // It could be 'email' or 'username' depending on your setup
-        email: email,
+      // Determine if 'loginId' is an email or a username
+      const key = loginId.includes('@') ? 'email' : 'username';
+
+  
+      // Form the payload based on what key we're using
+      const payload = {
+        [key]: loginId,
         password: password,
-      }, {
+      };
+  
+      // Make the POST request to the MongoDB Realm authentication endpoint
+      const response = await axios.post(url, payload, {
         headers: {
           'Content-Type': 'application/json',
-          // Remove the 'api-key' from the headers if not required for this endpoint
+          // If you have an API key for some reason, include it here, otherwise you may not need this
+          'api-key': API_KEY, // Note: This is typically not needed for login requests
         },
       });
   
       console.log('Authentication successful:', response.data);
-      return response.data; // Should contain authentication tokens
+      return response.data; // This should contain the access token and refresh token
     } catch (error) {
       console.error('Error during authentication:', error.response?.data || error.message);
       throw error;
     }
   };
+  
+
   
   
