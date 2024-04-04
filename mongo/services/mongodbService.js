@@ -1,7 +1,7 @@
 import { API_KEY, DATA_SOURCE, APP_ID, API_URL, BASE_URL} from '@env';
 import axios from 'axios';
 
-// const BASE_URL = 'https://us-west-2.aws.data.mongodb-api.com/app/data-hjhah/endpoint/data/v1/action';
+const BASE_URL = 'https://us-west-2.aws.data.mongodb-api.com/app/data-hjhah/endpoint/data/v1/action';
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
