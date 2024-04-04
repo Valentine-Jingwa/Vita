@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
 import DeckSwiper from 'react-native-deck-swiper';
@@ -10,7 +11,10 @@ import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import ReminderModal from './ReminderModal';
 
+
+// Debounce function to prevent multiple calls
 const debounce = (func, delay) => {
   let inDebounce;
   return function() {
@@ -29,6 +33,15 @@ const Home = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [reminderModalVisible, setReminderModalVisible] = useState(false);
+
+
+    // Function to handle saving the reminder
+    const handleSaveReminder = (date, repeat) => {
+      console.log('Reminder Saved', date, repeat);
+      // You can now use this to set up local notifications or save the reminder data
+      setReminderModalVisible(false);
+    };
 
 
    // Function to handle day press on the calendar
@@ -120,29 +133,54 @@ const Home = () => {
 
   
 
-
-
   return (
     <SafeAreaView style={styles.screenContainer}>
-      <TouchableOpacity style={styles.iconButton} onPress={() => setTimeModalVisible(true)}>
+      <TouchableOpacity style={styles.iconButton} onPress={() => setReminderModalVisible(true)}>
         <Iclock width={35} height={35} />
       </TouchableOpacity>
 
-      {/* Modal for clock icon */}
+      <ReminderModal
+        visible={reminderModalVisible}
+        onClose={() => setReminderModalVisible(false)}
+        onSave={handleSaveReminder}
+      />
+
+      {/* Modal for clock icon
       <Modal
-        animationType="fade"
-        transparent={true}
-        visible={calendarModalVisible}
-        onRequestClose={() => setTimeModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalView}>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setTimeModalVisible(false)}>
-              <Icon name="close" size={24} color="#000" />
-            </TouchableOpacity>
-            <Text>Blank Modal Content</Text>
+      animationType="fade"
+      transparent={true}
+      visible={visible}
+      onRequestClose={onClose}
+    >
+      <View style={styles.reminderModal}>
+        <View style={styles.reminderContent}>
+          <TouchableOpacity onPress={onClose}>
+            <Icon name="close" size={24} color="#000" />
+          </TouchableOpacity>
+          <DateTimePicker
+            value={date}
+            mode={'date'}
+            is24Hour={true}
+            display="default"
+            onChange={handleDateChange}
+          />
+          <View style={styles.repeatSwitch}>
+            <Text>Repeat</Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={repeat ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={() => setRepeat(previousState => !previousState)}
+              value={repeat}
+            />
           </View>
+          <TouchableOpacity style={styles.saveButton} onPress={() => onSave(date, repeat)}>
+            <Text style={styles.saveButtonText}>Save Reminder</Text>
+          </TouchableOpacity>
         </View>
-      </Modal>
+      </View>
+    </Modal> */}
+
 
       {/* Modal for Selected Date */}
       <Modal
