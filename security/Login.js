@@ -1,38 +1,28 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
 
-const loginValidationSchema = Yup.object().shape({
-  loginId: Yup.string().required('Email or Username is required'),
-  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-});
 
 export default function Login({ navigation }) {
-  const [loading, setLoading] = useState(false);
-  const [rememberUser, setRememberUser] = useState(false);
   const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values) => {
-    setLoading(true);
-    try {
-      // Authenticate the user with MongoDB
-      const authResponse = await authenticateUser(values.loginId, values.password);
-      if (authResponse.access_token) {
-        await login(authResponse.access_token);
-        navigation.navigate('BottomTabNavigator'); // Replace with your main authenticated route
-      } else {
-        alert('Login failed. Please check your credentials.');
+      setLoading(true);
+      try {
+          const { token } = await authenticateUser(values.email, values.password);
+          await login(token);
+          navigation.navigate('Home'); // Adjust as per your navigation setup
+      } catch (error) {
+          alert('Failed to login');
+      } finally {
+          setLoading(false);
       }
-    } catch (error) {
-      console.error('Authentication error:', error);
-      alert('An error occurred during login.');
-    } finally {
-      setLoading(false);
-    }
   };
+
 
   const navigateToPasswordRecovery = () => {
     navigation.navigate('PasswordRecovery');
@@ -43,54 +33,36 @@ export default function Login({ navigation }) {
       <View style={styles.loginCard}>
         <Text style={styles.title}>Login</Text>
         <Text style={styles.subtitle}>Login to continue using the app</Text>
-        <Formik
-          validationSchema={loginValidationSchema}
+        {/* // Adjustments to the Formik setup in Login.js to accommodate loginId */}
+      <Formik
           initialValues={{ loginId: '', password: '' }}
-          onSubmit={values => handleLogin(values)}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-            <>
-              <TextInput
-                name="loginId"
-                placeholder="Email or Username"
-                style={styles.textInput}
-                onChangeText={handleChange('loginId')}
-                onBlur={handleBlur('loginId')}
-                value={values.loginId}
-                autoCapitalize="none"
-                keyboardType="default"
-              />
-              {errors.loginId && touched.loginId && <Text style={styles.errorText}>{errors.loginId}</Text>}
-              <TextInput
-                name="password"
-                placeholder="Password"
-                style={styles.textInput}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                secureTextEntry
-              />
-              {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
-              <TouchableOpacity onPress={navigateToPasswordRecovery} style={styles.forgotPasswordButton}>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleSubmit} style={styles.button} disabled={loading}>
-                <Text style={styles.buttonText}>Login</Text>
-              </TouchableOpacity>
-              <View style={styles.switchContainer}>
-                <Switch
-                  value={rememberUser}
-                  onValueChange={setRememberUser}
-                  style={styles.switch}
-                />
-                <Text style={styles.label}>Remember me</Text>
-              </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.registerText}>Don't have an account? Register</Text>
-              </TouchableOpacity>
-            </>
+          onSubmit={handleLogin}
+          validationSchema={Yup.object({
+              loginId: Yup.string().required('Username or Email is required'), // Updated validation schema
+              password: Yup.string().required('Required'),
+          })}
+      >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <>
+                  <TextInput
+                      onChangeText={handleChange('loginId')} // Changed from email to loginId
+                      onBlur={handleBlur('loginId')} // Changed from email to loginId
+                      value={values.loginId}
+                      placeholder="Username or Email" // Updated placeholder
+                      autoCapitalize="none"
+                  />
+                  <TextInput
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      value={values.password}
+                      placeholder="Password"
+                      secureTextEntry
+                  />
+                  <Button onPress={handleSubmit} title="Login" />
+              </>
           )}
-        </Formik>
+      </Formik>
+
       </View>
     </View>
   );

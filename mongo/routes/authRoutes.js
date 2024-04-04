@@ -20,22 +20,26 @@ router.post('/signup', async (req, res) => {
 
 // SIGN IN
 router.post('/signin', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).send('Invalid credentials');
-    }
-    const token = jwt.sign({ id: user._id }, 'secret_key', { expiresIn: '1h' });
+  const { loginId, password } = req.body; // `loginId` can be either an email or a username
 
-    // Include the username in the response
-    res.status(200).json({ token, username: user.username /*, age: user.age - if you have an age field */ });
+  try {
+      // Check if loginId includes an '@', indicating it's an email
+      const criteria = loginId.includes('@') ? { email: loginId } : { username: loginId };
+      
+      const user = await User.findOne(criteria);
+      if (!user) {
+          return res.status(404).send('User not found');
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+          return res.status(400).send('Invalid credentials');
+      }
+
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      res.status(200).json({ token, username: user.username, email: user.email });
   } catch (error) {
-    res.status(500).send(error.message);
+      res.status(500).send(error.message);
   }
 });
 

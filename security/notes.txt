@@ -1,0 +1,10 @@
+curl --location --request POST 'https://us-west-2.aws.data.mongodb-api.com/app/data-hjhah/endpoint/data/v1/action/findOne' \
+--header 'Content-Type: application/json' \
+--header 'Access-Control-Request-Headers: *' \
+--header 'api-key: aq4jfOh5BUkoi38qxmRG28NcpZ5r799jjAzrjrIbw9CCDpXSMjlEZfgb97ebGKtE' \
+--data-raw '{
+    "collection":"users",
+    "database":"Vita_user",
+    "dataSource":"vits",
+    "projection": {"_id": 1}
+}'
