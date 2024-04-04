@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+import Navigation from '../Navigation';
 
 const loginValidationSchema = Yup.object().shape({
   loginId: Yup.string().required('Email or Username is required'),
@@ -17,6 +19,8 @@ export default function Login({ navigation }) {
 
   const handleLogin = async (values) => {
     setLoading(true);
+ // Simulate a fake delay for the "login" process
+
     try {
       // Authenticate the user with MongoDB
       const authResponse = await authenticateUser(values.loginId, values.password);

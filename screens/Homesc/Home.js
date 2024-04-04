@@ -8,6 +8,7 @@ import DataCard from '../../components/Home/DataCard';
 import CompactDataCard from '../../components/Home/CompactDataCard';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 
 const debounce = (func, delay) => {
@@ -114,7 +115,7 @@ const Home = () => {
   };
 
     // Debounce the swipe handler to prevent multiple calls
-  const onSwipe = debounce(handleSwipe, 200);
+  const onSwipe = debounce(handleSwipe, 100);
 
 
   
