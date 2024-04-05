@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+import Navigation from '../Navigation';
 
 
 export default function Login({ navigation }) {
