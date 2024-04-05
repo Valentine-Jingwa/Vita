@@ -12,30 +12,33 @@ export default function Login({ navigation }) {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
+  // const handleLogin = async (values) => {
+  //     setLoading(true);
+  //     try {
+  //         const { token } = await authenticateUser(values.email, values.password);
+  //         await login(token);
+  //         navigation.navigate('Home'); // Adjust as per your navigation setup
+  //     } catch (error) {
+  //         alert('Failed to login');
+  //     } finally {
+  //         setLoading(false);
+  //     }
+  // };
   const handleLogin = async (values) => {
     setLoading(true);
- // Simulate a fake delay for the "login" process
-
     try {
-      // Authenticate the user with MongoDB
-      const authResponse = await authenticateUser(values.loginId, values.password);
-      if (authResponse.access_token) {
-        await login(authResponse.access_token);
-        navigation.navigate('BottomTabNavigator'); // Replace with your main authenticated route
-      } else {
-        alert('Login failed. Please check your credentials.');
+        const { token } = await authenticateUser(values.loginId, values.password);
+        await login(token);
+        navigation.navigate('Home'); // Ensure your navigation and route names are correctly set up
+    } catch (error) {
+        // Assuming error.response.data contains a descriptive error message
+        const errorMessage = error.response?.data?.error || 'Failed to login';
+        alert(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
 
-//       setLoading(true);
-//       try {
-//           const { token } = await authenticateUser(values.email, values.password);
-//           await login(token);
-//           navigation.navigate('Home'); // Adjust as per your navigation setup
-//       } catch (error) {
-//           alert('Failed to login');
-//       } finally {
-//           setLoading(false);
-      }
-  };
 
 
   const navigateToPasswordRecovery = () => {

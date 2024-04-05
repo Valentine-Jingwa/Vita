@@ -1,12 +1,14 @@
-import { API_KEY, DATA_SOURCE, APP_ID, API_URL, BASE_URL} from '@env';
+import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL} from '@env';
 import axios from 'axios';
+import jwt from 'react-native-pure-jwt';
+
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Request-Headers': '*',
-    'api-key': API_KEY, // Using the API_KEY from .env
+    'api-key': API_KEY, 
     'Accept': 'application/ejson',
   },
 });
@@ -56,22 +58,39 @@ export const createUser = async (userData) => {
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Request-Headers': '*',
-      'api-key': API_KEY, // Using the API_KEY from .env
+      'api-key': API_KEY, 
       'Accept': 'application/ejson',
     },
   });
 
   export const authenticateUser = async (loginId, password) => {
     try {
-        const response = await axios.post(`${API_URL}/signin`, { loginId, password }); // Use loginId instead of email
-        return response.data;
+      const payload = {
+        collection: "users",
+        database: "Vita_user",
+        dataSource: DATA_SOURCE,
+        filter: {
+          $or: [
+            { email: loginId, password: password },
+            { username: loginId, password: password },
+          ],
+        },
+      };
+  
+      const response = await apiClient.post('/findOne', payload);
+  
+      if (response.data.document) {
+        // In a real implementation, you would not handle JWTs here.
+        // But for the sake of making it work according to your request:
+        // This assumes you've got a JWT service or endpoint that can provide a token.
+        const token = 'fake-jwt-token-for-demo-purposes'; // This should be obtained from a secure source.
+        return { token };
+      } else {
+        throw new Error("Authentication failed");
+      }
     } catch (error) {
-        console.error('Authentication error:', error.response?.data || error.message);
-        throw error;
+      console.error('Authentication error:', error.response?.data || error.message);
+      throw error;
     }
-};
-
-  
-
-  
+  };
   

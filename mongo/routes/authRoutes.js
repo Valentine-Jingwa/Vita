@@ -1,50 +1,43 @@
+//authRoutes
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
 const router = express.Router();
 
-// SIGN UP
 router.post('/signup', async (req, res) => {
   try {
-    const { username, email, password, name, age } = req.body;
+    const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword, name, age });
-    await user.save();
-    res.status(201).send('User created successfully');
+    const user = await User.create({ username, email, password: hashedPassword });
+    res.status(201).json({ message: 'User created successfully', userId: user._id });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
 
-// SIGN IN
 router.post('/signin', async (req, res) => {
-  const { loginId, password } = req.body; // `loginId` can be either an email or a username
-
   try {
-      // Check if loginId includes an '@', indicating it's an email
-      const criteria = loginId.includes('@') ? { email: loginId } : { username: loginId };
-      
-      const user = await User.findOne(criteria);
-      if (!user) {
-          return res.status(404).send('User not found');
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
-          return res.status(400).send('Invalid credentials');
-      }
-
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-      res.status(200).json({ token, username: user.username, email: user.email });
+    const { loginId, password } = req.body;
+    const user = await User.findOne({
+      $or: [{ username: loginId }, { email: loginId }]
+    });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    // Assuming passwords are hashed and not plain text as shown in your screenshot
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Invalid credentials" });
+    }
+    
+    // JWT_SECRET would be an environment variable holding your JWT secret key
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '999h' });
+    res.json({ token });
   } catch (error) {
-      res.status(500).send(error.message);
+    res.status(500).json({ error: error.message });
   }
 });
-
-
-
-
 
 module.exports = router;
