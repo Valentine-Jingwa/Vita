@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+import Navigation from '../Navigation';
 
 
 export default function Login({ navigation }) {
@@ -11,15 +13,27 @@ export default function Login({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values) => {
-      setLoading(true);
-      try {
-          const { token } = await authenticateUser(values.email, values.password);
-          await login(token);
-          navigation.navigate('Home'); // Adjust as per your navigation setup
-      } catch (error) {
-          alert('Failed to login');
-      } finally {
-          setLoading(false);
+    setLoading(true);
+ // Simulate a fake delay for the "login" process
+
+    try {
+      // Authenticate the user with MongoDB
+      const authResponse = await authenticateUser(values.loginId, values.password);
+      if (authResponse.access_token) {
+        await login(authResponse.access_token);
+        navigation.navigate('BottomTabNavigator'); // Replace with your main authenticated route
+      } else {
+        alert('Login failed. Please check your credentials.');
+
+//       setLoading(true);
+//       try {
+//           const { token } = await authenticateUser(values.email, values.password);
+//           await login(token);
+//           navigation.navigate('Home'); // Adjust as per your navigation setup
+//       } catch (error) {
+//           alert('Failed to login');
+//       } finally {
+//           setLoading(false);
       }
   };
 
