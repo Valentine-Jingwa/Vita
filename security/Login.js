@@ -12,18 +12,6 @@ export default function Login({ navigation }) {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  // const handleLogin = async (values) => {
-  //     setLoading(true);
-  //     try {
-  //         const { token } = await authenticateUser(values.email, values.password);
-  //         await login(token);
-  //         navigation.navigate('Home'); // Adjust as per your navigation setup
-  //     } catch (error) {
-  //         alert('Failed to login');
-  //     } finally {
-  //         setLoading(false);
-  //     }
-  // };
   const handleLogin = async (values) => {
     setLoading(true);
     try {
