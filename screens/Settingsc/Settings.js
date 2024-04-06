@@ -138,13 +138,6 @@ export default function Settings() {
             </View>
           </TouchableOpacity>
         </View>
-        <View style={styles.notificationbtnwrapper}>
-          <TouchableOpacity onPress={handleLogout}>
-            <View style={[styles.logoutButton, buttonStylemain]}>
-              <ThemedText>Logout</ThemedText>
-            </View>
-          </TouchableOpacity>
-        </View>
 
         <View style={styles.logoutButtonWrapper}>
           <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, buttonStyleside]}>

@@ -71,6 +71,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('first_name')}
               value={values.first_name}
               keyboardType="default"
+              placeholderTextColor={'black'}
+
             />  
             {errors.first_name && touched.first_name && <Text style={styles.errorText}>{errors.first_name}</Text>}
 
@@ -82,6 +84,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('last_name')}
               value={values.last_name}
               keyboardType="default"
+              placeholderTextColor={'black'}
+
             />
             {errors.last_name && touched.last_name && <Text style={styles.errorText}>{errors.last_name}</Text>}
 
@@ -93,6 +97,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('username')}
               value={values.username}
               keyboardType="default"
+              placeholderTextColor={'black'}
+
             />
             {errors.username && touched.username && <Text style={styles.errorText}>{errors.username}</Text>}
 
@@ -104,6 +110,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('email')}
               value={values.email}
               keyboardType="email-address"
+              placeholderTextColor={'black'}
+
             />
             {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
@@ -115,6 +123,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('password')}
               value={values.password}
               secureTextEntry
+              placeholderTextColor={'black'}
+
             />
             {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
@@ -126,6 +136,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
               secureTextEntry
+              placeholderTextColor={'black'}
+
             />
             {errors.confirmPassword && touched.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
 
@@ -137,6 +149,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('dob')}
               value={values.dob}
               keyboardType="default"
+              placeholderTextColor={'black'}
+
             />
             {errors.dob && touched.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
 

@@ -54,6 +54,7 @@ export default function Login({ navigation }) {
                       onBlur={handleBlur('loginId')} // Changed from email to loginId
                       value={values.loginId}
                       placeholder="Username or Email" // Updated placeholder
+                      placeholderTextColor={'black'}
                       autoCapitalize="none"
                   />
                   <TextInput
@@ -61,6 +62,7 @@ export default function Login({ navigation }) {
                       onBlur={handleBlur('password')}
                       value={values.password}
                       placeholder="Password"
+                      placeholderTextColor={'black'}
                       secureTextEntry
                   />
                   <Button onPress={handleSubmit} title="Login" />
