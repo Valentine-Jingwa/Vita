@@ -17,17 +17,15 @@ import Signup from "./security/SignUp";
 import PasswordRecovery from "./security/PasswordRecovery";
 
 import Home from "./screens/Homesc/Home";
-import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import Settings from "./screens/Settingsc/Settings";
 import { useAuth } from './security/AuthContext'; 
 
 
-import Profiles from "./screens/Profilesc/ProfileSelect.js";  
-import EditProfile from "./screens/Profilesc/EditProfile";
-import ProfileSettings from "./screens/Profilesc/ProfileSettings";
-import SupportUs from "./screens/Profilesc/SupportUs";
+
+import Profile from "./screens/Profilesc/ProfileSettings";
+
 
 
 //Bottom Tab animation

@@ -5,7 +5,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
-import Navigation from '../Navigation';
 
 
 export default function Login({ navigation }) {
@@ -17,7 +16,6 @@ export default function Login({ navigation }) {
     try {
         const { token } = await authenticateUser(values.loginId, values.password);
         await login(token);
-        navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
     } catch (error) {
         // Assuming error.response.data contains a descriptive error message
         const errorMessage = error.response?.data?.error || 'Failed to login';
