@@ -95,76 +95,82 @@ const ReminderModal = ({ visible, onClose }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => onClose()}>
     <Modal
       animationType="slide"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
       <View style={styles.fullScreenContainer}>
+        <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
         <View style={styles.modalContainer}>
-          <DateTimePicker
-            value={date}
-            mode="datetime"
-            is24Hour={true}
-            display="default"
-            onChange={handleDateChange}
-            style={styles.dateTimePicker}
-          />
-            <TextInput
-              style={[styles.input, {marginRight: 16}]}
-              placeholder="Title"
-              maxLength={30}
-              value={title}
-              onChangeText={setTitle}
-            />
-            <TextInput
-              style={[styles.input, {height: 200}]} // Adjust height for description input
-              placeholder="Description"
-              multiline
-              numberOfLines={4} // Allow room for multiple lines of text
-              maxLength={500} // Limit input to 500 characters
-              value={description}
-              onChangeText={setDescription}
-            />
-          <Button title="Save Reminder" onPress={saveReminder} color="#007AFF" />
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View>
+              <DateTimePicker
+                value={date}
+                mode="datetime"
+                is24Hour={true}
+                display="default"
+                onChange={handleDateChange}
+                style={styles.dateTimePicker}
+              />
+              <TextInput
+                style={[styles.input, {marginRight: 16, height: 40}]}
+                placeholder="Title"
+                placeholderTextColor="#888" // Adjust the color as needed
+                maxLength={30}
+                value={title}
+                onChangeText={setTitle}
+              />
+              <TextInput
+                style={[styles.input, {height: 200}]}
+                placeholder="Description"
+                placeholderTextColor="#888" // Adjust the color as needed
+                multiline
+                numberOfLines={4}
+                maxLength={500}
+                value={description}
+                onChangeText={setDescription}
+              />
+              <Button title="Save Reminder" onPress={saveReminder} color="#000" />
+            </View>
+          </TouchableWithoutFeedback>
           <FlatList
             data={reminders}
             keyExtractor={(item) => item.id.toString()}
-            style={styles.reminderList}
+            style={[styles.reminderList, {marginBottom: 70}]} 
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.reminderItem}
-                onPress={() => toggleDescription(item.id)}
+              <TouchableOpacity 
+                onPress={() => toggleDescription(item.id)} 
+                style={[styles.reminderItem, { borderWidth: 1, marginBottom: 15}]}
               >
-                <Text style={styles.reminderText}>{item.title}</Text>
-                {item.showDescription && (
+                {!item.showDescription ? (
+                  <>
+                    <Text style={styles.reminderText}>{`${item.title} - ${new Date(item.time).toLocaleString()}`}</Text>
+                    {item.showDelete && (
+                      <View style={{marginLeft: 'auto'}}>
+                        <Icon name="close-circle-outline" size={20} color="#000" />
+                      </View>
+                    )}
+                  </>
+                ) : (
                   <Text style={styles.descriptionText}>{item.description}</Text>
-                )}
-                {!item.showDescription && item.showDelete && (
-                  <TouchableOpacity
-                    style={styles.removeButton}
-                    onPress={() => removeReminder(item.id)}
-                  >
-                    <Icon name="close-circle-outline" size={20} color="#000" />
-                  </TouchableOpacity>
                 )}
               </TouchableOpacity>
             )}
-            />
-              <TouchableOpacity 
-               style={styles.clearAllButton} 
-               onPress={clearAllReminders}
-                >
-               <Icon name="trash-can-outline" size={24} color="#ffffff" />
-              </TouchableOpacity>
+          />
+
+          <TouchableOpacity 
+            style={styles.clearAllButton} 
+            onPress={clearAllReminders}>
+            <Icon name="trash-can-outline" size={24} color="#ffffff" />
+          </TouchableOpacity>
         </View>
       </View>
-      </TouchableWithoutFeedback>
     </Modal>
-    </TouchableWithoutFeedback>
+
+
   );
 };
 
@@ -172,12 +178,6 @@ export default ReminderModal;
 
 
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    bottom: 0,
-  },
   modalContainer: {
     marginTop: 50,
     backgroundColor: 'white',
@@ -195,6 +195,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   input: {
     width: '100%', // Full width inputs
@@ -244,7 +252,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Dark background for full-screen effect
   },
   dateTimePicker: {
     width: '100%',
