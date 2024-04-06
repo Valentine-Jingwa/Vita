@@ -54,10 +54,10 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       style={{ flex: 1 }}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
-      <TouchableWithoutFeedback onPress={handleOnClose}>
-
-
       <View style={styles.modalOverlay}>
+          <TouchableWithoutFeedback onPress={handleOnClose}>
+            <View style={{ flex: 1, width: '100%' }} />
+          </TouchableWithoutFeedback>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <AntDesign name="close" size={24} color="black" />
@@ -91,7 +91,6 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
           </Animated.View>
         </View>
       </View>
-      </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </Modal>
   );
