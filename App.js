@@ -18,6 +18,7 @@ export default function App() {
           </GestureHandlerRootView>
         </ThemeProvider>
       </AuthProvider>
+
     </>
   );
 }
