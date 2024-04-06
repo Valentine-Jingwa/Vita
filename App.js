@@ -12,11 +12,11 @@ export default function App() {
   return (
     <>
       <AuthProvider>
-      <ThemeProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <Navigation /> 
-        </GestureHandlerRootView>
-      </ThemeProvider>
+        <ThemeProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+              <Navigation /> 
+          </GestureHandlerRootView>
+        </ThemeProvider>
       </AuthProvider>
     </>
   );
