@@ -3,7 +3,8 @@ import { Modal, View, Text, TouchableOpacity, Switch, StyleSheet, FlatList, Text
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { registerForPushNotificationsAsync } from '../Settingsc/Notifications'; 
+import * as Notifications from 'expo-notifications';
 
 
 
@@ -13,6 +14,30 @@ const ReminderModal = ({ visible, onClose }) => {
   const [title, setTitle] = useState('');
   const [reminders, setReminders] = useState([]);
   const [description, setDescription] = useState('');
+
+  useEffect(() => {
+    async function setupNotifications() {
+      await registerForPushNotificationsAsync();
+      
+      const receivedSubscription = Notifications.addNotificationReceivedListener(notification => {
+        console.log(notification);
+        Alert.alert("Reminder", "You have a reminder: " + notification.request.content.body);
+      });
+
+      const responseSubscription = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+        // Handle response (e.g., navigate to a specific screen)
+      });
+
+      return () => {
+        receivedSubscription.remove();
+        responseSubscription.remove();
+      };
+    }
+
+    setupNotifications();
+  }, []);
+  
 
   useEffect(() => {
     loadReminders();
@@ -28,23 +53,43 @@ const ReminderModal = ({ visible, onClose }) => {
       alert("Please enter both a title and a description for the reminder.");
       return;
     }
+    
+    // Ensuring the reminder time is in the future
+    const reminderDate = new Date(date);
+    if (reminderDate.getTime() <= Date.now()) {
+      alert("Please choose a future date and time for your reminder.");
+      return;
+    }
+  
     const newReminder = {
       id: Date.now(),
       title,
       description,
-      time: date.toISOString(),
+      time: reminderDate.toISOString(),
       enabled: true,
       showDescription: false, // Initially, descriptions are not shown
       showDelete: true, // Initially, delete buttons are shown
     };
+  
     const newRemindersList = [...reminders, newReminder];
     await AsyncStorage.setItem('reminders', JSON.stringify(newRemindersList));
     setReminders(newRemindersList);
+  
     setTitle(''); // Clear the input field after saving
     setDescription('');
-
+  
+    // Schedule the notification
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Reminder",
+        body: title, // Message to show in the notification
+      },
+      trigger: reminderDate,
+    });
+  
     Keyboard.dismiss();
   };
+  
 
 
   const toggleDescription = (id) => {
