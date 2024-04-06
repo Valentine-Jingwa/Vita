@@ -189,8 +189,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <AppStack />
-      {/* {isAuthenticated ? <AppStack /> : <AuthStack />} */}
+      {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
