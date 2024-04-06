@@ -17,7 +17,7 @@ export default function Login({ navigation }) {
     try {
         const { token } = await authenticateUser(values.loginId, values.password);
         await login(token);
-        navigation.navigate('Home'); // Ensure your navigation and route names are correctly set up
+        navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
     } catch (error) {
         // Assuming error.response.data contains a descriptive error message
         const errorMessage = error.response?.data?.error || 'Failed to login';
