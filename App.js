@@ -11,15 +11,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function App() {
   return (
     <>
-        <DataProvider>
-          <AuthProvider>
-          <ThemeProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                <Navigation /> 
-            </GestureHandlerRootView>
-          </ThemeProvider>
-          </AuthProvider>
-        </DataProvider>
+      <AuthProvider>
+      <ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <Navigation /> 
+        </GestureHandlerRootView>
+      </ThemeProvider>
+      </AuthProvider>
     </>
   );
 }
