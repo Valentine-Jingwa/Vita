@@ -1,4 +1,4 @@
-import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL} from '@env';
+import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL, JWT_SECRET} from '@env';
 import axios from 'axios';
 import jwt from 'react-native-pure-jwt';
 
@@ -81,9 +81,7 @@ export const createUser = async (userData) => {
   
       if (response.data.document) {
         // In a real implementation, you would not handle JWTs here.
-        // But for the sake of making it work according to your request:
-        // This assumes you've got a JWT service or endpoint that can provide a token.
-        const token = 'fake-jwt-token-for-demo-purposes'; // This should be obtained from a secure source.
+        const token = JWT_SECRET; // This should be obtained from a secure source.
         return { token };
       } else {
         throw new Error("Authentication failed");

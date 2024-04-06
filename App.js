@@ -1,9 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import Navigation from './Navigation';
-import { DataProvider } from './components/DataContext';
 import { AuthProvider } from './security/AuthContext';
-import { navigationRef } from './NavigationService';
 import { name as appName } from './app.json';
 import 'react-native-gesture-handler';
 import { ThemeProvider } from './screens/Settingsc/Theme';
@@ -16,9 +14,9 @@ export default function App() {
         <DataProvider>
           <AuthProvider>
           <ThemeProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-             <Navigation /> 
-          </GestureHandlerRootView>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <Navigation /> 
+            </GestureHandlerRootView>
           </ThemeProvider>
           </AuthProvider>
         </DataProvider>
