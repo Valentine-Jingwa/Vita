@@ -1,9 +1,5 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import * as eva from '@eva-design/eva';
-import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import Navigation from './Navigation';
 import { DataProvider } from './components/DataContext';
 import { AuthProvider } from './security/AuthContext';
@@ -17,8 +13,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 export default function App() {
   return (
     <>
-      <IconRegistry icons={EvaIconsPack} />
-      <ApplicationProvider {...eva} theme={eva.light}>
         <DataProvider>
           <AuthProvider>
           <ThemeProvider>
@@ -28,7 +22,6 @@ export default function App() {
           </ThemeProvider>
           </AuthProvider>
         </DataProvider>
-      </ApplicationProvider>
     </>
   );
 }
