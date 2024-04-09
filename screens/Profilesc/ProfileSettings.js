@@ -1,17 +1,36 @@
 //This will contain the stuff to modifying the profile
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView, SafeAreaView, FlatList, Modal, Dimensions, Image} from 'react-native';
-import admin from '../../security/userData/users/adminUser';
-import Profile from './Profile';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, Text, StyleSheet, View } from 'react-native';
+import Profile from './Profile'; // Ensure this is correctly imported
+import SubUserStorage from './subUser';
+import AdminUserStorage from './AdminUser';
+
 
 const { width, height } = Dimensions.get('window');
 
+// There will be a function here that will retrieve the Adminuser profile and It's subUsers from mongoDbService.js
 
 export default function profileSettings({ navigation }) {
+  const [adminUser, setAdminUser] = useState(null);
+  const [subUsers, setSubUsers] = useState([]);
+
+  useEffect(() => {
+    // Fetch admin and sub-users data on component mount
+    const fetchData = async () => {
+      const admin = await AdminUserStorage.getAdminUser();
+      setAdminUser(admin);
+      if (admin) {
+        const subUsersData = await SubUserStorage.getSubUsers(admin.username);
+        setSubUsers(subUsersData);
+      }
+    };
+
+    fetchData();
+  }, []);
     
   return (
     <SafeAreaView style={styles.container}>
-        {/* The user profile section */}     
+        {/* The user profile section the Profile will take parameters */}     
         <Profile />  
         {/* The options below are a scroll view */}
         <View style={styles.profileOptions}>
