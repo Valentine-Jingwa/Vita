@@ -79,17 +79,36 @@ export const createUser = async (userData) => {
   
       const response = await apiClient.post('/findOne', payload);
       if (response.data.document) {
-        const { _id, password, age, ...safeUserData } = response.data.document;
+        const { _id, password, ...safeUserData } = response.data.document;
   
-        // Now `safeUserData` does not contain `_id` or `password`
-        // Ensure this safeUserData is used immediately here, within the if block scope
-        await AsyncStorage.setItem('adminUser', JSON.stringify(safeUserData));
-        console.log(safeUserData);
+        // Function to calculate age from dob
+        const calculateAge = (dob) => {
+          const birthDate = new Date(dob);
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          const m = today.getMonth() - birthDate.getMonth();
+          if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+          }
+          return age;
+        };
+  
+        // Ensure dob is available for age calculation
+        const dob = safeUserData.dob; // Assuming dob is a field in your user document
+        const age = calculateAge(dob);
+  
+        // Add calculated age to user data, retain dob
+        const userDataWithAge = { ...safeUserData, age };
+  
+        // Store user data without sensitive information, including calculated age and dob
+        await AsyncStorage.setItem('adminUser', JSON.stringify(userDataWithAge));
+  
+        console.log(userDataWithAge);
+  
+        const token = JWT_SECRET; // Ideally obtained securely
         
-        const token = JWT_SECRET; // This should be obtained in a more secure way, usually from the server
-        
-        // Return both token and user data here, after the exclusion of sensitive data
-        return { token, user: safeUserData }; 
+        // Return both token and safe user data, now including age
+        return { token, user: userDataWithAge }; 
       } else {
         throw new Error("Authentication failed");
       }

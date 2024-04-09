@@ -18,6 +18,17 @@ const Profile = ({ userData }) => {
         path: 'images',
         },
     };
+      // Function to calculate age from dob
+  const calculateAge = (dob) => {
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
     
     launchImageLibrary(options, (response) => {
         if (response.didCancel) {
@@ -88,7 +99,7 @@ const Profile = ({ userData }) => {
             {/*When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes */}
             <Swipeable renderRightActions={renderSwipeable} renderLeftActions={renderSwipeable}>
                 <View style={styles.user_detail}>
-                    <Text style={styles.user_name}>{userData?.first_name} {userData?.last_name}</Text>
+                    <Text style={styles.user_name}>{userData?.username}</Text>
                     <Text style={styles.user_age}>Age: {userData?.age}</Text>
                 </View>
             </Swipeable>
