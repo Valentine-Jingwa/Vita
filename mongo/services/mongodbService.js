@@ -168,7 +168,6 @@ export const createUser = async (userData) => {
       console.error("Error creating sub-user:", error);
       throw error;
     }
-  };
   // When the user is authenticated another function will be called to get the user data
   // The first name, last name, email,age and other user data will be returned and saved in an asychronous storage
   // The async storage(admindata) will be called to get some of the user data and display it on the profile.js
@@ -179,3 +178,5 @@ export const createUser = async (userData) => {
   // The collection name will use the Admin username and the word subUser example "Vanessa_subUsers"
   // Everytime a new subUser is created the collection will be updated with the new subUser data
   // sub users must have a firstname, lastname, username, age, and dob
+
+  };
