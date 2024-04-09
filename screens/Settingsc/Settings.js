@@ -45,6 +45,7 @@ export default function Settings() {
 
   const handleLogout = async () => {
     try {
+
       await logout(); // Clears the user token and updates isAuthenticated state. This function from AuthContext
 
     } catch (error) {

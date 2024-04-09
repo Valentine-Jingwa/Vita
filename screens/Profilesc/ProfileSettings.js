@@ -1,6 +1,6 @@
 //This will contain the stuff to modifying the profile
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image} from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpacity} from 'react-native';
 import Profile from './Profile'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
@@ -39,11 +39,21 @@ export default function profileSettings({ navigation }) {
         <Profile adminData={adminUser} subUserData={subUsers} />
         {/* The options below are a scroll view */}
         <View style={styles.profileOptions}>
-            <Text style={styles.Options_btn}>Update Profile</Text>
-            <Text style={styles.Options_btn}>Account Synch</Text>
-            <Text style={styles.Options_btn}>Notifications</Text>
-            <Text style={styles.Options_btn}>View Logs</Text>
-            <Text style={styles.Options_btn}>User Themes</Text>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Account Synch</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Notifications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>View Logs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>User Themes</Text>
+          </TouchableOpacity>
         </View>
     </SafeAreaView>
     );
@@ -71,9 +81,13 @@ const styles = StyleSheet.create({
         height: 50, // 50 height
         backgroundColor: '#ffffff', // Light grey background
         borderRadius: 10, // Small border radius
-        textAlign: 'center', // Center the text
         textAlignVertical: 'center', // Center the text vertically
-        fontSize: 18, // Larger font size
         fontWeight: 'bold', // Bold font
     },
+    Option_Text: {
+        fontSize: 18, // Larger font size
+        fontWeight: 'bold', // Bold font
+        textAlign: 'center', // Center the text
+        marginTop: 10, // Add some top margin
+    }
 });
