@@ -1,6 +1,7 @@
 import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL, JWT_SECRET} from '@env';
 import axios from 'axios';
 import jwt from 'react-native-pure-jwt';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const apiClient = axios.create({
@@ -62,7 +63,6 @@ export const createUser = async (userData) => {
       'Accept': 'application/ejson',
     },
   });
-
   export const authenticateUser = async (loginId, password) => {
     try {
       const payload = {
@@ -78,39 +78,52 @@ export const createUser = async (userData) => {
       };
   
       const response = await apiClient.post('/findOne', payload);
-  
       if (response.data.document) {
-        // In a real implementation, you would not handle JWTs here.
-        const token = JWT_SECRET; // This should be obtained from a secure source.
-        return { token };
+        const { _id, password, age, ...safeUserData } = response.data.document;
+  
+        // Now `safeUserData` does not contain `_id` or `password`
+        // Ensure this safeUserData is used immediately here, within the if block scope
+        await AsyncStorage.setItem('adminUser', JSON.stringify(safeUserData));
+        console.log(safeUserData);
+        
+        const token = JWT_SECRET; // This should be obtained in a more secure way, usually from the server
+        
+        // Return both token and user data here, after the exclusion of sensitive data
+        return { token, user: safeUserData }; 
       } else {
         throw new Error("Authentication failed");
       }
     } catch (error) {
-      console.error('Authentication error:', error.response?.data || error.message);
+      console.error('Authentication error:', error);
       throw error;
     }
   };
+  
+  
 
-  export const getAdminAndSubUsers = async (adminUsername) => {
-    // Assuming you have a way to identify which documents in your "users" collection are sub-users
-    // This is just a placeholder query, adjust according to your actual data structure and requirements
+  export const getSubUsers = async (adminUsername) => {
     const adminUserQuery = { username: adminUsername };
-    const subUsersQuery = { adminUsername: adminUsername };
-  
+    
     try {
-      const adminUser = await findOne("users", "Vita_user", adminUserQuery);
-      const subUsers = await findOne(adminUser.username+"_subUsers", "Vita_user", subUsersQuery); // Adjust this line if you have a specific method to get all sub-users
+      // Fetch the admin user
+      const adminResponse = await findOne("users", "Vita_user", adminUserQuery);
+      const { password, _id, ...adminUserData } = adminResponse.document;
   
-      return {
-        adminUser: adminUser,
-        subUsers: subUsers,//If there is no subUser collection just return the admin user
-      };
+      // Fetch subusers if needed, handle this according to your logic
+      // const subUsersResponse = await findOne(adminUsername+"_subUsers", "Vita_user", {});
+      // const subUsersData = subUsersResponse.documents; // Or however your data is structured
+      
+      console.log(adminUserData); // Log the admin user data without password and _id
+      return adminUserData;
+  
+      // If needed, also handle and return the subUsersData
+      // return { adminUserData, subUsersData };
     } catch (error) {
       console.error("Error fetching admin and sub-users:", error);
       throw error;
     }
   };
+  
   
   export const addSubUser = async (adminUsername, subUserData) => {
     

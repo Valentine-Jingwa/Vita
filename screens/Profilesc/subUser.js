@@ -1,13 +1,7 @@
-//subUser.js
-// This will contain 3 functions 
-// 1. getSubUsers will check with the mongoDbService.js to get the subUsers of the adminUser 
-// 2. addSubUser will add a new subUser to the adminUser and update the mongoDbService.js
-// 3. deleteSubUser will delete a subUser from the adminUser and update the mongoDbService.js by moving the subUser to a deleted subUser collection a new value which is the admin username will be added to the deleted user data.
-// 4. removeSubUser will remove the subUser when the admin logs out/ or not authenticated
-// 5. updateSubUser will update the subUser in the async storage and MongoDbService.js, password will be requested for the update to go through
+
 // subUser.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addSubUser as addSubUserToDb, deleteSubUser as deleteSubUserFromDb, updateSubUser as updateSubUserInDb } from './mongoDbService'; // Assuming these functions are implemented similarly to your mongoDbService structure
+import { addSubUser as addSubUserToDb, deleteSubUser as deleteSubUserFromDb, updateSubUser as updateSubUserInDb } from '../../mongo/services/mongodbService'; // Assuming these functions are implemented similarly to your mongoDbService structure
 
 const subUserStorageKey = 'subUsers';
 

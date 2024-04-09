@@ -17,7 +17,6 @@ export default function Login({ navigation }) {
         const { token } = await authenticateUser(values.loginId, values.password);
         await login(token);
     } catch (error) {
-        // Assuming error.response.data contains a descriptive error message
         const errorMessage = error.response?.data?.error || 'Failed to login';
         alert(errorMessage);
     } finally {

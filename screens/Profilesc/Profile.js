@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, Text, Image } from 'react-native'; 
-import { Dimensions, StyleSheet, View } from 'react-native';
+import React, { useState, useEffect } from 'react'; 
+import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 const { width, height } = Dimensions.get('window');
 
-const Profile = () => {
+const Profile = ({ userData }) => {
     const [currentUser, setCurrentUser] = useState(null); // Holds the current user's data
     const [profilePic, setProfilePic] = useState(null);
 
@@ -49,23 +48,17 @@ const Profile = () => {
         fetchCurrentUser();
     }, []);
 
-        // Placeholder for fetching admin user data
-        const fetchAdminUser = async () => {
-            // Implement fetching admin user data from your storage or backend
-            return {
-                name: "Admin",
-                age: "30",
-                // Add other details
-            };
-        };
   // When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes
       const renderSwipeable = (progress, dragX) => {
         return (
             <TouchableOpacity onPress={handleChangeUser}>
                 <View style={styles.swipeView}>
-                    <Text>Swipe to change user</Text>
+                    <Text style={styles.user_name}>{currentUser?.name}</Text>
+                    <Text style={styles.user_age} >Age: {currentUser?.age}</Text>
+
                 </View>
             </TouchableOpacity>
+            // if there are no users return null
         );
     };
     const handleChangeUser = async () => {
@@ -82,15 +75,21 @@ const Profile = () => {
         <View style={styles.user_profile}>     
             {/* By default it is slightly red. It will have a color function that increases and decreases the opacity of the user choosen color*/}
             <View style={styles.user_Themebubble}> 
-                <Text style={styles.user_image}>MA</Text>
+                {profilePic ? (
+                        <Image source={profilePic} style={styles.user_image} />
+                    ) : (
+                        <Text style={styles.user_image}>
+                            {userData?.first_name?.[0]}{userData?.last_name?.[0]}
+                        </Text>
+                    )}
                 {/* When the add user is tapped a function is triggered to create a user that is not the admin in a subuser asynch storage subUser.js */}
                 <Text style={styles.add_subuser}>+</Text>
             </View>
             {/*When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes */}
             <Swipeable renderRightActions={renderSwipeable} renderLeftActions={renderSwipeable}>
                 <View style={styles.user_detail}>
-                    <Text style={styles.userName}>{currentUser?.name}</Text>
-                    <Text style={styles.userAge}>Age: {currentUser?.age}</Text>
+                    <Text style={styles.user_name}>{userData?.first_name} {userData?.last_name}</Text>
+                    <Text style={styles.user_age}>Age: {userData?.age}</Text>
                 </View>
             </Swipeable>
         </View> 

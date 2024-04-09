@@ -1,9 +1,10 @@
 //This will contain the stuff to modifying the profile
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, View } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image} from 'react-native';
 import Profile from './Profile'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 
 const { width, height } = Dimensions.get('window');
@@ -15,27 +16,26 @@ export default function profileSettings({ navigation }) {
   const [subUsers, setSubUsers] = useState([]);
 
   useEffect(() => {
-    // Fetch admin and sub-users data on component mount
-    const fetchData = async () => {
+    const fetchAdminUser = async () => {
       const admin = await AdminUserStorage.getAdminUser();
-      setAdminUser(admin);
       if (admin) {
-        const subUsersData = await SubUserStorage.getSubUsers(admin.username);
-        setSubUsers(subUsersData);
+        // Remove sensitive data before setting the state
+        const { _id, password, ...adminData } = admin;
+        setAdminUser(adminData);
       }
     };
 
-    fetchData();
+    fetchAdminUser();
   }, []);
     
   return (
     <SafeAreaView style={styles.container}>
         {/* The user profile section the Profile will take parameters */}     
-        <Profile />  
+        <Profile userData={adminUser}/>  
         {/* The options below are a scroll view */}
         <View style={styles.profileOptions}>
-            <Text style={styles.Options_btn}>Edit Profile</Text>
-            <Text style={styles.Options_btn}>Synch With Others</Text>
+            <Text style={styles.Options_btn}>Update Profile</Text>
+            <Text style={styles.Options_btn}>Account Synch</Text>
             <Text style={styles.Options_btn}>Notifications</Text>
             <Text style={styles.Options_btn}>View Logs</Text>
             <Text style={styles.Options_btn}>User Themes</Text>
