@@ -93,22 +93,29 @@ export const createUser = async (userData) => {
           return age;
         };
   
-        // Ensure dob is available for age calculation
+        // Function to generate initials from first and last names
+        const generateInitials = (firstName, lastName) => {
+          const initials = `${firstName ? firstName[0].toUpperCase() : ''}${lastName ? lastName[0].toUpperCase() : ''}`;
+          return initials;
+        };
+  
         const dob = safeUserData.dob; // Assuming dob is a field in your user document
         const age = calculateAge(dob);
+        const initials = generateInitials(safeUserData.first_name, safeUserData.last_name);
   
-        // Add calculated age to user data, retain dob
-        const userDataWithAge = { ...safeUserData, age };
+        // Add calculated age and initials to user data, retain dob
+        const userDataWithAgeAndInitials = { ...safeUserData, age, initials };
   
-        // Store user data without sensitive information, including calculated age and dob
-        await AsyncStorage.setItem('adminUser', JSON.stringify(userDataWithAge));
+        // Log for debugging
+        console.log("User Data with Age and Initials:", userDataWithAgeAndInitials);
   
-        console.log(userDataWithAge);
+        // Store user data without sensitive information, including calculated age, dob, and initials
+        await AsyncStorage.setItem('adminUser', JSON.stringify(userDataWithAgeAndInitials));
   
         const token = JWT_SECRET; // Ideally obtained securely
         
-        // Return both token and safe user data, now including age
-        return { token, user: userDataWithAge }; 
+        // Return both token and safe user data, now including age and initials
+        return { token, user: userDataWithAgeAndInitials };
       } else {
         throw new Error("Authentication failed");
       }
@@ -119,7 +126,8 @@ export const createUser = async (userData) => {
   };
   
   
-
+  
+  
   export const getSubUsers = async (adminUsername) => {
     const adminUserQuery = { username: adminUsername };
     

@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react'; 
-import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import React, { useState, useEffect, memo } from 'react';
+import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import SubUserForm from './SubUserForm';
 
 const { width, height } = Dimensions.get('window');
 
 const Profile = ({ userData }) => {
     const [currentUser, setCurrentUser] = useState(null); // Holds the current user's data
     const [profilePic, setProfilePic] = useState(null);
+    const [isFormVisible, setIsFormVisible] = useState(false);
+
 
  //Tapping once will reveal a photo icon to update the image
     const updateProfilePic = () => {
@@ -18,18 +21,7 @@ const Profile = ({ userData }) => {
         path: 'images',
         },
     };
-      // Function to calculate age from dob
-  const calculateAge = (dob) => {
-    const birthDate = new Date(dob);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
-    
+
     launchImageLibrary(options, (response) => {
         if (response.didCancel) {
         console.log('User cancelled image picker');
@@ -79,9 +71,19 @@ const Profile = ({ userData }) => {
         setCurrentUser(newUser);
         await AsyncStorage.setItem('currentUser', JSON.stringify(newUser));
     };
+    const handleSaveSubUser = (subUserData) => {
+        console.log('Sub-user data:', subUserData);
+        // Here you can add the logic to save the sub-user data
+        setIsFormVisible(false); // Close the modal after saving
+      };
+      
   const onImageTapTwice = () => {}
   return (
     <SafeAreaView>
+              {/* Modal to display the SubUserForm */}
+      <Modal visible={isFormVisible} animationType="slide" transparent={true}>
+          <SubUserForm onSave={handleSaveSubUser} onCancel={() => setIsFormVisible(false)} />
+      </Modal>
         {/* The user profile section */}       
         <View style={styles.user_profile}>     
             {/* By default it is slightly red. It will have a color function that increases and decreases the opacity of the user choosen color*/}
@@ -90,11 +92,13 @@ const Profile = ({ userData }) => {
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
                         <Text style={styles.user_image}>
-                            {userData?.first_name?.[0]}{userData?.last_name?.[0]}
+                            {userData?.initials || 'No Image'}
                         </Text>
                     )}
-                {/* When the add user is tapped a function is triggered to create a user that is not the admin in a subuser asynch storage subUser.js */}
-                <Text style={styles.add_subuser}>+</Text>
+                      {/* Plus icon TouchableOpacity modified to open the modal */}
+                    <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
+                        <Text style={styles.add_subuserText}>+</Text>
+                    </TouchableOpacity>
             </View>
             {/*When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes */}
             <Swipeable renderRightActions={renderSwipeable} renderLeftActions={renderSwipeable}>
@@ -142,7 +146,7 @@ const styles = StyleSheet.create({
     },
     user_name: {
         textAlign: 'center',
-        fontSize: 44, 
+        fontSize: 32, 
         fontWeight: 'bold', 
     },
     user_age: {
@@ -162,6 +166,30 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: -10,
     },
+    add_subuserText: {
+        flex: 1,
+        textAlign: 'center',
+        alignItems: 'center',
+        fontSize: 44,
+        justifyContent: 'center',
+    
+    },
+    modalView: {
+        // Style for the modal view container
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+      },
 
 })
 
