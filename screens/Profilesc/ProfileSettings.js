@@ -17,21 +17,26 @@ export default function profileSettings({ navigation }) {
 
   useEffect(() => {
     const fetchAdminUser = async () => {
-      const admin = await AdminUserStorage.getAdminUser();
-      if (admin) {
-        // Remove sensitive data before setting the state
-        const { _id, password, ...adminData } = admin;
-        setAdminUser(adminData);
+      const adminData = await AdminUserStorage.getAdminUser(); // Simulated function to fetch admin user data
+      setAdminUser(adminData);
+    };
+
+    const fetchSubUsers = async () => {
+      if (adminUser) {
+        const subUsersData = await SubUserStorage.getSubUsers(adminUser.email); // Assume email is part of adminUser data
+        setSubUsers(subUsersData);
       }
     };
 
     fetchAdminUser();
-  }, []);
+    fetchSubUsers();
+  }, [adminUser?.email]);
     
   return (
     <SafeAreaView style={styles.container}>
         {/* The user profile section the Profile will take parameters */}     
-        <Profile userData={adminUser}/>  
+        {/* <Profile userData={adminUser}/>  */}
+        <Profile adminData={adminUser} subUserData={subUsers} />
         {/* The options below are a scroll view */}
         <View style={styles.profileOptions}>
             <Text style={styles.Options_btn}>Update Profile</Text>

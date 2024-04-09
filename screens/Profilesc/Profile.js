@@ -1,115 +1,79 @@
-import React, { useState, useEffect, memo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import SubUserForm from './SubUserForm';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const Profile = ({ userData }) => {
-    const [currentUser, setCurrentUser] = useState(null); // Holds the current user's data
+const Profile = ({ adminData, subUserData }) => {
+    const [currentUser, setCurrentUser] = useState(adminData);
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [userIndex, setUserIndex] = useState(0); // To keep track of current user index
 
-
- //Tapping once will reveal a photo icon to update the image
+    // Handle image update
     const updateProfilePic = () => {
-    const options = {
-        storageOptions: {
-        skipBackup: true,
-        path: 'images',
-        },
-    };
-
-    launchImageLibrary(options, (response) => {
-        if (response.didCancel) {
-        console.log('User cancelled image picker');
-        } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-        } else {
-        const source = { uri: response.uri };
-        // Here you can set the image to be displayed and also update it in your backend/database
-        setProfilePic(source);
-        }
-    });
-    };
-    useEffect(() => {
-        // Fetch the current user from AsyncStorage or default to admin on first load
-        const fetchCurrentUser = async () => {
-            const storedUser = await AsyncStorage.getItem('currentUser');
-            if (storedUser) {
-                setCurrentUser(JSON.parse(storedUser));
-            } else {
-                // Assuming function fetchAdminUser() fetches the admin user data
-                const adminUser = await fetchAdminUser();
-                setCurrentUser(adminUser);
-                await AsyncStorage.setItem('currentUser', JSON.stringify(adminUser));
+        const options = { storageOptions: { skipBackup: true, path: 'images' }};
+        launchImageLibrary(options, (response) => {
+            if (!response.didCancel && !response.error) {
+                setProfilePic({ uri: response.uri });
             }
-        };
-
-        fetchCurrentUser();
-    }, []);
-
-  // When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes
-      const renderSwipeable = (progress, dragX) => {
-        return (
-            <TouchableOpacity onPress={handleChangeUser}>
-                <View style={styles.swipeView}>
-                    <Text style={styles.user_name}>{currentUser?.name}</Text>
-                    <Text style={styles.user_age} >Age: {currentUser?.age}</Text>
-
-                </View>
-            </TouchableOpacity>
-            // if there are no users return null
-        );
+        });
     };
-    const handleChangeUser = async () => {
-        // Implement user change logic, possibly showing a list of users to select from
-        // For demonstration, just toggle between a dummy user and the admin
-        const newUser = currentUser.name === "Admin" ? { name: "Subuser", age: "20" } : await fetchAdminUser();
-        setCurrentUser(newUser);
-        await AsyncStorage.setItem('currentUser', JSON.stringify(newUser));
+
+    useEffect(() => {
+        if (adminData) setCurrentUser(adminData);
+    }, [adminData, subUserData]);
+
+    const handleChangeUser = (direction) => {
+        if (direction === 'next' && userIndex < subUserData.length) {
+            setUserIndex(userIndex + 1);
+            setCurrentUser(subUserData[userIndex]);
+        } else if (direction === 'prev' && userIndex > 0) {
+            setUserIndex(userIndex - 1);
+            setCurrentUser(userIndex === 1 ? adminData : subUserData[userIndex - 2]);
+        }
     };
+
     const handleSaveSubUser = (subUserData) => {
         console.log('Sub-user data:', subUserData);
-        // Here you can add the logic to save the sub-user data
-        setIsFormVisible(false); // Close the modal after saving
-      };
-      
-  const onImageTapTwice = () => {}
-  return (
-    <SafeAreaView>
-              {/* Modal to display the SubUserForm */}
-      <Modal visible={isFormVisible} animationType="slide" transparent={true}>
-          <SubUserForm onSave={handleSaveSubUser} onCancel={() => setIsFormVisible(false)} />
-      </Modal>
-        {/* The user profile section */}       
-        <View style={styles.user_profile}>     
-            {/* By default it is slightly red. It will have a color function that increases and decreases the opacity of the user choosen color*/}
-            <View style={styles.user_Themebubble}> 
-                {profilePic ? (
+        setIsFormVisible(false);
+        // Additional logic to save sub-user data
+    };
+
+    return (
+        <SafeAreaView>
+            {/* Modal for SubUserForm */}
+            <Modal visible={isFormVisible} animationType="slide" transparent={true}>
+                <SubUserForm onSave={handleSaveSubUser} onCancel={() => setIsFormVisible(false)} />
+            </Modal>
+            <View style={styles.user_profile}>
+                {/* User Theme Bubble */}
+                <View style={styles.user_Themebubble}>
+                    {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={styles.user_image}>
-                            {userData?.initials || 'No Image'}
-                        </Text>
+                        <Text style={styles.user_image}>{currentUser?.initials || 'No Image'}</Text>
                     )}
-                      {/* Plus icon TouchableOpacity modified to open the modal */}
                     <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
                         <Text style={styles.add_subuserText}>+</Text>
                     </TouchableOpacity>
-            </View>
-            {/*When the user swiped the profile_detial section they will switch to the new or previous profile <- or -> swipes */}
-            <Swipeable renderRightActions={renderSwipeable} renderLeftActions={renderSwipeable}>
-                <View style={styles.user_detail}>
-                    <Text style={styles.user_name}>{userData?.username}</Text>
-                    <Text style={styles.user_age}>Age: {userData?.age}</Text>
                 </View>
-            </Swipeable>
-        </View> 
-    </SafeAreaView>
-  );
+                {/* Swipeable user detail view */}
+                <Swipeable
+                    onSwipeableRightOpen={() => handleChangeUser('prev')}
+                    onSwipeableLeftOpen={() => handleChangeUser('next')}
+                >
+                    <View style={styles.user_detail}>
+                        <Text style={styles.user_name}>{currentUser?.username || currentUser?.email}</Text>
+                        <Text style={styles.user_age}>Age: {currentUser?.age}</Text>
+                    </View>
+                </Swipeable>
+            </View>
+        </SafeAreaView>
+    );
 };
 const styles = StyleSheet.create({
   user_profile: {
