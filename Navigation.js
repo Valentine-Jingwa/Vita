@@ -56,7 +56,7 @@ import UpdatePage from './screens/Profilesc/options/Update';
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="Profile" component={Profile} options={{ headerShown: false  }}/>
       <ProfileStack.Screen name="UserThemes" component={UserThemes} />
       <ProfileStack.Screen name="UserLogs" component={UserLogs} />
       <ProfileStack.Screen name="NotificationPage" component={NotificationPage} />

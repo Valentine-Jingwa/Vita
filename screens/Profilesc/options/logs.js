@@ -1,5 +1,5 @@
 //log.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo} from 'react';
 import { SafeAreaView, View, Text, TouchableOpacity, Touchable } from 'react-native';
 import { useTheme } from '../../Settingsc/Theme';
 import { useAuth } from '../../../security/AuthContext';
