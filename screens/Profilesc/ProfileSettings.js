@@ -1,6 +1,6 @@
 //This will contain the stuff to modifying the profile
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image} from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpacity} from 'react-native';
 import Profile from './Profile'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
@@ -17,28 +17,43 @@ export default function profileSettings({ navigation }) {
 
   useEffect(() => {
     const fetchAdminUser = async () => {
-      const admin = await AdminUserStorage.getAdminUser();
-      if (admin) {
-        // Remove sensitive data before setting the state
-        const { _id, password, ...adminData } = admin;
-        setAdminUser(adminData);
+      const adminData = await AdminUserStorage.getAdminUser(); // Simulated function to fetch admin user data
+      setAdminUser(adminData);
+    };
+
+    const fetchSubUsers = async () => {
+      if (adminUser) {
+        const subUsersData = await SubUserStorage.getSubUsers(adminUser.email); // Assume email is part of adminUser data
+        setSubUsers(subUsersData);
       }
     };
 
     fetchAdminUser();
-  }, []);
+    fetchSubUsers();
+  }, [adminUser?.email]);
     
   return (
     <SafeAreaView style={styles.container}>
         {/* The user profile section the Profile will take parameters */}     
-        <Profile userData={adminUser}/>  
+        {/* <Profile userData={adminUser}/>  */}
+        <Profile adminData={adminUser} subUserData={subUsers} />
         {/* The options below are a scroll view */}
         <View style={styles.profileOptions}>
-            <Text style={styles.Options_btn}>Update Profile</Text>
-            <Text style={styles.Options_btn}>Account Synch</Text>
-            <Text style={styles.Options_btn}>Notifications</Text>
-            <Text style={styles.Options_btn}>View Logs</Text>
-            <Text style={styles.Options_btn}>User Themes</Text>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Update Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Account Synch</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>Notifications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>View Logs</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.Options_btn}>
+            <Text style={styles.Option_Text}>User Themes</Text>
+          </TouchableOpacity>
         </View>
     </SafeAreaView>
     );
@@ -66,9 +81,13 @@ const styles = StyleSheet.create({
         height: 50, // 50 height
         backgroundColor: '#ffffff', // Light grey background
         borderRadius: 10, // Small border radius
-        textAlign: 'center', // Center the text
         textAlignVertical: 'center', // Center the text vertically
-        fontSize: 18, // Larger font size
         fontWeight: 'bold', // Bold font
     },
+    Option_Text: {
+        fontSize: 18, // Larger font size
+        fontWeight: 'bold', // Bold font
+        textAlign: 'center', // Center the text
+        marginTop: 10, // Add some top margin
+    }
 });
