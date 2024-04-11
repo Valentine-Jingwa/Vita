@@ -15,7 +15,8 @@ export const AuthProvider = ({ children }) => {
     };
 
     const logout = async () => {
-        await AsyncStorage.removeItem('@user_token');
+        // await AsyncStorage.removeItem('@user_token');
+        await AsyncStorage.removeItem('authToken');
         setIsAuthenticated(false);
     };
 

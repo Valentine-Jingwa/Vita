@@ -17,17 +17,14 @@ import Signup from "./security/SignUp";
 import PasswordRecovery from "./security/PasswordRecovery";
 
 import Home from "./screens/Homesc/Home";
-import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import Settings from "./screens/Settingsc/Settings";
 import { useAuth } from './security/AuthContext'; 
 
+import Profile from "./screens/Profilesc/ProfileSettings";
 
-import Profiles from "./screens/Profilesc/ProfileSelect.js";  
-import EditProfile from "./screens/Profilesc/EditProfile";
-import ProfileSettings from "./screens/Profilesc/ProfileSettings";
-import SupportUs from "./screens/Profilesc/SupportUs";
+import { isTokenValid } from './security/auth/authUtils'; // Adjust the path as necessary
 
 
 //Bottom Tab animation
@@ -185,10 +182,28 @@ const AppStack = () => (
 
 
 export default function Navigation() {
-  const { isAuthenticated } = useAuth(); // Using the isAuthenticated flag from AuthContext
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const valid = await isTokenValid();
+      setIsAuthenticated(valid);
+      setCheckingAuth(false);
+    }
+
+    checkAuth();
+  }, []);
+
+  if (checkingAuth) {
+    return (
+      // Optionally return a loading indicator while checking authentication
+      <ActivityIndicator />
+    );
+  }
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer>
       {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { CommonActions } from '@react-navigation/native';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button, Dimensions } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
-import Navigation from '../Navigation';
 
+const { width, height } = Dimensions.get('window');
 
 export default function Login({ navigation }) {
   const { login } = useAuth();
@@ -17,17 +17,13 @@ export default function Login({ navigation }) {
     try {
         const { token } = await authenticateUser(values.loginId, values.password);
         await login(token);
-        navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
     } catch (error) {
-        // Assuming error.response.data contains a descriptive error message
         const errorMessage = error.response?.data?.error || 'Failed to login';
         alert(errorMessage);
     } finally {
         setLoading(false);
     }
 };
-
-
 
   const navigateToPasswordRecovery = () => {
     navigation.navigate('PasswordRecovery');
@@ -50,6 +46,7 @@ export default function Login({ navigation }) {
           {({ handleChange, handleBlur, handleSubmit, values }) => (
               <>
                   <TextInput
+                      style={styles.textInput}
                       onChangeText={handleChange('loginId')} // Changed from email to loginId
                       onBlur={handleBlur('loginId')} // Changed from email to loginId
                       value={values.loginId}
@@ -58,6 +55,7 @@ export default function Login({ navigation }) {
                       autoCapitalize="none"
                   />
                   <TextInput
+                      style={styles.textInput}
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
                       value={values.password}
@@ -66,6 +64,23 @@ export default function Login({ navigation }) {
                       secureTextEntry
                   />
                   <Button onPress={handleSubmit} title="Login" />
+                  <TouchableOpacity onPress={navigateToPasswordRecovery}>
+                      <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                  </TouchableOpacity>
+                  <View style={styles.switchContainer}>
+                      <Text style={styles.label}>Remember me</Text>
+                      <Switch style={styles.checkbox} 
+                      // Add your switch logic here
+                      />
+                  </View>
+                  <View style={styles.socialLoginButtons}>
+                      <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
+                          <Text style={styles.socialButtonText}>G</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={[styles.socialButton, styles.facebookButton]}>
+                          <Text style={styles.socialButtonText}>f</Text>
+                      </TouchableOpacity>
+                  </View>
               </>
           )}
       </Formik>
@@ -85,7 +100,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#95B5BB',
   },
   loginCard: {
-    width: '100%',
+    width: width * 0.85,
+    height: height * 0.5,
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
