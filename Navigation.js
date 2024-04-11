@@ -184,6 +184,7 @@ const AppStack = () => (
 export default function Navigation() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  
 
   useEffect(() => {
     async function checkAuth() {

@@ -47,7 +47,12 @@ const Profile = ({ adminData, subUserData }) => {
         <SafeAreaView>
             {/* Modal for SubUserForm */}
             <Modal visible={isFormVisible} animationType="slide" transparent={true}>
-                <SubUserForm onSave={handleSaveSubUser} onCancel={() => setIsFormVisible(false)} />
+                <SubUserForm 
+                    onSave={handleSaveSubUser} 
+                    onCancel={() => setIsFormVisible(false)} 
+                    isVisible={isFormVisible}
+                    adminUsername={adminData?.username}
+                    />
             </Modal>
             <View style={styles.user_profile}>
                 {/* User Theme Bubble */}
