@@ -8,7 +8,6 @@ const { width } = Dimensions.get('window');
 
 const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
   const [formState, setFormState] = useState({
-    accountHolder: adminUsername, // Pre-populate with adminUsername or email
     firstName: '',
     lastName: '',
     username: '',
@@ -16,66 +15,39 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
   });
 
   useEffect(() => {
-    // Reset form when hidden or pre-populate accountHolder when shown
-    setFormState({
-      accountHolder: adminUsername, // Keep the account holder pre-populated
-      firstName: '',
-      lastName: '',
-      username: '',
-      dob: '',
-    });
-  }, [isVisible, adminUsername]);
+    if (!isVisible) {
+      setFormState({ firstName: '', lastName: '', username: '', dob: '' });
+    }
+  }, [isVisible]);
 
   const handleInputChange = (name, value) => {
     setFormState(prevState => ({ ...prevState, [name]: value }));
   };
 
-  // Check if the required fields are filled (excluding accountHolder)
-  const canSubmit = formState.firstName && formState.lastName && formState.username && formState.dob;
+  // Determine if the form can be submitted
+  const canSubmit = Object.values(formState).every(value => value.trim());
 
   const saveSubUser = () => {
     if (canSubmit) {
-      onSave(formState);
+      onSave({ ...formState, accountHolder: adminUsername });
+      onCancel(); 
     }
   };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent onRequestClose={onCancel}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalOverlay}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null } style={styles.modalOverlay}>
         <View style={styles.container}>
-          {/* Account Holder Field */}
-          <TextInput
-            style={styles.input}
-            placeholder="Account Holder"
-            onChangeText={(value) => handleInputChange('accountHolder', value)}
-            value={formState.accountHolder}
-            editable={false} // Make it non-editable if you don't want users to change this
-          />
-          {/* Other Fields */}
-          <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            onChangeText={(value) => handleInputChange('firstName', value)}
-            value={formState.firstName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            onChangeText={(value) => handleInputChange('lastName', value)}
-            value={formState.lastName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            onChangeText={(value) => handleInputChange('username', value)}
-            value={formState.username}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Date of Birth (YYYY-MM-DD)"
-            onChangeText={(value) => handleInputChange('dob', value)}
-            value={formState.dob}
-          />
+          <Text style={styles.input}>{`Account Holder: ${adminUsername}`}</Text>
+          {['firstName', 'lastName', 'username', 'dob'].map((field) => (
+            <TextInput
+              key={field}
+              style={styles.input}
+              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              onChangeText={value => handleInputChange(field, value)}
+              value={formState[field]}
+            />
+          ))}
           <TouchableOpacity onPress={saveSubUser} style={[styles.submitButton, !canSubmit && styles.disabledButton]} disabled={!canSubmit}>
             <Text style={styles.submitButtonText}>Save</Text>
           </TouchableOpacity>
@@ -118,7 +90,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
-    color: '#333', // Text color
+    color: '#000', // Text color
   },
   submitButton: {
     backgroundColor: '#4F4F4F', // Dark neutral for contrast

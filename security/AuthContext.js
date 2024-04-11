@@ -10,14 +10,15 @@ export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const login = async (token) => {
-        await AsyncStorage.setItem('@user_token', token);
+        await AsyncStorage.setItem('@authToken', token);
         setIsAuthenticated(true);
     };
 
     const logout = async () => {
         // await AsyncStorage.removeItem('@user_token');
-        await AsyncStorage.removeItem('authToken');
+        await AsyncStorage.removeItem('@authToken');
         setIsAuthenticated(false);
+        
     };
 
     return (

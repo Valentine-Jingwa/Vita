@@ -6,6 +6,7 @@ import { addSubUser as addSubUserToDb, deleteSubUser as deleteSubUserFromDb, upd
 const subUserStorageKey = 'subUsers';
 
 const SubUserStorage = {
+
   async getSubUsers(adminUsername) {
     try {
       const subUsersJson = await AsyncStorage.getItem(subUserStorageKey);
@@ -59,3 +60,4 @@ const SubUserStorage = {
     }
   },
 };
+export default SubUserStorage;

@@ -46,6 +46,25 @@ const AddDataStack = createStackNavigator(); // This section if for the add data
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
 
+import UserThemes from './screens/Profilesc/options/UserThemes';
+import UserLogs from './screens/Profilesc/options/logs';
+import NotificationPage from './screens/Profilesc/options/Notifications';
+import UserSynch from './screens/Profilesc/options/Synch';
+import UpdatePage from './screens/Profilesc/options/Update';
+
+
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={Profile} options={{ headerShown: false  }}/>
+      <ProfileStack.Screen name="UserThemes" component={UserThemes} />
+      <ProfileStack.Screen name="UserLogs" component={UserLogs} />
+      <ProfileStack.Screen name="NotificationPage" component={NotificationPage} />
+      <ProfileStack.Screen name="UserSynch" component={UserSynch} />
+      <ProfileStack.Screen name="UpdatePage" component={UpdatePage} />
+    </ProfileStack.Navigator>
+  );
+}
 
 
 function AddDataStackScreen() {
@@ -147,11 +166,12 @@ function BottomTabs() {
       </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
-  
+{/* <Tab.Screen name="Profile" component={ProfileStackScreen} options={{ headerShown: false }} /> */}
+
   <Tab.Screen name="Profile" options={{ headerShown: false }}>
     {() => (
       <AnimatedScreenWrapper style={{ flex: 1 }}>
-        <Profile />
+        <ProfileStackScreen />
       </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
@@ -184,6 +204,7 @@ const AppStack = () => (
 export default function Navigation() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  
 
   useEffect(() => {
     async function checkAuth() {
