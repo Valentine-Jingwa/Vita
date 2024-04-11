@@ -18,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         // await AsyncStorage.removeItem('@user_token');
         await AsyncStorage.removeItem('@authToken');
         setIsAuthenticated(false);
+        
     };
 
     return (
