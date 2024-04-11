@@ -5,15 +5,17 @@ import Profile from './Profile'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { useNavigation } from '@react-navigation/native';
 
 
 const { width, height } = Dimensions.get('window');
 
 // There will be a function here that will retrieve the Adminuser profile and It's subUsers from mongoDbService.js
 
-export default function profileSettings({ navigation }) {
+export default function ProfileSettings({ }) {
   const [adminUser, setAdminUser] = useState(null);
   const [subUsers, setSubUsers] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchAdminUser = async () => {
@@ -37,21 +39,23 @@ export default function profileSettings({ navigation }) {
         {/* The user profile section the Profile will take parameters */}     
         {/* <Profile userData={adminUser}/>  */}
         <Profile adminData={adminUser} subUserData={subUsers} />
-        {/* The options below are a scroll view */}
+        {/* The options below are a scroll view "userThemes" compo
+*/}
         <View style={styles.profileOptions}>
-          <TouchableOpacity style={styles.Options_btn}>
+          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UpdatePage')} >
+        
             <Text style={styles.Option_Text}>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn}>
+          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserSynch')}>
             <Text style={styles.Option_Text}>Account Synch</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn}>
+          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('NotificationPage')}>
             <Text style={styles.Option_Text}>Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn}>
+          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserLogs')}>
             <Text style={styles.Option_Text}>View Logs</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn}>
+          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserThemes')}>
             <Text style={styles.Option_Text}>User Themes</Text>
           </TouchableOpacity>
         </View>
