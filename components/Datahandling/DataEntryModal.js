@@ -56,7 +56,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       >
       <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback onPress={handleOnClose}>
-            <View style={{ flex: 1, width: '100%' }} />
+            <View style={{ width: '100%' }} />
           </TouchableWithoutFeedback>
         <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
