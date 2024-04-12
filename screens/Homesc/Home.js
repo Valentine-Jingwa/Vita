@@ -136,7 +136,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.screenContainer}>
       <TouchableOpacity style={styles.iconButton} onPress={() => setReminderModalVisible(true)}>
-        <Iclock width={35} height={35} />
+        <Iclock width={40} height={40} />
       </TouchableOpacity>
 
       <ReminderModal
@@ -144,42 +144,6 @@ const Home = () => {
         onClose={() => setReminderModalVisible(false)}
         onSave={handleSaveReminder}
       />
-
-      {/* Modal for clock icon
-      <Modal
-      animationType="fade"
-      transparent={true}
-      visible={visible}
-      onRequestClose={onClose}
-    >
-      <View style={styles.reminderModal}>
-        <View style={styles.reminderContent}>
-          <TouchableOpacity onPress={onClose}>
-            <Icon name="close" size={24} color="#000" />
-          </TouchableOpacity>
-          <DateTimePicker
-            value={date}
-            mode={'date'}
-            is24Hour={true}
-            display="default"
-            onChange={handleDateChange}
-          />
-          <View style={styles.repeatSwitch}>
-            <Text>Repeat</Text>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={repeat ? "#f5dd4b" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={() => setRepeat(previousState => !previousState)}
-              value={repeat}
-            />
-          </View>
-          <TouchableOpacity style={styles.saveButton} onPress={() => onSave(date, repeat)}>
-            <Text style={styles.saveButtonText}>Save Reminder</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal> */}
 
 
       {/* Modal for Selected Date */}
@@ -296,7 +260,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     paddingTop: 10,
-    marginTop: 35,
+    marginTop: 40,
     height: 350,
   },
   deckContainer: {

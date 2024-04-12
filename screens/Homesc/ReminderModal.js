@@ -15,6 +15,13 @@ const ReminderModal = ({ visible, onClose }) => {
   const [reminders, setReminders] = useState([]);
   const [description, setDescription] = useState('');
 
+    // Custom onClose that also clears input fields
+    const handleModalClose = () => {
+      setTitle('');       // Reset the title input field
+      setDescription(''); // Reset the description input field
+      onClose();          // Call the original onClose prop function
+    };
+
   useEffect(() => {
     async function setupNotifications() {
       await registerForPushNotificationsAsync();
@@ -41,12 +48,53 @@ const ReminderModal = ({ visible, onClose }) => {
 
   useEffect(() => {
     loadReminders();
+    setupNotifications();
   }, []);
+
+  const setupNotifications = async () => {
+    await registerForPushNotificationsAsync();
+    // Notification listeners setup here...
+  };
 
   const loadReminders = async () => {
     const storedReminders = await AsyncStorage.getItem('reminders');
     if (storedReminders) setReminders(JSON.parse(storedReminders));
   };
+
+
+  const renderItem = ({ item }) => {
+    const alertDateTime = new Date(item.time);
+  
+    if (item.showDescription) {
+      // When showDescription is true, only show the description
+      return (
+        <TouchableOpacity 
+          onPress={() => toggleDescription(item.id)} 
+          style={styles.reminderItem}
+        >
+          <Text style={styles.descriptionText}>{item.description}</Text>
+        </TouchableOpacity>
+      );
+    } else {
+      // When showDescription is false, show the regular details
+      return (
+        <TouchableOpacity 
+          onPress={() => toggleDescription(item.id)} 
+          style={styles.reminderItem}
+        >
+          <View style={styles.reminderHeader}>
+            <Text style={styles.reminderTitle}>{item.title}</Text>
+            <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
+              <Icon name="close" size={16} color="#cc0000" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.reminderDateTime}>{`Alert Date: ${alertDateTime.toLocaleDateString()}`}</Text>
+          <Text style={styles.reminderDateTime}>{`Alert Time: ${alertDateTime.toLocaleTimeString()}`}</Text>
+        </TouchableOpacity>
+      );
+    }
+  };
+  
 
   const saveReminder = async () => {
     if (title.trim().length === 0 || description.trim().length === 0) {
@@ -98,7 +146,7 @@ const ReminderModal = ({ visible, onClose }) => {
         return {
           ...reminder,
           showDescription: !reminder.showDescription,
-          showDelete: reminder.showDescription, // Toggle delete icon visibility
+          // showDelete: reminder.showDescription, // Toggle delete icon visibility
         };
       }
       return reminder;
@@ -144,9 +192,9 @@ const ReminderModal = ({ visible, onClose }) => {
       animationType="slide"
       transparent={true}
       visible={visible}
-      onRequestClose={onClose}>
+      onRequestClose={handleModalClose}>
       <View style={styles.fullScreenContainer}>
-        <TouchableWithoutFeedback onPress={onClose}>
+        <TouchableWithoutFeedback onPress={handleModalClose}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
         <View style={styles.modalContainer}>
@@ -184,26 +232,8 @@ const ReminderModal = ({ visible, onClose }) => {
           <FlatList
             data={reminders}
             keyExtractor={(item) => item.id.toString()}
-            style={[styles.reminderList, {marginBottom: 70}]} 
-            renderItem={({ item }) => (
-              <TouchableOpacity 
-                onPress={() => toggleDescription(item.id)} 
-                style={[styles.reminderItem, { borderWidth: 1, marginBottom: 15}]}
-              >
-                {!item.showDescription ? (
-                  <>
-                    <Text style={styles.reminderText}>{`${item.title} - ${new Date(item.time).toLocaleString()}`}</Text>
-                    {item.showDelete && (
-                      <View style={{marginLeft: 'auto'}}>
-                        <Icon name="close-circle-outline" size={20} color="#000" />
-                      </View>
-                    )}
-                  </>
-                ) : (
-                  <Text style={styles.descriptionText}>{item.description}</Text>
-                )}
-              </TouchableOpacity>
-            )}
+            style={styles.reminderList}
+            renderItem={renderItem}
           />
 
           <TouchableOpacity 
@@ -259,27 +289,42 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
   },
+  reminderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  reminderTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  reminderDateTime: {
+    fontSize: 14,
+    color: '#666',
+  },
   reminderList: {
     marginTop: 30,
   },
   reminderItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    minHeight: 80,
-    paddingLeft: 20,
-    paddingRight: 20,
-    borderWidth: 1,
-    marginBottom: 15,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+    padding: 10,
+    marginBottom: 10,
   },
   reminderText: {
+    fontSize: 16,
     color: 'black',
   },
   removeButton: {
-    marginLeft: 'auto', // Push the remove button to the end of the row
-    padding: 10,
+    padding: 5,
   },
-
+  descriptionText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: 'gray',
+  },
   clearAllButton: {
     position: 'absolute', 
     right: 20,
@@ -334,9 +379,5 @@ const styles = StyleSheet.create({
   },
   dayTextSelected: {
     color: 'white',
-  },
-  descriptionText: {
-    color: 'black',
-    padding: 20,
   },
 });
