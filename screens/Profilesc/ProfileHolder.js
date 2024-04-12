@@ -4,10 +4,11 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import SubUserForm from './SubUserForm';
+import QuickSwitch from './quickSwitch';
 
 const { width } = Dimensions.get('window');
 
-const Profile = ({ adminData, subUserData }) => {
+const ProfileHolder = ({ adminData, subUserData }) => {
     const [currentUser, setCurrentUser] = useState(adminData);
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
@@ -162,4 +163,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Profile;
+export default ProfileHolder;
