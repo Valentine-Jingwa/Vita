@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData, restoreData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
 
 const { width, height } = Dimensions.get('window');
 
@@ -16,6 +17,22 @@ export default function Login({ navigation }) {
     setLoading(true);
     try {
         const { token } = await authenticateUser(values.loginId, values.password);
+        const currentEmail = await getCurrentUserEmail();
+        const loginResponse = await authenticateUser(values.loginId, values.password);
+        if (loginResponse.success) {
+          if (currentEmail !== email) {
+              await clearLocalData(); // Clear data if different user
+              console.log('Cleared local data due to different user login');
+          }
+
+          // Always check for new data from the database to keep local up-to-date
+          await restoreData(email);
+          await setCurrentUserEmail(email); // Update the current user email in storage
+
+          // Proceed with user login success actions
+      } else {
+          console.error('Login failed:', loginResponse.message);
+      }
         await login(token);
     } catch (error) {
         const errorMessage = error.response?.data?.error || 'Failed to login';

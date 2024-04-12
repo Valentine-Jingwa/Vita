@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    
 
     const login = async (token) => {
         await AsyncStorage.setItem('@authToken', token);
