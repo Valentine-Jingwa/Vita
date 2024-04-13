@@ -9,6 +9,7 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   const [content, setContent] = useState(null);
 
 
+
   useEffect(() => {
     fetchDataForSubcategory();
   }, [isVisible, selectedSubcategory]);
@@ -32,36 +33,38 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
 
   const prepareChartData = (data) => {
     const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const labelColors = [];
     const labels = sortedData.map(item => {
       const date = new Date(item.timestamp);
-      const label = `${date.getDate()} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
-      const isTime = label.includes(':');
-      labelColors.push(isTime ? 'black' : 'red');
-      return label;
+      return `${date.getDate()} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
     });
-
+  
     const values = sortedData.map(item => parseFloat(item.value));
-
+  
+    const chartWidth = Math.max(labels.length * 80, Dimensions.get('window').width);
+  
     const chartData = {
       labels,
       datasets: [{ data: values }],
     };
-
-    const chartWidth = labels.length > 10 ? Dimensions.get('window').width * (labels.length / 10) : Dimensions.get('window').width * 0.9;
-
+  
     setContent(
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: Dimensions.get('window').width * 0.9 }}>
+      <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={{ flexGrow: 0, width: '100%', height: 400 }}
+      contentContainerStyle={{ alignItems: 'center' }}
+    >
         <LineChart
           data={chartData}
-          width={chartWidth}
-          height={Dimensions.get('window').height * 0.4}
+          width={chartWidth} // Use the dynamic width
+          height={400}
+          // height={Dimensions.get('window').height * 0.4}
           chartConfig={{
             backgroundGradientFrom: '#ffffff',
             backgroundGradientTo: '#ffffff',
             decimalPlaces: 2,
             color: () => `rgba(0, 0, 0, 1)`,
-            labelColor: (opacity = 1, index) => `rgba(${labelColors[index] === 'red' ? '255, 0, 0' : '0, 0, 0'}, ${opacity})`,
+            labelColor: (opacity = 1, index) => index % 2 === 0 ? `rgba(255, 0, 0, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
             style: {
               borderRadius: 16,
             },
@@ -82,8 +85,8 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
         />
       </ScrollView>
     );
-};
-
+  };
+  
   
   
 
