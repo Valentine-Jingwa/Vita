@@ -46,8 +46,10 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
       labels,
       datasets: [{ data: values }],
     };
+
   
     setContent(
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
@@ -69,7 +71,7 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
               borderRadius: 16,
             },
             propsForDots: {
-              r: '5',
+              r: '6',
               strokeWidth: '1',
               stroke: 'blue',
             },
@@ -84,6 +86,7 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
           }}
         />
       </ScrollView>
+      </View>
     );
   };
   
