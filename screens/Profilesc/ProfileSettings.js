@@ -1,7 +1,7 @@
 //This will contain the stuff to modifying the profile
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpacity} from 'react-native';
-import Profile from './Profile'; // Ensure this is correctly imported
+import Profile from './ProfileHolder'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';

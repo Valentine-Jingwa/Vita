@@ -1,19 +1,97 @@
-//synch'js
-// This will have a button that when clicked will synch the user data with the database if it hasn't already been synched
-// If all data matches a message will appear saying that the data is already synched and will show a check mark and the modal will close
-// The other button here will be authorise other user of the app have access to one of your subUsers data
-//When the button is clicked an input field will appear and the user will enter the username of the subUser they want to authorise. While typing the email of the user the database will be carrying a query. When The dataBase finds a match the user will be able to click the authorise button and the user will be able to view the subUser. For Security to proceed the user will have to enter the admin password.
-// The User can then admin user can then choose if the user can only view the data or view and edit the data
+import React, { useState } from 'react';
+import { SafeAreaView, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { checkSyncStatus, syncData, authorizeAccess } from '../../../mongo/services/dataManagement';
 
-import React, { Component } from 'react';
-import { SafeAreaView, View, Text, TouchableOpacity, Touchable } from 'react-native';
+export default function Synch({ navigation }) {
+    const [isSynced, setIsSynced] = useState(false);
+    const [username, setUsername] = useState('');
+    const [isAdminPassword, setAdminPassword] = useState('');
+    const [showAuthInput, setShowAuthInput] = useState(false);
 
-export default function Synch({ navigation}) {
+    const handleSync = async () => {
+        const synced = await checkSyncStatus();  // Function to check if data is synced
+        if (synced) {
+            Alert.alert("Sync Status", "All data is already synchronized.");
+            setIsSynced(true);
+        } else {
+            const result = await syncData();  // Function to sync data
+            if (result.success) {
+                Alert.alert("Sync Successful", "Your data has been synchronized.");
+                setIsSynced(true);
+            } else {
+                Alert.alert("Sync Failed", result.message);
+            }
+        }
+    };
+
+    const handleAuthorization = async () => {
+        if (isAdminPassword && username) {
+            const result = await authorizeAccess(username, isAdminPassword);  // Assuming this function exists to handle authorization
+            if (result.success) {
+                Alert.alert("Authorization Successful", "User has been authorized successfully.");
+            } else {
+                Alert.alert("Authorization Failed", result.message);
+            }
+        } else {
+            Alert.alert("Error", "Please enter all required fields.");
+        }
+    };
+
     return (
-        <SafeAreaView>
-            <TouchableOpacity >
-                <Text>Synch</Text>
+        <SafeAreaView style={styles.container}>
+            <TouchableOpacity style={styles.button} onPress={handleSync}>
+                <Text style={styles.buttonText}>Sync Data</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={() => setShowAuthInput(true)}>
+                <Text style={styles.buttonText}>Authorize Sub-User Access</Text>
+            </TouchableOpacity>
+            {showAuthInput && (
+                <View>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter sub-user username"
+                        value={username}
+                        onChangeText={setUsername}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Admin Password"
+                        value={isAdminPassword}
+                        onChangeText={setAdminPassword}
+                        secureTextEntry={true}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={handleAuthorization}>
+                        <Text style={styles.buttonText}>Authorize</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    input: {
+        width: 300,
+        height: 40,
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+    },
+    button: {
+        backgroundColor: '#007bff',
+        padding: 10,
+        margin: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+});

@@ -45,12 +45,12 @@ const AddDataOptions = ({ navigation }) => {
       Animated.parallel([
         Animated.timing(notificationAnim, {
           toValue: 0,
-          duration: 300,
+          duration: 80,
           useNativeDriver: true,
         }),
         Animated.timing(notificationOpacity, {
           toValue: 1,
-          duration: 300,
+          duration: 80,
           useNativeDriver: true,
         })
       ]),
