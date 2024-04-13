@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
@@ -12,28 +12,40 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import ReminderModal from './ReminderModal';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+
+
 
 
 // Debounce function to prevent multiple calls
-const debounce = (func, delay) => {
-  let inDebounce;
-  return function() {
-    const context = this;
-    const args = arguments;
-    clearTimeout(inDebounce);
-    inDebounce = setTimeout(() => func.apply(context, args), delay);
-  };
-};
+// const debounce = (func, delay) => {
+//   let inDebounce;
+//   return function() {
+//     const context = this;
+//     const args = arguments;
+//     clearTimeout(inDebounce);
+//     inDebounce = setTimeout(() => func.apply(context, args), delay);
+//   };
+// };
+
+
 
 
 
 const Home = () => {
-  const [calendarModalVisible, setTimeModalVisible] = useState(false);
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
   const [data, setData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [reminderModalVisible, setReminderModalVisible] = useState(false);
+  const [swipeFeedback, setSwipeFeedback] = useState(false);
+
+
+  useEffect(() => {
+    console.log(`Current Index: ${currentIndex}, Data Length: ${data.length}`);
+  }, [currentIndex, data.length]);
+
 
 
     // Function to handle saving the reminder
@@ -109,6 +121,7 @@ const Home = () => {
     }, [])
   );
 
+
    // Function to go to the next card
    const goToNextCard = () => {
     setCurrentIndex(prevIndex => (prevIndex + 1) % data.length); // Loop back to the first card after reaching the end
@@ -119,16 +132,11 @@ const Home = () => {
     setCurrentIndex(prevIndex => (prevIndex - 1 + data.length) % data.length); // Loop to the last card when reaching the first one
   };
 
-  const handleSwipe = ({ nativeEvent }) => {
-    if (nativeEvent.translationX < 0) {
-      goToNextCard(); // Swiped Left, go to next card
-    } else if (nativeEvent.translationX > 0) {
-      goToPrevCard(); // Swiped Right, go to previous card
-    }
-  };
-
-    // Debounce the swipe handler to prevent multiple calls
-  const onSwipe = debounce(handleSwipe, 100);
+  const handleSwipe = useCallback((direction) => {
+    setSwipeFeedback(true);
+    setTimeout(() => setSwipeFeedback(false), 300);
+    setCurrentIndex(prevIndex => (direction === 'left' ? (prevIndex + 1) % data.length : (prevIndex - 1 + data.length) % data.length));
+  }, [data.length]);
 
 
   
@@ -178,27 +186,26 @@ const Home = () => {
 
       {/* Calendar Component */}
       <Calendar
-  onDayPress={handleDayPress}
-  markedDates={getMarkedDates()}
-  theme={{
-    arrowColor: '#007AFF',
-    todayTextColor: '#007AFF',
-  }}
+        onDayPress={handleDayPress}
+        markedDates={getMarkedDates()}
+        theme={{
+          arrowColor: '#007AFF',
+          todayTextColor: '#007AFF',
+        }}
         // Add style to ensure calendar doesn't change the layout size dynamically
         style={{
           ...styles.calendar, // Spread existing styles from your styles.calendar
         }}
       />
 
-      {/* Simplified Card Viewer */}
+      {/* Card Viewer with Swipe Handling */}
       <PanGestureHandler
-        onGestureEvent={onSwipe}
         onHandlerStateChange={({ nativeEvent }) => {
           if (nativeEvent.state === State.END) {
-            onSwipe({ nativeEvent });
+            handleSwipe(nativeEvent.translationX < 0 ? 'left' : 'right');
           }
         }}>
-        <View style={styles.cardViewer}>
+        <View style={[styles.cardViewer, swipeFeedback ? styles.swipeFeedback : null]}>
           {data.length > 0 && currentIndex < data.length ? (
             <DataCard item={data[currentIndex]} />
           ) : (
@@ -208,12 +215,13 @@ const Home = () => {
       </PanGestureHandler>
 
 
+
       {/* Navigation Arrows */}
       <View style={styles.arrowContainer}>
-        <TouchableOpacity onPress={goToPrevCard}>
+        <TouchableOpacity onPress={() => handleSwipe('right')}>
           <Icon name="chevron-left" size={30} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={goToNextCard}>
+        <TouchableOpacity onPress={() => handleSwipe('left')}>
           <Icon name="chevron-right" size={30} color="#000" />
         </TouchableOpacity>
       </View>
@@ -226,16 +234,16 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     justifyContent: 'flex-start',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#FFFFFF', // Bright and clean background color
   },
   selectedDateModalView: {
-    width: '100%', 
+    width: '100%',
     position: 'absolute',
-    bottom: 0, 
+    bottom: 0,
     left: 0,
-    right: 0, 
-    height: '70%', 
-    backgroundColor: 'white',
+    right: 0,
+    height: '70%',
+    backgroundColor: '#f9f9f9', // Light grey for modal background
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -244,9 +252,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    alignItems: 'center', // Centers the content horizontally
-    ustifyContent: 'center',
-    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   closeButton: {
     alignSelf: 'flex-end', // Move close button to the right
@@ -257,11 +264,25 @@ const styles = StyleSheet.create({
     top: 40,
     left: 20,
     zIndex: 2,
+    backgroundColor: 'transparent', 
+    borderRadius: 30,
+    padding: 10,
   },
   calendar: {
     paddingTop: 10,
-    marginTop: 40,
+    marginTop: 60,     // Keeps top margin
+    marginBottom: 20,  // Adds bottom margin for spacing
+    marginLeft: 20,    // Adds left margin
+    marginRight: 20,   // Adds right margin
     height: 350,
+    borderRadius: 15,  // Rounded corners for the calendar
+    borderWidth: 1,    // Light grey border
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },  // Reduces shadow vertical offset
+    shadowOpacity: 0.15,  // Reduces shadow opacity for a subtler effect
+    shadowRadius: 10,     // Reduces shadow blur radius
+    elevation: 5,         // Reduces elevation for Android
   },
   deckContainer: {
     flex: 1,
@@ -273,12 +294,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20, // Add some padding
+    marginLeft: 20,    // Adds left margin
+    marginRight: 20,   // Adds right margin
+    borderRadius: 15,  // Rounded corners for the calendar
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },  // Reduces shadow vertical offset
+  },
+  swipeFeedback: {
+    opacity: 0.5, // Adjust as needed for visible feedback
   },
   arrowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 65, 
+    marginBottom: 65,
+    opacity: 0.8,
+  },
+  gestureArea: {
+    width: '100%',
+    height: '100%',
   },
   noDataText: {
     fontSize: 18,
@@ -334,8 +368,8 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   noDataText: {
-    fontSize: 30,
-    color: '#000',
+    fontSize: 18,
+    color: '#666',
     textAlign: 'center',
     marginTop: '50%',
     marginBottom: 'auto',
