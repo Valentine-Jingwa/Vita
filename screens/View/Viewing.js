@@ -89,7 +89,8 @@ export default function Viewing() {
       <View style={styles.searchAndFilterContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Search subcategories..."
+          placeholderTextColor={"#A9A9A9"}
+          placeholder="Search..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />

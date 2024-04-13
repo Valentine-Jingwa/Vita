@@ -1,52 +1,35 @@
 // TimeCalculator.js
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, View, ScrollView } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, ScrollView, } from 'react-native';
 
 const TimeCalculator = ({ timestamp }) => {
-  const getElapsedTime = (timestamp) => {
-    const now = new Date();
-    const past = new Date(timestamp);
-    const diffInSeconds = Math.floor((now - past) / 1000);
-    const secPerMinute = 60;
-    const secPerHour = secPerMinute * 60;
-    const secPerDay = secPerHour * 24;
-    const secPerWeek = secPerDay * 7;
-    const secPerYear = secPerDay * 365;
-
-    if (diffInSeconds < secPerMinute) {
-      return `${diffInSeconds} seconds ago`;
-    } else if (diffInSeconds < secPerHour) {
-      return `${Math.floor(diffInSeconds / secPerMinute)} minutes ago`;
-    } else if (diffInSeconds < secPerDay) {
-      return `${Math.floor(diffInSeconds / secPerHour)} hours ago`;
-    } else if (diffInSeconds < secPerWeek) {
-      return `${Math.floor(diffInSeconds / secPerDay)} days ago`;
-    } else if (diffInSeconds < secPerYear) {
-      return `${Math.floor(diffInSeconds / secPerWeek)} weeks ago`;
-    } else {
-      return `${Math.floor(diffInSeconds / secPerYear)} year ago`;
-    }
-  };
-
-  const handleTimeClick = () => {
-    // Format timestamp to 'yyyy/mm/dd AM/PM' format
+  // Format the date directly without calculating elapsed time
+  const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    const formattedDate = date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
+      month: 'long', // Month as the full name
+      day: 'numeric', // Day of the month
+      weekday: 'long' // Day of the week
+    }) + ' ' + date.toLocaleTimeString('en-US', {
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true,
+      hour12: true
     });
-    alert(formattedDate);
   };
 
   return (
-    <View onClick={handleTimeClick}>
-      <Text>{getElapsedTime(timestamp)}</Text>
+    <View>
+      <Text style={styles.dateText}>{formatDate(timestamp)}</Text>
     </View>
   );
 };
 
 export default TimeCalculator;
+
+const styles = StyleSheet.create({
+  dateText: {
+    fontSize: 16,
+    color: '#555', // Adjust color as needed
+  },
+});
