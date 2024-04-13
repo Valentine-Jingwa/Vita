@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe, Dimensions } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
@@ -17,7 +17,7 @@ import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-na
 
 
 
-
+const { width, height } = Dimensions.get('window');
 // Debounce function to prevent multiple calls
 // const debounce = (func, delay) => {
 //   let inDebounce;
@@ -107,7 +107,7 @@ const Home = () => {
         const formattedData = storedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setData(formattedData);
     } else {
-        setData([]); // Ensure data is always an array
+        setData([]); 
     }
 };
 
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   },
   calendar: {
     paddingTop: 10,
-    marginTop: 60,     // Keeps top margin
+    marginTop: height*0.12,     // Keeps top margin
     marginBottom: 20,  // Adds bottom margin for spacing
     marginLeft: 20,    // Adds left margin
     marginRight: 20,   // Adds right margin
