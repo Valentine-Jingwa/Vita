@@ -1,25 +1,35 @@
-//DataCard.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import ColorId from '../../constants/ColorId';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimeCalculator from './TimeCalculator';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const DataCard = ({ item }) => {
     if (!item) {
-        // Optionally, render nothing or some placeholder
-        return null; // or <View><Text>Loading...</Text></View> for a placeholder
+        return <View style={styles.placeholder}><Text>Loading...</Text></View>;
     }
 
     return (
-        <View style={styles.dataBox}>
-            <View style={styles.contentBox}>
-                <Text style={styles.idcolor}><ColorId id={item.id}/></Text>
-                <Text style={styles.subcatName}>{item.subcategory}</Text>
-                <Text style={styles.textvalue}>{item.value}</Text>
-                <Text style={styles.textunit}>{item.unit}</Text>  
-            </View>
-            <Text><TimeCalculator timestamp={item.timestamp} /></Text>
-        </View>
+        <TouchableOpacity activeOpacity={0.7} style={styles.dataBox}>
+            <LinearGradient
+                colors={['#e6e6e6', '#ffffff']}
+                style={styles.gradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+            >
+                <Icon name="database" size={24} color="#007AFF" style={styles.icon} />
+                <View style={styles.textGroup}>
+                    <Text style={styles.subcatName}>{item.subcategory}</Text>
+                    <View style={styles.valueContainer}>
+                        <Text style={styles.textvalue}>{item.value}</Text>
+                        <Text style={styles.textunit}>{item.unit}</Text>
+                    </View>
+                </View>
+                <View style={styles.timeContainer}>
+                    <TimeCalculator timestamp={item.timestamp} />
+                </View>
+            </LinearGradient>
+        </TouchableOpacity>
     );
 };
 
@@ -27,41 +37,60 @@ export default DataCard;
 
 const styles = StyleSheet.create({
     dataBox: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
         borderRadius: 15,
-        backgroundColor: '#FFFFFF', // Neutral background color
+        backgroundColor: 'transparent',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 2,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6.27,
+        elevation: 10,
         marginVertical: 10,
-        width: '95%', // Make cards wide
-        height: 250, // Make cards tall
-        alignSelf: 'center', // Center cards
+        width: '90%',
+        height: 100,
+        alignSelf: 'center',
     },
-    contentBox: {
+    gradient: {
+        flex: 1,
+        borderRadius: 15,
+        padding: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        width: '100%', // Use full width of the card
+        justifyContent: 'space-between',
+    },
+    icon: {
+        marginRight: 10,
+    },
+    textGroup: {
+        flex: 4,  // Increase flex to give more space to the content
     },
     subcatName: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
     },
+    valueContainer: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        marginTop: 5, // Additional spacing from the category name
+    },
     textvalue: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#007AFF',
+        marginRight: 5, // Ensures space between the value and unit
     },
     textunit: {
         fontSize: 18,
-        color: '#777', // Slightly lighter for the unit
+        color: '#777',
     },
-    
+    timeContainer: {
+        flex: 2.5,  // Reduced flex, ensures it does not take too much space
+    },
+    placeholder: {
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f9f9f9',
+        borderRadius: 15,
+    },
 });
