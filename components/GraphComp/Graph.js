@@ -1,6 +1,6 @@
 // GraphModal.js
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Includes} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import DataStorage from '../Datahandling/DataStorage';
 import { AntDesign } from '@expo/vector-icons';
@@ -32,50 +32,60 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
 
   const prepareChartData = (data) => {
     const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
+    const labelColors = [];
+    const labels = sortedData.map(item => {
+      const date = new Date(item.timestamp);
+      const label = `${date.getDate()} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+      const isTime = label.includes(':');
+      labelColors.push(isTime ? 'black' : 'red');
+      return label;
+    });
+
+    const values = sortedData.map(item => parseFloat(item.value));
 
     const chartData = {
       labels,
-      datasets: [{ data: sortedData.map(item => parseFloat(item.value)) }],
+      datasets: [{ data: values }],
     };
 
-    const chartWidth = sortedData.length > 10 ? Dimensions.get('window').width * (sortedData.length / 10) : Dimensions.get('window').width * 0.9;
-
+    const chartWidth = labels.length > 10 ? Dimensions.get('window').width * (labels.length / 10) : Dimensions.get('window').width * 0.9;
 
     setContent(
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{width: Dimensions.get('window').width * 0.9}}>
-      <LineChart
-        data={chartData}
-        width={Dimensions.get('window').width * 0.9}
-        height={Dimensions.get('window').height * 0.4} 
-        
-        chartConfig={{
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
-          decimalPlaces: 2,
-          color: () => `rgba(0, 0, 0, 1)`,
-          labelColor: () => `rgba(0, 0, 0, 1)`,
-          style: {
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ width: Dimensions.get('window').width * 0.9 }}>
+        <LineChart
+          data={chartData}
+          width={chartWidth}
+          height={Dimensions.get('window').height * 0.4}
+          chartConfig={{
+            backgroundGradientFrom: '#ffffff',
+            backgroundGradientTo: '#ffffff',
+            decimalPlaces: 2,
+            color: () => `rgba(0, 0, 0, 1)`,
+            labelColor: (opacity = 1, index) => `rgba(${labelColors[index] === 'red' ? '255, 0, 0' : '0, 0, 0'}, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: '5',
+              strokeWidth: '1',
+              stroke: 'blue',
+            },
+            propsForBackgroundLines: {
+              strokeDasharray: '',
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
             borderRadius: 16,
-          },
-          propsForDots: {
-            r: '5',
-            strokeWidth: '1',
-            stroke: 'blue',
-          },
-          propsForBackgroundLines: {
-            strokeDasharray: '', 
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
+          }}
+        />
       </ScrollView>
     );
-  };
+};
+
+  
+  
 
   const prepareTextualData = (data) => {
     const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));

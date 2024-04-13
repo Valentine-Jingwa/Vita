@@ -122,16 +122,6 @@ const Home = () => {
   );
 
 
-   // Function to go to the next card
-   const goToNextCard = () => {
-    setCurrentIndex(prevIndex => (prevIndex + 1) % data.length); // Loop back to the first card after reaching the end
-  };
-
-  // Function to go to the previous card
-  const goToPrevCard = () => {
-    setCurrentIndex(prevIndex => (prevIndex - 1 + data.length) % data.length); // Loop to the last card when reaching the first one
-  };
-
   const handleSwipe = useCallback((direction) => {
     setSwipeFeedback(true);
     setTimeout(() => setSwipeFeedback(false), 300);
@@ -168,9 +158,8 @@ const Home = () => {
               style={styles.closeButton}
               onPress={() => setSelectedDateModalVisible(false)}
             >
-              <Icon name="close" size={24} color="#000" />
             </TouchableOpacity>
-            <ScrollView horizontal={false} style={{ width: '100%' }}>
+            <ScrollView horizontal={false} style={{ width: '95%' }}>
                   {getDataForSelectedDate(selectedDate).length > 0 ? (
                     getDataForSelectedDate(selectedDate).map((item, index) => (
                       <CompactDataCard key={index} item={item} />
@@ -238,20 +227,14 @@ const styles = StyleSheet.create({
   },
   selectedDateModalView: {
     width: '100%',
-    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: '70%',
+    height: '75%',
     backgroundColor: '#f9f9f9', // Light grey for modal background
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -354,12 +337,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1,
   },
   dateText: {
     fontSize: 18,
