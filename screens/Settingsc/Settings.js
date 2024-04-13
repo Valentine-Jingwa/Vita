@@ -1,5 +1,6 @@
+// Settings.js
 import React, { useEffect, useState, } from 'react';
-import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button, Dimensions } from 'react-native';
+import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,29 +19,20 @@ const fullWidth = Dimensions.get('window').width;
 export default function Settings() {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const { theme, toggleTheme } = useTheme();
   const { logout } = useAuth();
   const navigation = useNavigation();
-
-  const themeStyles = {
-    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
-    color: theme === 'light' ? '#120D0E' : '#F2EDEE',
-  };
-
-  const buttonStylemain = theme === 'dark' ? { backgroundColor: '#384E51' }: {};
-
-
-  const buttonStyleside = {
-    backgroundColor: theme === 'light' ? '#0D1012' : '#ECEFF1',
-  }
-
-
+  const { theme, themeStyles, toggleTheme } = useTheme();
 
 
 
   const handleClearStorage = async () => {
-    await DataStorage.Clear();
-    setModalVisible(false);``
+    try {
+      await DataStorage.clear();
+      setModalVisible(false);
+      alert('Storage has been wiped!');
+    } catch (error) {
+      alert('Failed to clear storage: ' + error.message);
+    }
   };
 
   const handleLogout = async () => {
@@ -80,40 +72,37 @@ export default function Settings() {
       <Modal
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-          
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
-
-   <View style={styles.wipemodalViewWrapper}>
-      <View style={styles.wipemodalView}>
-      <Text style={styles.modalText}>Are you sure you want to wipe all data?</Text>
-        <View style={styles.modalButtons}>
-        <TouchableOpacity style={[styles.button, styles.buttonClose]} onPress={handleClearStorage}>
-          <ThemedText style={styles.buttonText}>Wipe</ThemedText>
-        </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonClose]}  onPress={handleCancel}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  </Modal>
-  <View style={styles.settingTopView}>
-     {/* <View style={styles.SettingsTitleWrapper}>
-      <TouchableOpacity>
-        <View style={styles.SettingsTitle}>
-          <ThemedText>Settings</ThemedText>
-        </View>
-      </TouchableOpacity>
-    </View> */}
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalView}>
+                <Text style={[styles.modalText, { color: themeStyles.text }]}>Are you sure you want to wipe all data?</Text>
+                <View style={styles.modalButtons}>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonClose, { backgroundColor: themeStyles.secondary }]}
+                    onPress={handleClearStorage}
+                  >
+                    <Text style={{ color: themeStyles.text }}>Wipe</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, styles.buttonClose, { backgroundColor: themeStyles.secondary }]}
+                    onPress={() => setModalVisible(false)}
+                  >
+                    <Text style={{ color: themeStyles.text }}>Cancel</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+  <View style={[styles.settingTopView, {backgroundColor: themeStyles.background}]}>
   </View>
-
-
-      <View style={styles.settingBottomView}>
-      <View style={styles.ldbtnwrapper}>
-          <TouchableOpacity onPress={toggleTheme}>
+  <View style={[styles.settingBottomView, {backgroundColor: themeStyles.background}]}>
+        <View style={styles.ldbtnwrapper}>
+          <TouchableOpacity style={[styles.button, ]} onPress={toggleTheme}>
             {theme === 'light' ? (
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Day width={35} height={35}/>
@@ -127,27 +116,25 @@ export default function Settings() {
         </View>
         <View style={styles.wipebtnwrapper}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <View style={[styles.wipebtn, buttonStylemain]}>
-              <ThemedText>Wipe Storage</ThemedText>
+            <View style={[styles.wipebtn, {backgroundColor: themeStyles.secondary}]}>
+              <ThemedText style={{ color: themeStyles.text }}>Wipe Storage</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.notificationbtnwrapper}>
           <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
-            <View style={[styles.notificationbtn, buttonStylemain]}>
-              <ThemedText>Notification</ThemedText>
+            <View style={[styles.notificationbtn, {backgroundColor: themeStyles.secondary}]}>
+              <ThemedText style={{ color: themeStyles.text }}>Notification</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
-
         <View style={styles.logoutButtonWrapper}>
-          <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, buttonStyleside]}>
-            <View style={[styles.buttonText]}>
-              < RLogout width={20} height={20}/>
+          <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, {backgroundColor: themeStyles.accent}]}>
+            <View style={[styles.buttonText, { color: themeStyles.text }]}>
+              <RLogout width={20} height={20}/>
             </View>
           </TouchableOpacity>
         </View>
-
       </View>
       
     </SafeAreaView>
@@ -157,8 +144,15 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAF7F8',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   settingTopView: {
     flex: 3, // Takes up 30% of the screen
@@ -261,40 +255,37 @@ const styles = StyleSheet.create({
     color: '#4a4a4a',
   },
 
-  wipemodalViewWrapper: {
+  modalViewWrapper: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  wipemodalView: {
-    width: '100%',
-    height: '70%',
-    backgroundColor: "white",
-    borderTopLeftRadius: 20, 
-    borderTopRightRadius: 20,
+  modalView: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: -2
+      height: 2
     },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+    shadowRadius: 3.84,
+    elevation: 5,
   },
+
   modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 15,
   },
   modalButtons: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    width: 'auto',
-    padding: 10,
+    justifyContent: 'space-around',
+    width: '100%',
   },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
+
 });
