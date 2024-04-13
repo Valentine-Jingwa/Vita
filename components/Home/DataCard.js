@@ -17,18 +17,16 @@ const DataCard = ({ item }) => {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
             >
-                <View style={styles.contentBox}>
-                    <Icon name="database" size={24} color="#007AFF" style={styles.icon} />
-                    <View style={styles.textGroup}>
-                        <Text style={styles.subcatName}>{item.subcategory}</Text>
-                        <View style={styles.valueContainer}>
-                            <Text style={styles.textvalue}>{item.value}</Text>
-                            <Text style={styles.textunit}>{item.unit}</Text>
-                        </View>
+                <Icon name="database" size={24} color="#007AFF" style={styles.icon} />
+                <View style={styles.textGroup}>
+                    <Text style={styles.subcatName}>{item.subcategory}</Text>
+                    <View style={styles.valueContainer}>
+                        <Text style={styles.textvalue}>{item.value}</Text>
+                        <Text style={styles.textunit}>{item.unit}</Text>
                     </View>
-                    <View style={styles.timeContainer}>
-                        <TimeCalculator timestamp={item.timestamp} />
-                    </View>
+                </View>
+                <View style={styles.timeContainer}>
+                    <TimeCalculator timestamp={item.timestamp} />
                 </View>
             </LinearGradient>
         </TouchableOpacity>
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
         shadowRadius: 6.27,
         elevation: 10,
         marginVertical: 10,
-        width: '90%', 
+        width: '90%',
         height: 100,
         alignSelf: 'center',
     },
@@ -55,12 +53,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 15,
         padding: 20,
-        flexDirection: 'row', // Ensures horizontal layout
-        alignItems: 'center',
-        justifyContent: 'space-between', // Spaces children evenly
-    },
-    contentBox: {
-        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -69,31 +61,30 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     textGroup: {
-        flex: 2, // Takes 70% of the space
+        flex: 4,  // Increase flex to give more space to the content
     },
     subcatName: {
         fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-        marginBottom: 5,
     },
-    valueUnitContainer: {
+    valueContainer: {
         flexDirection: 'row',
-        alignItems: 'baseline', 
+        alignItems: 'baseline',
+        marginTop: 5, // Additional spacing from the category name
     },
     textvalue: {
         fontSize: 24,
         fontWeight: 'bold',
         color: '#007AFF',
-        marginRight: 5,
+        marginRight: 5, // Ensures space between the value and unit
     },
     textunit: {
         fontSize: 18,
         color: '#777',
     },
     timeContainer: {
-        flex: 1, // Takes 30% of the space
-        alignItems: 'flex-end',
+        flex: 2.5,  // Reduced flex, ensures it does not take too much space
     },
     placeholder: {
         height: 100,
