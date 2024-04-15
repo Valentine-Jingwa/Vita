@@ -17,6 +17,8 @@ import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
 import { backupOneData } from '../../mongo/services/mongodbService.js';
+import { subcategories as defaultSubcategories } from '../../components/DataList';
+import DataStorage from '../../components/Datahandling/DataStorage';
 
 const { width } = Dimensions.get('window');
 
@@ -33,6 +35,20 @@ const AddDataOptions = ({ navigation }) => {
   const [notification, setNotification] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [adminUser, setAdminUser] = useState(null);
+  const [allSubcategories, setAllSubcategories] = useState([]);
+ const [filteredSubcategories, setFilteredSubcategories] = useState([]);
+
+ useEffect(() => {
+  const initializeData = async () => {
+    const existingData = await AsyncStorage.getItem('subcategories');
+    if (!existingData) {
+      const jsonValue = JSON.stringify(defaultSubcategories);
+      await AsyncStorage.setItem('subcategories', jsonValue);
+    }
+    fetchData();
+  };
+  initializeData();
+}, []);
 
   useEffect(() => {
     const fetchAdminUser = async () => {
@@ -42,20 +58,61 @@ const AddDataOptions = ({ navigation }) => {
     fetchAdminUser();
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('subcategories');
-      const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-      setSubcategories(data);
-    } catch (e) {
-      console.error('Failed to fetch the data from storage', e);
-      setSubcategories([]); // Fallback to an empty array on error
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem('subcategories');
+  //     const data = jsonValue != null ? JSON.parse(jsonValue) : [];
+  //     console.log('Data successfully fetched');
+  //     setSubcategories(data);
+  //   } catch (e) {
+  //     console.error('Failed to fetch the data from storage', e);
+  //     setSubcategories([]); // Fallback to an empty array on error
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+     // Function to show notification
+     const showNotification = (message) => {
+      setNotification(message);
+    
+      // First, make the notification visible and slide in
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(notificationAnim, {
+            toValue: 0,
+            duration: 80,
+            useNativeDriver: true,
+          }),
+          Animated.timing(notificationOpacity, {
+            toValue: 1,
+            duration: 80,
+            useNativeDriver: true,
+          })
+        ]),
+        Animated.delay(2000), // Keep the notification visible for 3000 milliseconds
+        // Then, slide the notification out and make it invisible
+        Animated.parallel([
+          Animated.timing(notificationAnim, {
+            toValue: -60,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(notificationOpacity, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          })
+        ])
+      ]).start(() => {
+        // Optionally reset the notification message
+        setNotification('');
+      });
+    };
+    
+    
 
   const handleSubcategorySelect = (subcategory) => {
     setSelectedSubcategory(subcategory);
@@ -80,6 +137,8 @@ const AddDataOptions = ({ navigation }) => {
     }
   };
 
+
+
   useEffect(() => {
     if (selectedCategory) {
         setSubcategories(subcategories.filter(
@@ -87,6 +146,29 @@ const AddDataOptions = ({ navigation }) => {
         ));
     }
 }, [selectedCategory]);
+
+const fetchData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('subcategories');
+    const data = jsonValue != null ? JSON.parse(jsonValue) : [];
+    console.log('Data successfully fetched');
+    setAllSubcategories(data);
+    setFilteredSubcategories(data); // Initially, filtered list shows all items
+  } catch (e) {
+    console.error('Failed to fetch the data from storage', e);
+  }
+};
+
+useEffect(() => {
+  if (selectedCategory) {
+    const filteredData = allSubcategories.filter(
+      subcat => subcat.categoryname === selectedCategory
+    );
+    setFilteredSubcategories(filteredData);
+  } else {
+    setFilteredSubcategories(allSubcategories); // Reset to all subcategories when no category is selected
+  }
+}, [selectedCategory, allSubcategories]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -109,16 +191,25 @@ const AddDataOptions = ({ navigation }) => {
                 <TouchableOpacity style={styles.backButton} onPress={() => setSelectedCategory(null)}>
                     <Ibackbtn width={30} height={30} />
                 </TouchableOpacity>
+                <View style={styles.selectedTitleIcon}>
                 <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>
+                {/* Matching Icon */}
+                {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
+                {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
+                {selectedCategory === 'Nutrition' && <Ifood width={30} height={30} />}
+                {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
             </View>
-            {subcategories.map((subcategory, index) => (
+            </View>
+            <View style={styles.BentoBoxlayout}>
+              {filteredSubcategories.map((subcategory, index) => (
                 <TouchableOpacity key={index} onPress={() => handleSubcategorySelect(subcategory)} style={styles.subcategoryBox}>
-                    <Text style={styles.subcategoryText}>{subcategory.subcategory}</Text>
+                  <Text style={styles.subcategoryText}>{subcategory.subcategory}</Text>
                 </TouchableOpacity>
-            ))}
-            <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
+              ))}
+              <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
                 <Text style={styles.addNewText}>Add New</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
         </View>
     )}
     <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} />

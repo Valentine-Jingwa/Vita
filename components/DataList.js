@@ -129,6 +129,9 @@ export const subcategories = [
         
 
       ];
+
+
+
 // Function to store data in AsyncStorage
 const storeData = async () => {
   try {
