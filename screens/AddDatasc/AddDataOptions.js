@@ -18,6 +18,9 @@ import NewSubForm from './NewSubForm'; // Ensure you import the NewSubForm
 import { subcategories as allSubcategories } from '../../components/DataList.js';
 import DataStorage from '../../components/Datahandling/DataStorage';
 
+import AdminUserStorage from '../Profilesc/AdminUser';
+import { backupOneData } from '../../mongo/services/mongodbService.js';
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,7 +37,18 @@ const AddDataOptions = ({ navigation }) => {
   const [selectedSubcategory, setSelectedSubcategory] = useState({});
   const [notification, setNotification] = useState('');
   const [notificationOpacity] = useState(new Animated.Value(-1)); // Initial opacity set to 0
-
+  //Call for admin email from storage
+  const [adminUser, setAdminUser] = useState(null);
+  
+  useEffect(() => {
+    const fetchAdminUser = async () => {
+      const adminData = await AdminUserStorage.getAdminUser(); 
+      setAdminUser(adminData);
+    };
+  
+    fetchAdminUser();
+  }, []);
+  
 
    // Function to show notification
    const showNotification = (message) => {
@@ -45,12 +59,12 @@ const AddDataOptions = ({ navigation }) => {
       Animated.parallel([
         Animated.timing(notificationAnim, {
           toValue: 0,
-          duration: 300,
+          duration: 80,
           useNativeDriver: true,
         }),
         Animated.timing(notificationOpacity, {
           toValue: 1,
-          duration: 300,
+          duration: 80,
           useNativeDriver: true,
         })
       ]),
@@ -97,6 +111,7 @@ const handleSave = async (id, value, unit, subcategory, categoryname) => {
   if (value && unit) {
     try {
       const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
+      backupOneData(adminUser.email,newDataPoint);
       await DataStorage.Store(newDataPoint);
       setModalVisible(false);
       showNotification('Data successfully saved');

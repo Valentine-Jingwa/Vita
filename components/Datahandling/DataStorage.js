@@ -57,4 +57,36 @@ const DataStorage = {
   
 };
 
+
+// Function to save the current user's email
+export const setCurrentUserEmail = async (email) => {
+    try {
+        await AsyncStorage.setItem('currentUserEmail', email);
+        console.log('Current user email saved');
+    } catch (error) {
+        console.error('Failed to save current user email:', error);
+    }
+};
+
+// Function to get the current user's email
+export const getCurrentUserEmail = async () => {
+    try {
+        const email = await AsyncStorage.getItem('currentUserEmail');
+        return email;
+    } catch (error) {
+        console.error('Failed to retrieve current user email:', error);
+        return null; // Return null if there's an error
+    }
+};
+
+export const clearLocalData = async (STORAGE_KEY) => {
+    try {
+        await AsyncStorage.clear();
+        console.log('Local storage cleared successfully');
+    } catch (error) {
+        console.error('Failed to clear local storage:', error);
+    }
+};
+
+
 export default DataStorage;

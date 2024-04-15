@@ -170,3 +170,51 @@ export const createUser = async (userData) => {
     }
  
   };
+
+
+//Features for dealing with user app data
+  export const backupData = async (email, data) => {
+    const collectionName = `${email}_data`;
+    try {
+        const response = await apiClient.post('/insertMany', {
+            collection: collectionName,
+            database: "Vita_Data",
+            dataSource: DATA_SOURCE,
+            documents: data,
+        });
+        console.log('Backup successful:', response.data);
+    } catch (error) {
+        console.error('Backup failed:', error);
+    }
+};
+
+export const backupOneData = async (email, data) => {
+  const collectionName = `${email}_data`;
+  try {
+      const response = await apiClient.post('/insertOne', {
+          collection: collectionName,
+          database: "Vita_Data",
+          dataSource: DATA_SOURCE,
+          documents: data,
+      });
+      console.log('Backup successful:', response.data);
+  } catch (error) {
+      console.error('Backup failed:', error);
+  }
+};
+
+export const restoreData = async (email) => {
+  const collectionName = `${email}_data`;
+  try {
+      const response = await apiClient.post('/find', {
+          collection: collectionName,
+          database: "Vita_Data",
+          dataSource: DATA_SOURCE,
+      });
+      const newData = response.data.documents || [];
+      await AsyncStorage.setItem('localData', JSON.stringify(newData));
+      console.log('Data restored and updated successfully');
+  } catch (error) {
+      console.error('Failed to restore and update data:', error);
+  }
+};
