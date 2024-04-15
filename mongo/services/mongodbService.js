@@ -187,6 +187,22 @@ export const createUser = async (userData) => {
         console.error('Backup failed:', error);
     }
 };
+
+export const backupOneData = async (email, data) => {
+  const collectionName = `${email}_data`;
+  try {
+      const response = await apiClient.post('/insertOne', {
+          collection: collectionName,
+          database: "Vita_Data",
+          dataSource: DATA_SOURCE,
+          documents: data,
+      });
+      console.log('Backup successful:', response.data);
+  } catch (error) {
+      console.error('Backup failed:', error);
+  }
+};
+
 export const restoreData = async (email) => {
   const collectionName = `${email}_data`;
   try {

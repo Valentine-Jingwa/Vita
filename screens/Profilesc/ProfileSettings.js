@@ -19,7 +19,7 @@ export default function ProfileSettings({ }) {
 
   useEffect(() => {
     const fetchAdminUser = async () => {
-      const adminData = await AdminUserStorage.getAdminUser(); // Simulated function to fetch admin user data
+      const adminData = await AdminUserStorage.getAdminUser(); 
       setAdminUser(adminData);
     };
 

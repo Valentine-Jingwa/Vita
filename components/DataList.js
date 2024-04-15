@@ -2,8 +2,6 @@
 //DataList
 
 import React, { useState, useTheme} from 'react';
-import { StyleSheet, Text, View, TextInput, Button, TouchableOpacity, ScrollView, SafeAreaView, FlatList, Modal } from 'react-native';
-
 
 export const subcategories = [
         //Vitals
@@ -131,6 +129,27 @@ export const subcategories = [
         
 
       ];
-//TODO add a funtion where user can add a new category and subcategory
-        //there is a function here that helps the user add a new category and subcategory and the units for that category id's are automatically assigned. 
-//New sub categories are gotten from the async storage and displayed in the list
+// Function to store data in AsyncStorage
+const storeData = async () => {
+  try {
+      const jsonValue = JSON.stringify(subcategories); // Convert data to a string
+      await AsyncStorage.setItem('subcategories', jsonValue); // Store the string
+      console.log('Data successfully saved');
+  } catch (e) {
+      // Saving error
+      console.error('Failed to save the data to the storage', e);
+  }
+};
+
+// Function to read data from AsyncStorage
+const readData = async () => {
+  try {
+      const jsonValue = await AsyncStorage.getItem('subcategories');
+      return jsonValue != null ? JSON.parse(jsonValue) : null; // Parse the string back to JSON
+  } catch(e) {
+      // Error reading value
+      console.error('Failed to fetch the data from storage', e);
+  }
+};
+
+export { storeData, readData };
