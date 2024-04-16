@@ -58,21 +58,7 @@ const AddDataOptions = ({ navigation }) => {
     fetchAdminUser();
   }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem('subcategories');
-  //     const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-  //     console.log('Data successfully fetched');
-  //     setSubcategories(data);
-  //   } catch (e) {
-  //     console.error('Failed to fetch the data from storage', e);
-  //     setSubcategories([]); // Fallback to an empty array on error
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
      // Function to show notification
      const showNotification = (message) => {
@@ -118,32 +104,6 @@ const AddDataOptions = ({ navigation }) => {
     setSelectedSubcategory(subcategory);
     setModalVisible(true);
   };
-
-
-
-
-
-const handleSave = async (id, value, unit, subcategory, categoryname) => {
-  if (value && unit) {
-    try {
-      // Get a local date with time stripped off (set to 00:00:00)
-      const now = new Date();
-      const localDateStr = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      
-      const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: localDateStr };
-      backupOneData(adminUser.email, newDataPoint);
-      await DataStorage.Store(newDataPoint);
-      setModalVisible(false);
-      showNotification('Data successfully saved');
-      fetchData();
-    } catch (error) {
-      console.error('Save error:', error);
-      showNotification('Failed to save data');
-    }
-  } else {
-    showNotification('Incorrect data');
-  }
-};
 
 
 
