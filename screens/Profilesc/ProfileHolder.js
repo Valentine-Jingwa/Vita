@@ -12,7 +12,7 @@ const ProfileHolder = ({ adminData, subUserData }) => {
     const [currentUser, setCurrentUser] = useState(adminData);
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [userIndex, setUserIndex] = useState(0); // To keep track of current user index
+    const [userIndex, setUserIndex] = useState(0); 
 
     // Handle image update
     const updateProfilePic = () => {
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
         width: 180, // 100 width
         height: 175, // 100 height
         borderRadius: 100, // Set border radius to match design
-        backgroundColor: '#f89090', // Light grey background
+        backgroundColor: '#000', // Light grey background
         fontSize: 24, // Larger font size
         fontWeight: 'bold', // Bold font
         marginTop: 10, // Add some top margin
