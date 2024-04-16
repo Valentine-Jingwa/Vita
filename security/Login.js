@@ -32,7 +32,7 @@ export default function Login({ navigation }) {
       } else {
           console.error('Login failed:', loginResponse.message);
       }
-        await login(token);
+         await login(token);
         // navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
     } catch (error) {
         // Assuming error.response.data contains a descriptive error message
