@@ -119,23 +119,23 @@ const AddDataOptions = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  const handleSave = async (id, value, unit, subcategory, categoryname) => {
-    if (value && unit) {
-      try {
-        const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
-        backupOneData(adminUser.email, newDataPoint);
-        await DataStorage.Store(newDataPoint);
-        setModalVisible(false);
-        showNotification('Data successfully saved');
-        fetchData();
-      } catch (error) {
-        console.error('Save error:', error);
-        showNotification('Failed to save data');
-      }
-    } else {
-      showNotification('Incorrect data');
-    }
-  };
+  // const handleSave = async (id, value, unit, subcategory, categoryname) => {
+  //   if (value && unit) {
+  //     try {
+  //       const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
+  //       backupOneData(adminUser.email, newDataPoint);
+  //       await DataStorage.Store(newDataPoint);
+  //       setModalVisible(false);
+  //       showNotification('Data successfully saved');
+  //       fetchData();
+  //     } catch (error) {
+  //       console.error('Save error:', error);
+  //       showNotification('Failed to save data');
+  //     }
+  //   } else {
+  //     showNotification('Incorrect data');
+  //   }
+  // };
 
 
 
