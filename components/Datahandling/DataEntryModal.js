@@ -32,11 +32,15 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
       return;
     }
- 
     onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
     setInputValue('');
     onClose();
-    showNotification();
+  };
+
+  const handleCancel = () => {
+    setInputValue(''); // Reset input value
+    setSelectedUnit(subcategory.dunit || ''); // Reset to default or empty
+    onClose(); // Close modal
   };
  
   const showNotification = () => {
@@ -55,25 +59,20 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     ]).start();
   };
 
-  const handleOnClose = () => {
-    onClose();
-    setInputValue('');
-  }
  
   return (
-      <Modal
-        visible={isVisible}
-        animationType="slide"
-        onRequestClose={onClose}
-        transparent={true}
-        style={{ backgroundColor: 'transparent' }} // Ensure transparency
-      >
+    <Modal
+      visible={isVisible}
+      animationType="slide"
+      onRequestClose={onClose}
+      transparent={true}
+    >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={[styles.centeredView, { backgroundColor: themeStyles.background }]} // Ensure the background matches the theme
+        style={[styles.centeredView, { backgroundColor: themeStyles.background }]}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
-      <TouchableWithoutFeedback onPress={onClose}>
+        <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.modalOverlay} />
         </TouchableWithoutFeedback>
         <View style={[styles.modalView, { backgroundColor: themeStyles.secondary }]}>
@@ -90,25 +89,28 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             keyboardType="numeric"
             maxLength={3}
           />
-            {subcategory.units && (
-              <View style={[styles.picker]}>
-                <Picker
-                  selectedValue={selectedUnit}
-                  onValueChange={setSelectedUnit}
-                  itemStyle={{ color: themeStyles.text, backgroundColor: themeStyles.secondary }}
-                >
-                  {subcategory.units.map(unit => (
-                    <Picker.Item label={unit} value={unit} key={unit} />
-                  ))}
-                </Picker>
-              </View>
-            )}
-          <TouchableOpacity style={[styles.saveButton, { backgroundColor: themeStyles.primary }]} onPress={validateAndSave}>
-            <Text style={[styles.buttonText, { color: themeStyles.text }]}>Save</Text>
-          </TouchableOpacity>
-          <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
-            <Text style={styles.notificationText}>Data saved successfully!</Text>
-          </Animated.View>
+          {subcategory.units && (
+            <View style={[styles.picker, { backgroundColor: themeStyles.background }]}>
+              <Picker
+                selectedValue={selectedUnit}
+                onValueChange={setSelectedUnit}
+                style={{ color: themeStyles.text }}
+                itemStyle={{ color: themeStyles.text, backgroundColor: themeStyles.secondary }}
+              >
+                {subcategory.units.map(unit => (
+                  <Picker.Item label={unit} value={unit} key={unit} />
+                ))}
+              </Picker>
+            </View>
+          )}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={[styles.cancelButton, { backgroundColor: themeStyles.primary }]} onPress={handleCancel}>
+              <Text style={[styles.buttonText, { color: themeStyles.text }]}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.saveButton, { backgroundColor: themeStyles.primary }]} onPress={validateAndSave}>
+              <Text style={[styles.buttonText, { color: themeStyles.text }]}>Save</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </Modal>
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
+},
   closeButton: {
     alignSelf: 'flex-end',
     padding: 25,
@@ -172,18 +174,15 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     width: '100%',
-    marginBottom: 10,
+    marginTop: 10,
   },
   saveButton: {
-    padding: 20,
+    padding: 10,
     borderRadius: 10,
-    elevation: 2,
     flex: 1,
     marginHorizontal: 5,
-    alignItems: 'center',
-
   },
   saveAddMoreButton: {
     backgroundColor: '#fff',
@@ -194,11 +193,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   cancelButton: {
-    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
-    elevation: 2,
-    width: '100%',
+    flex: 1,
+    marginHorizontal: 5,
   },
   buttonText: {
     textAlign: 'center',
