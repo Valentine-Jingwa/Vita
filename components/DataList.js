@@ -129,12 +129,16 @@ export const subcategories = [
         
 
       ];
+
+
+
 // Function to store data in AsyncStorage
 const storeData = async () => {
   try {
       const jsonValue = JSON.stringify(subcategories); // Convert data to a string
       await AsyncStorage.setItem('subcategories', jsonValue); // Store the string
       console.log('Data successfully saved');
+      console.log(jsonValue);
   } catch (e) {
       // Saving error
       console.error('Failed to save the data to the storage', e);
