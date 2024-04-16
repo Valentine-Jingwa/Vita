@@ -1,12 +1,25 @@
 // DataEntryModal.js
  
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, Animated, Alert, Platform, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+  Alert,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback
+} from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
-import { subcategories } from '../DataList'; // Make sure this import path is correct
+import { useTheme } from '../../screens/Settingsc/Theme';
  
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
+  const { themeStyles } = useTheme();
   if (!subcategory) return null;
  
   const [inputValue, setInputValue] = useState('');
@@ -50,47 +63,46 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   return (
     <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
       <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        behavior={Platform.OS === "ios" ? "padding" : "height"} 
+        style={styles.centeredView}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
-      <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback onPress={handleOnClose}>
-            <View style={{ width: '100%' }} />
-          </TouchableWithoutFeedback>
-        <View style={styles.modalView}>
+      <TouchableWithoutFeedback onPress={onClose}>
+          <View style={styles.modalOverlay} />
+        </TouchableWithoutFeedback>
+        <View style={[styles.modalView, { backgroundColor: themeStyles.secondary }]}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <AntDesign name="close" size={24} color="black" />
+            <AntDesign name="close" size={24} color={themeStyles.text} />
           </TouchableOpacity>
-          <Text style={styles.subcategoryTitle}>{subcategory.subcategory}</Text>
+          <Text style={[styles.subcategoryTitle, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: themeStyles.background, color: themeStyles.text }]}
             value={inputValue}
-            onChangeText={text => setInputValue(text.replace(/[^0-9]/g, ''))}
+            onChangeText={setInputValue}
+            placeholder="Enter value (0-999)"
+            placeholderTextColor={themeStyles.placeholderText}
             keyboardType="numeric"
             maxLength={3}
-            placeholder="Enter value (0-999)"
           />
           {subcategory.units && (
-            <Picker selectedValue={selectedUnit} onValueChange={setSelectedUnit} style={styles.picker}>
-              {subcategory.units.map((unit, index) => (
-                <Picker.Item key={index} label={unit} value={unit} />
-              ))}
-            </Picker>
+            <View style={[styles.picker, { backgroundColor: themeStyles.background }]}>
+              <Picker
+                selectedValue={selectedUnit}
+                onValueChange={setSelectedUnit}
+                style={{ color: themeStyles.text }}
+                itemStyle={{ backgroundColor: themeStyles.background }}
+              >
+                {/* Picker items */}
+              </Picker>
+            </View>
           )}
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.saveButton} onPress={validateAndSave}>
-              <Text style={styles.buttonText}>Save</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.saveAddMoreButton} onPress={validateAndSave}>
-              <Text style={styles.buttonText}>Save and Add More</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={[styles.saveButton, { backgroundColor: themeStyles.primary }]} onPress={validateAndSave}>
+            <Text style={[styles.buttonText, { color: themeStyles.text }]}>Save</Text>
+          </TouchableOpacity>
           <Animated.View style={[styles.notification, { opacity: notificationOpacity }]}>
             <Text style={styles.notificationText}>Data saved successfully!</Text>
           </Animated.View>
         </View>
-      </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -98,25 +110,30 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
  
  
 const styles = StyleSheet.create({
-  modalOverlay: {
+  centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   modalView: {
-    backgroundColor: 'lightgrey',
+    backgroundColor: 'white',
     borderRadius: 20,
-    padding: 25,
-    alignItems: 'center',
+    padding: 35,
     width: '90%',
+    alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 4,
     elevation: 5,
   },
   closeButton: {
@@ -135,7 +152,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   input: {
-    backgroundColor: '#fff',
     borderRadius: 10,
     fontSize: 16,
     padding: 10,
@@ -154,12 +170,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    backgroundColor: '#fff',
     padding: 10,
     borderRadius: 10,
     elevation: 2,
     flex: 1,
     marginHorizontal: 5,
+    alignItems: 'center',
+
   },
   saveAddMoreButton: {
     backgroundColor: '#fff',
