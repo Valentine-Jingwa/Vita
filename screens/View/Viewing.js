@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import GraphModal from '../../components/GraphComp/Graph';
 import DataStorage from '../../components/Datahandling/DataStorage';
-import { readData } from '../../components/DataList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../Settingsc/Theme';
-
+import ColorId from '../../constants/ColorId';
 
 export default function Viewing() {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
@@ -15,36 +15,31 @@ export default function Viewing() {
 
   const { themeStyles } = useTheme();
 
-
   useEffect(() => {
     const fetchSubcategories = async () => {
-      const data = await readData();
-      if (data) {
+      try {
+        const jsonValue = await AsyncStorage.getItem('subcategories');
+        const data = jsonValue != null ? JSON.parse(jsonValue) : [];
         applyFilters(data);
+      } catch (e) {
+        console.error('Failed to fetch the data from storage', e);
       }
     };
 
     fetchSubcategories();
-  }, [searchQuery, selectedFilter]); // Depend on external changes
+  }, [searchQuery, selectedFilter]);
 
-  const handleSubcategorySelect = async (subcategory) => {
-    setSelectedSubcategory(subcategory);
-    const data = await DataStorage.getDataForSubcategory(subcategory.subcategory);
-    setIsGraphModalVisible(data.length >= 0);
-
-  };
-  
-  const applyFilters = (initialSubcategories) => {
-    let data = initialSubcategories.map((sub) => {
-      const entries = DataStorage.getDataForSubcategory(sub.subcategory); // This should ideally be awaited
+  const applyFilters = async (initialSubcategories) => {
+    const dataWithCounts = await Promise.all(initialSubcategories.map(async (sub) => {
+      const entries = await DataStorage.getDataForSubcategory(sub.subcategory);
       return { ...sub, count: entries.length };
-    });
+    }));
 
-    if (searchQuery) {
-      data = data.filter(item => item.subcategory.toLowerCase().includes(searchQuery.toLowerCase()));
-    }
+    const filteredData = searchQuery
+      ? dataWithCounts.filter(item => item.subcategory.toLowerCase().includes(searchQuery.toLowerCase()))
+      : dataWithCounts;
 
-    const grouped = data.reduce((acc, item) => {
+    const grouped = filteredData.reduce((acc, item) => {
       (acc[item.categoryname] = acc[item.categoryname] || []).push(item);
       return acc;
     }, {});
@@ -52,16 +47,10 @@ export default function Viewing() {
     setGroupedSubcategories(grouped);
   };
 
-  const sortData = (data, method) => {
-    return [...data].sort((a, b) => {
-      if (method === 'ascending') {
-        return a.subcategory.localeCompare(b.subcategory);
-      } else if (method === 'descending') {
-        return b.subcategory.localeCompare(a.subcategory);
-      }
-      // No additional sort for 'categoryname', as grouping takes precedence
-      return 0;
-    });
+  const handleSubcategorySelect = async (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    const data = await DataStorage.getDataForSubcategory(subcategory.subcategory);
+    setIsGraphModalVisible(data.length > 0);
   };
 
   const renderGroupedSubcategories = () => {
@@ -71,17 +60,13 @@ export default function Viewing() {
           {categoryName}
         </Text>
         {subcategories.map((sub, subIndex) => (
-          <View key={subIndex} style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
-            <TouchableOpacity
-              style={styles.subcategoryItem}
-              onPress={() => handleSubcategorySelect(sub)}
-            >
-              <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
-            </TouchableOpacity>
+          <TouchableOpacity key={subIndex} style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}
+            onPress={() => handleSubcategorySelect(sub)}>
+            <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
             <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id) }]}>
               <Text style={styles.dotText}>{sub.count > 999 ? "999+" : sub.count}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
     ));
@@ -99,12 +84,13 @@ export default function Viewing() {
         />
         <TouchableOpacity
           style={[styles.filterButton, { backgroundColor: themeStyles.background, shadowColor: themeStyles.text }]}
-          onPress={() => setSelectedFilter(selectedFilter === 'categoryname' ? 'ascending' : 'categoryname')}
-        >
+          onPress={() => setSelectedFilter(selectedFilter === 'categoryname' ? 'ascending' : 'categoryname')}>
           <Text style={{ color: themeStyles.text }}>Toggle Filter</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>{renderGroupedSubcategories()}</ScrollView>
+      <ScrollView>
+        {renderGroupedSubcategories()}
+      </ScrollView>
       {selectedSubcategory && (
         <GraphModal
           isVisible={isGraphModalVisible}

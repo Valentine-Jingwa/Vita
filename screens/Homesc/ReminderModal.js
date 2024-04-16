@@ -204,7 +204,7 @@ const ReminderModal = ({ visible, onClose }) => {
                 mode="datetime"
                 is24Hour={true}
                 display="clock"
-                androidDisplay="clock"
+                androidDisplay="default"
                 onChange={(event, selectedDate) => setDate(selectedDate || date)}
                 style={[styles.dateTimePicker, { color: themeStyles.text, backgroundColor: themeStyles.background}]}
               />
