@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe, Dimensions } from 'react-native';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe, Dimensions, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
@@ -43,14 +43,14 @@ const Home = () => {
 
 
   useEffect(() => {
-    console.log(`Current Index: ${currentIndex}, Data Length: ${data.length}`);
+    
   }, [currentIndex, data.length]);
 
 
 
     // Function to handle saving the reminder
     const handleSaveReminder = (date, repeat) => {
-      console.log('Reminder Saved', date, repeat);
+      Alert.alert('Reminder Saved', 'Your reminder has been saved successfully');
       // You can now use this to set up local notifications or save the reminder data
       setReminderModalVisible(false);
     };
@@ -58,7 +58,6 @@ const Home = () => {
 
    // Function to handle day press on the calendar
    const handleDayPress = (day) => {
-    console.log("Selected Day:", day);
     setSelectedDate(day.dateString);
     setSelectedDateModalVisible(true);
   };
