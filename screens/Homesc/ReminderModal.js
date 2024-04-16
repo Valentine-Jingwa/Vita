@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerForPushNotificationsAsync } from '../Settingsc/Notifications'; 
 import * as Notifications from 'expo-notifications';
+import { useTheme } from '../Settingsc/Theme';
 
 
 
@@ -14,13 +15,15 @@ const ReminderModal = ({ visible, onClose }) => {
   const [title, setTitle] = useState('');
   const [reminders, setReminders] = useState([]);
   const [description, setDescription] = useState('');
+  const { themeStyles } = useTheme();
 
-    // Custom onClose that also clears input fields
-    const handleModalClose = () => {
-      setTitle('');       // Reset the title input field
-      setDescription(''); // Reset the description input field
-      onClose();          // Call the original onClose prop function
-    };
+  // Custom onClose that also clears input fields
+  const handleModalClose = () => {
+    setTitle('');
+    setDescription('');
+    onClose();
+  };
+
 
   useEffect(() => {
     async function setupNotifications() {
@@ -64,35 +67,22 @@ const ReminderModal = ({ visible, onClose }) => {
 
   const renderItem = ({ item }) => {
     const alertDateTime = new Date(item.time);
-  
-    if (item.showDescription) {
-      // When showDescription is true, only show the description
-      return (
-        <TouchableOpacity 
-          onPress={() => toggleDescription(item.id)} 
-          style={styles.reminderItem}
-        >
-          <Text style={styles.descriptionText}>{item.description}</Text>
-        </TouchableOpacity>
-      );
-    } else {
-      // When showDescription is false, show the regular details
-      return (
-        <TouchableOpacity 
-          onPress={() => toggleDescription(item.id)} 
-          style={styles.reminderItem}
-        >
-          <View style={styles.reminderHeader}>
-            <Text style={styles.reminderTitle}>{item.title}</Text>
-            <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
-              <Icon name="close" size={16} color="#cc0000" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.reminderDateTime}>{`Alert Date: ${alertDateTime.toLocaleDateString()}`}</Text>
-          <Text style={styles.reminderDateTime}>{`Alert Time: ${alertDateTime.toLocaleTimeString()}`}</Text>
-        </TouchableOpacity>
-      );
-    }
+
+    return (
+      <TouchableOpacity 
+        onPress={() => toggleDescription(item.id)} 
+        style={[styles.reminderItem, {backgroundColor: themeStyles.background}]}
+      >
+        <View style={styles.reminderHeader}>
+          <Text style={[styles.reminderTitle, {color: themeStyles.text}]}>{item.title}</Text>
+          <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
+            <Icon name="close" size={16} color={themeStyles.accent} />
+          </TouchableOpacity>
+        </View>
+        <Text style={[styles.reminderDateTime, {color: themeStyles.secondary}]}>{`Alert Date: ${alertDateTime.toLocaleDateString()}`}</Text>
+        <Text style={[styles.reminderDateTime, {color: themeStyles.secondary}]}>{`Alert Time: ${alertDateTime.toLocaleTimeString()}`}</Text>
+      </TouchableOpacity>
+    );
   };
   
 
@@ -195,9 +185,9 @@ const ReminderModal = ({ visible, onClose }) => {
       onRequestClose={handleModalClose}>
       <View style={styles.fullScreenContainer}>
         <TouchableWithoutFeedback onPress={handleModalClose}>
-          <View style={styles.modalOverlay} />
+          <View style={[styles.modalOverlay, {backgroundColor: 'rgba(0, 0, 0, 0.6)'}]} />
         </TouchableWithoutFeedback>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, {backgroundColor: themeStyles.background}]}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
               <DateTimePicker
@@ -205,47 +195,41 @@ const ReminderModal = ({ visible, onClose }) => {
                 mode="datetime"
                 is24Hour={true}
                 display="default"
-                onChange={handleDateChange}
+                onChange={(event, selectedDate) => setDate(selectedDate || date)}
                 style={styles.dateTimePicker}
               />
               <TextInput
-                style={[styles.input, {marginRight: 16, height: 40}]}
+                style={[styles.input, {backgroundColor: themeStyles.background, color: themeStyles.text}]}
                 placeholder="Title"
-                placeholderTextColor="#888" // Adjust the color as needed
-                maxLength={30}
+                placeholderTextColor={themeStyles.accent}
                 value={title}
                 onChangeText={setTitle}
               />
               <TextInput
-                style={[styles.input, {height: 200}]}
+                style={[styles.input, {backgroundColor: themeStyles.inputBackground, color: themeStyles.text, height: 200}]}
                 placeholder="Description"
-                placeholderTextColor="#888" // Adjust the color as needed
+                placeholderTextColor={themeStyles.accent}
                 multiline
                 numberOfLines={4}
-                maxLength={500}
                 value={description}
                 onChangeText={setDescription}
               />
-              <Button title="Save Reminder" onPress={saveReminder} color="#000" />
+              <Button title="Save Reminder" onPress={saveReminder} color={themeStyles.buttonColor} />
             </View>
           </TouchableWithoutFeedback>
           <FlatList
             data={reminders}
             keyExtractor={(item) => item.id.toString()}
-            style={styles.reminderList}
             renderItem={renderItem}
           />
-
           <TouchableOpacity 
-            style={styles.clearAllButton} 
+            style={[styles.clearAllButton, {backgroundColor: themeStyles.accent}]} 
             onPress={clearAllReminders}>
             <Icon name="trash-can-outline" size={24} color="#ffffff" />
           </TouchableOpacity>
         </View>
       </View>
     </Modal>
-
-
   );
 };
 
