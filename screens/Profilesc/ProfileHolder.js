@@ -85,8 +85,8 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                 </View>
                 {/* Swipeable user detail view */}
                 <Swipeable
-                    renderLeftActions={() => <View style={{width: 50, backgroundColor: 'blue'}}/>}
-                    renderRightActions={() => <View style={{width: 50, backgroundColor: 'red'}}/>}
+                    renderLeftActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
+                    renderRightActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
                     onSwipeableOpen={(direction) => {
                         if (direction === 'left') {
                             handleSwipe('left');  // Assuming 'left' means revealing right actions
