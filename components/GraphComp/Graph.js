@@ -4,9 +4,11 @@ import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView
 import { LineChart } from 'react-native-chart-kit';
 import DataStorage from '../Datahandling/DataStorage';
 import { AntDesign } from '@expo/vector-icons';
+import {useTheme} from '../../screens/Settingsc/Theme';
 
 const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   const [content, setContent] = useState(null);
+  const { themeStyles } = useTheme();
 
 
 

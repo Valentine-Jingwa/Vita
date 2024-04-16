@@ -15,12 +15,8 @@ export default function Viewing() {
   const [selectedFilter, setSelectedFilter] = useState('categoryname');
   const [groupedSubcategories, setGroupedSubcategories] = useState({});
 
-  const { theme, toggleTheme } = useTheme();
+  const { themeStyles } = useTheme();
 
-  const themeStyles = {
-    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
-    color: theme === 'light' ? '#000000' : '#FFFFFF',
-  };
 
   useEffect(() => {
     applyFilters();
@@ -65,15 +61,17 @@ export default function Viewing() {
 
   const renderGroupedSubcategories = () => {
     return Object.entries(groupedSubcategories).map(([categoryName, subcategories], index) => (
-      <View key={index} style={styles.categoryContainer}>
-        <Text style={styles.categoryHeader}>{categoryName}</Text>
+      <View key={index} style={[styles.categoryContainer, { backgroundColor: themeStyles.background, shadowColor: themeStyles.text }]}>
+        <Text style={[styles.categoryHeader, { color: themeStyles.text, borderBottomColor: themeStyles.secondary }]}>
+          {categoryName}
+        </Text>
         {subcategories.map((sub, subIndex) => (
-          <View key={subIndex} style={styles.subcategoryContainer}>
+          <View key={subIndex} style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
             <TouchableOpacity
               style={styles.subcategoryItem}
               onPress={() => handleSubcategorySelect(sub)}
             >
-              <Text style={styles.subcategoryText}>{sub.subcategory}</Text>
+              <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
             </TouchableOpacity>
             <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id) }]}>
               <Text style={styles.dotText}>{sub.count > 999 ? "999+" : sub.count}</Text>
@@ -85,20 +83,20 @@ export default function Viewing() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: themeStyles.backgroundColor}]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
       <View style={styles.searchAndFilterContainer}>
         <TextInput
-          style={styles.input}
-          placeholderTextColor={"#A9A9A9"}
+          style={[styles.input, { backgroundColor: themeStyles.secondary, color: themeStyles.text }]}
           placeholder="Search..."
+          placeholderTextColor={themeStyles.text}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
         <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setSelectedFilter(selectedFilter === 'categoryname' ? 'ascending' : 'categoryname')} // Toggle for demo
+          style={[styles.filterButton, { backgroundColor: themeStyles.background, shadowColor: themeStyles.text }]}
+          onPress={() => setSelectedFilter(selectedFilter === 'categoryname' ? 'ascending' : 'categoryname')}
         >
-          <Text>Toggle Filter</Text>
+          <Text style={{ color: themeStyles.text }}>Toggle Filter</Text>
         </TouchableOpacity>
       </View>
       <ScrollView>{renderGroupedSubcategories()}</ScrollView>
@@ -109,7 +107,6 @@ export default function Viewing() {
           selectedSubcategory={selectedSubcategory.subcategory}
         />
       )}
-
     </SafeAreaView>
   );
 }
