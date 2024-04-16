@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerForPushNotificationsAsync } from '../Settingsc/Notifications'; 
 import * as Notifications from 'expo-notifications';
+import { useTheme } from '../Settingsc/Theme';
 
 
 
@@ -14,13 +15,15 @@ const ReminderModal = ({ visible, onClose }) => {
   const [title, setTitle] = useState('');
   const [reminders, setReminders] = useState([]);
   const [description, setDescription] = useState('');
+  const { themeStyles } = useTheme();
 
-    // Custom onClose that also clears input fields
-    const handleModalClose = () => {
-      setTitle('');       // Reset the title input field
-      setDescription(''); // Reset the description input field
-      onClose();          // Call the original onClose prop function
-    };
+  // Custom onClose that also clears input fields
+  const handleModalClose = () => {
+    setTitle('');
+    setDescription('');
+    onClose();
+  };
+
 
   useEffect(() => {
     async function setupNotifications() {
@@ -63,37 +66,30 @@ const ReminderModal = ({ visible, onClose }) => {
 
 
   const renderItem = ({ item }) => {
-    const alertDateTime = new Date(item.time);
-  
-    if (item.showDescription) {
-      // When showDescription is true, only show the description
-      return (
+    return (
         <TouchableOpacity 
-          onPress={() => toggleDescription(item.id)} 
-          style={styles.reminderItem}
+            onPress={() => toggleDescription(item.id)} 
+            style={[styles.reminderItem, {backgroundColor: themeStyles.background}]}
         >
-          <Text style={styles.descriptionText}>{item.description}</Text>
+            <View style={styles.reminderHeader}>
+                <Text style={[styles.reminderTitle, {color: themeStyles.text}]}>{item.title}</Text>
+                <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
+                    <Icon name="close" size={16} color={themeStyles.accent} />
+                </TouchableOpacity>
+            </View>
+            {item.showDescription ? (
+                <Text style={[styles.descriptionText, {color: themeStyles.text}]}>
+                    {item.description}
+                </Text>
+            ) : (
+                <Text style={[styles.reminderDateTime, {color: themeStyles.text}]}>
+                    {`Alert Date: ${new Date(item.time).toLocaleDateString()}`}
+                    {`Alert Time: ${new Date(item.time).toLocaleTimeString()}`}
+                </Text>
+            )}
         </TouchableOpacity>
-      );
-    } else {
-      // When showDescription is false, show the regular details
-      return (
-        <TouchableOpacity 
-          onPress={() => toggleDescription(item.id)} 
-          style={styles.reminderItem}
-        >
-          <View style={styles.reminderHeader}>
-            <Text style={styles.reminderTitle}>{item.title}</Text>
-            <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
-              <Icon name="close" size={16} color="#cc0000" />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.reminderDateTime}>{`Alert Date: ${alertDateTime.toLocaleDateString()}`}</Text>
-          <Text style={styles.reminderDateTime}>{`Alert Time: ${alertDateTime.toLocaleTimeString()}`}</Text>
-        </TouchableOpacity>
-      );
-    }
-  };
+    );
+};
   
 
   const saveReminder = async () => {
@@ -141,17 +137,20 @@ const ReminderModal = ({ visible, onClose }) => {
 
 
   const toggleDescription = (id) => {
-    setReminders(reminders.map(reminder => {
-      if (reminder.id === id) {
-        return {
-          ...reminder,
-          showDescription: !reminder.showDescription,
-          // showDelete: reminder.showDescription, // Toggle delete icon visibility
-        };
-      }
-      return reminder;
-    }));
-  };
+    setReminders(currentReminders => {
+        return currentReminders.map(reminder => {
+            if (reminder.id === id) {
+                // Log the current state of 'showDescription' before toggling
+                console.log("Current state of showDescription:", reminder.showDescription);
+                return {
+                    ...reminder,
+                    showDescription: !reminder.showDescription
+                };
+            }
+            return reminder;
+        });
+    });
+};
 
   const removeReminder = async (id) => {
     // Filter out the reminder with the given id
@@ -195,57 +194,51 @@ const ReminderModal = ({ visible, onClose }) => {
       onRequestClose={handleModalClose}>
       <View style={styles.fullScreenContainer}>
         <TouchableWithoutFeedback onPress={handleModalClose}>
-          <View style={styles.modalOverlay} />
+          <View style={[styles.modalOverlay, {backgroundColor: 'rgba(0, 0, 0, 0.6)'}]} />
         </TouchableWithoutFeedback>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, {backgroundColor: themeStyles.background}]}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View>
+          <View style={[styles.pickerContainer, { backgroundColor: themeStyles.background }]}>
               <DateTimePicker
                 value={date}
                 mode="datetime"
                 is24Hour={true}
-                display="default"
-                onChange={handleDateChange}
-                style={styles.dateTimePicker}
+                display="clock"
+                onChange={(event, selectedDate) => setDate(selectedDate || date)}
+                style={[styles.dateTimePicker, { color: themeStyles.text, backgroundColor: themeStyles.background}]}
               />
               <TextInput
-                style={[styles.input, {marginRight: 16, height: 40}]}
+                style={[styles.input, {backgroundColor: themeStyles.secondary, color: themeStyles.text, height: 40, marginTop: 15}]}
                 placeholder="Title"
-                placeholderTextColor="#888" // Adjust the color as needed
-                maxLength={30}
+                placeholderTextColor={themeStyles.text}
                 value={title}
                 onChangeText={setTitle}
               />
               <TextInput
-                style={[styles.input, {height: 200}]}
+                style={[styles.input, {backgroundColor: themeStyles.secondary, color: themeStyles.text, height: 200}]}
                 placeholder="Description"
-                placeholderTextColor="#888" // Adjust the color as needed
+                placeholderTextColor={themeStyles.text}
                 multiline
                 numberOfLines={4}
-                maxLength={500}
                 value={description}
                 onChangeText={setDescription}
               />
-              <Button title="Save Reminder" onPress={saveReminder} color="#000" />
+              <Button title="Save Reminder" onPress={saveReminder} color={themeStyles.text} />
             </View>
           </TouchableWithoutFeedback>
           <FlatList
             data={reminders}
             keyExtractor={(item) => item.id.toString()}
-            style={styles.reminderList}
             renderItem={renderItem}
           />
-
           <TouchableOpacity 
-            style={styles.clearAllButton} 
+            style={[styles.clearAllButton, {backgroundColor: themeStyles.accent}]} 
             onPress={clearAllReminders}>
             <Icon name="trash-can-outline" size={24} color="#ffffff" />
           </TouchableOpacity>
         </View>
       </View>
     </Modal>
-
-
   );
 };
 
@@ -255,7 +248,6 @@ export default ReminderModal;
 const styles = StyleSheet.create({
   modalContainer: {
     marginTop: 50,
-    backgroundColor: 'white',
     width: '100%',
     height: '85%',
     borderRadius: 20,
@@ -271,23 +263,25 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+  dateTimePicker: {
+    width: '100%',
+    // Android might allow some additional styling:
+    ...(Platform.OS === 'android' ? { backgroundColor: 'white', color: 'black' } : {}),
+  },
   modalOverlay: {
     position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   input: {
     width: '100%', // Full width inputs
     height: '5%',
     padding: 10,
     marginVertical: 8,
-    backgroundColor: '#f5f5f5', // Light background for the input fields
     borderRadius: 5,
     fontSize: 18,
-    color: 'black',
   },
   reminderHeader: {
     flexDirection: 'row',
@@ -298,10 +292,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
-  },
-  reminderDateTime: {
-    fontSize: 14,
-    color: '#666',
   },
   reminderList: {
     marginTop: 30,
