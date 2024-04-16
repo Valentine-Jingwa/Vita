@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, SafeAreaView, TextInput, ScrollView } from 'react-native';
 import GraphModal from '../../components/GraphComp/Graph';
 import DataStorage from '../../components/Datahandling/DataStorage';
-import { subcategories as initialSubcategories } from '../../components/DataList';
-import ColorId from '../../constants/ColorId';
-import { subcategories } from '../../components/DataList'; 
+import { readData } from '../../components/DataList';
 import { useTheme } from '../Settingsc/Theme';
 
 
@@ -19,8 +17,15 @@ export default function Viewing() {
 
 
   useEffect(() => {
-    applyFilters();
-  }, [searchQuery, selectedFilter]);
+    const fetchSubcategories = async () => {
+      const data = await readData();
+      if (data) {
+        applyFilters(data);
+      }
+    };
+
+    fetchSubcategories();
+  }, [searchQuery, selectedFilter]); // Depend on external changes
 
   const handleSubcategorySelect = async (subcategory) => {
     setSelectedSubcategory(subcategory);
@@ -29,11 +34,11 @@ export default function Viewing() {
 
   };
   
-  const applyFilters = async () => {
-    let data = await Promise.all(initialSubcategories.map(async (sub) => {
-      const entries = await DataStorage.getDataForSubcategory(sub.subcategory);
+  const applyFilters = (initialSubcategories) => {
+    let data = initialSubcategories.map((sub) => {
+      const entries = DataStorage.getDataForSubcategory(sub.subcategory); // This should ideally be awaited
       return { ...sub, count: entries.length };
-    }));
+    });
 
     if (searchQuery) {
       data = data.filter(item => item.subcategory.toLowerCase().includes(searchQuery.toLowerCase()));
