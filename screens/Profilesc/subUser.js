@@ -2,35 +2,49 @@
 // subUser.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addSubUser as addSubUserToDb, deleteSubUser as deleteSubUserFromDb, updateSubUser as updateSubUserInDb } from '../../mongo/services/mongodbService'; // Assuming these functions are implemented similarly to your mongoDbService structure
+import { Alert } from 'react-native';
 
 const subUserStorageKey = 'subUsers';
 
 const SubUserStorage = {
 
-  async getSubUsers(adminUsername) {
+  async getSubUsers() {
     try {
       const subUsersJson = await AsyncStorage.getItem(subUserStorageKey);
       const subUsers = subUsersJson ? JSON.parse(subUsersJson) : [];
-      return subUsers.filter(subUser => subUser.adminUsername === adminUsername);
-    } catch (error) {
+      return subUsers;  // Returns all sub-users stored in AsyncStorage
+  } catch (error) {
       console.error('Failed to get sub-users.', error);
-      return [];
-    }
+      return [];  // Return an empty array if there's an error
+  }
   },
 
   async addSubUser(subUserData) {
     try {
-      const added = await addSubUserToDb(subUserData);
-      if (added) {
-        const subUsers = await this.getSubUsers(subUserData.adminUsername);
-        subUsers.push(subUserData);
-        await AsyncStorage.setItem(subUserStorageKey, JSON.stringify(subUsers));
-        console.log('Sub-user successfully added.');
+      // Retrieve the existing list of sub-users from AsyncStorage
+      const subUsersJson = await AsyncStorage.getItem(subUserStorageKey);
+      const subUsers = subUsersJson ? JSON.parse(subUsersJson) : [];
+  
+      // Check if a sub-user with the same username already exists
+      const existingUser = subUsers.find(subUser => subUser.username === subUserData.username && subUser.adminUsername === subUserData.adminUsername);
+      if (existingUser) {
+        Alert.alert('Sub-user already exists', 'A sub-user with this username already exists.');
+        return false;  // Indicate that the user was not added because they already exist
       }
+  
+      // Add the new sub-user to the array
+      subUsers.push(subUserData);
+  
+      // Save the updated array back to AsyncStorage
+      await AsyncStorage.setItem(subUserStorageKey, JSON.stringify(subUsers));
+      console.log('Sub-user successfully added.');
+      return true;  // Indicate success
     } catch (error) {
       console.error('Failed to add sub-user.', error);
+      return false;  // Indicate failure
     }
   },
+  
 
   async deleteSubUser(subUserData) {
     try {

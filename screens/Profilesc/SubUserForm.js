@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, KeyboardAvoidingView, Platform, Button
+  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform, Button,
+  Keyboard
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SubUserStorage from './subUser';
 
 const { width } = Dimensions.get('window');
 
@@ -35,16 +38,23 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
 
   const canSubmit = firstName.trim() !== '' && lastName.trim() !== '' && username.trim() !== '' && dob instanceof Date;
 
-  const saveSubUser = () => {
+  const saveSubUser = async () => {
     if (canSubmit) {
-      onSave({ firstName, lastName, username, dob, accountHolder: adminUsername });
-      onCancel();
+      const subUserData = { firstName, lastName, username, dob: formatDate(dob), adminUsername };
+      try {
+        await SubUserStorage.addSubUser(subUserData);
+        onSave(subUserData); // Assuming onSave is meant to handle the UI update/notification
+        onCancel(); // Close the modal
+      } catch (error) {
+        console.error("Failed to save sub-user:", error);
+        // Handle errors (e.g., show a message to the user)
+      }
     }
   };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent onRequestClose={onCancel}>
-      <KeyboardAvoidingView style={styles.modalOverlay}>
+      <View style={styles.modalOverlay}>
         <View style={styles.container}>
           <Text style={styles.inputLabel}>{`Account Holder: ${adminUsername}`}</Text>
           <TextInput
@@ -86,7 +96,7 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 };
