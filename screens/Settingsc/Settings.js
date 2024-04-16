@@ -20,7 +20,6 @@ export default function Settings() {
   const [notificationsEnabled, setNotificationsEnabled] = React.useState(false);
   const [modalVisible, setModalVisible] = React.useState(false);
   const { logout } = useAuth();
-  const navigation = useNavigation();
   const { theme, themeStyles, toggleTheme } = useTheme();
 
 
@@ -35,15 +34,17 @@ export default function Settings() {
     }
   };
 
+  const navigation = useNavigation();
+
   const handleLogout = async () => {
     try {
-
-      await logout(); // Clears the user token and updates isAuthenticated state. This function from AuthContext
-
+      await logout(); // This clears the token and updates isAuthenticated
+      // You might not even need to navigate manually if your navigation listens to isAuthenticated
     } catch (error) {
-      console.error("Logout failed", error);
+      console.error("Logout failed:", error);
     }
   };
+
   
   const handleCancel = () => {
     setModalVisible(false); // Just hide the modal

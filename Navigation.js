@@ -201,26 +201,7 @@ const AppStack = () => (
 
 
 export default function Navigation() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  
-
-  useEffect(() => {
-    async function checkAuth() {
-      const valid = await isTokenValid();
-      setIsAuthenticated(valid);
-      setCheckingAuth(false);
-    }
-
-    checkAuth();
-  }, []);
-
-  if (checkingAuth) {
-    return (
-      // Optionally return a loading indicator while checking authentication
-      <ActivityIndicator />
-    );
-  }
+  const { isAuthenticated } = useAuth();
 
   return (
     <NavigationContainer>
