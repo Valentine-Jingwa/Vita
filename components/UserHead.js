@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import QuickSwitch from '../screens/Profilesc/quickSwitch';
+import { useTheme } from '../screens/Settingsc/Theme'
 
 const UserHead = () => {
     const { colors } = useTheme();
@@ -9,6 +9,7 @@ const UserHead = () => {
     const [currentTime, setCurrentTime] = useState('');
     const [currentDate, setCurrentDate] = useState('');
     const [containerHeight, setContainerHeight] = useState(0);
+    const { themeStyles } = useTheme();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -22,15 +23,15 @@ const UserHead = () => {
         return () => clearInterval(interval);
       }, []);
 
-    return (
-        <View style={styles.header}>
+      return (
+        <View style={[styles.header, { backgroundColor: themeStyles.background }]}>
             <View>
                 <QuickSwitch />
             </View>
-            <Text style={[styles.time, { color: colors.text }]}>{currentTime}</Text>
-            <Text style={[styles.date, { color: colors.text }]}>{currentDate}</Text>
+            <Text style={[styles.time, { color: themeStyles.text }]}>{currentTime}</Text>
+            <Text style={[styles.date, { color: themeStyles.text }]}>{currentDate}</Text>
         </View>
-    )
+    );
 }
 export default UserHead;
 const styles = StyleSheet.create({
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
         fontSize: 36, // Increase font size for time
         fontWeight: '300', // Make the font a bit lighter
         marginVertical: 5, // Maintain vertical margin
+        marginTop: 10, // Add some top margin
       },
       date: {
         paddingHorizontal: 30,
