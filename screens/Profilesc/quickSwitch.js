@@ -1,64 +1,45 @@
 import React, { memo, useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {useTheme} from '../Settingsc/Theme';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import { useTheme } from '../Settingsc/Theme';
+import { useUser } from '../../UserContext'; 
 
 const { width, height } = Dimensions.get('window');
 
 const QuickSwitch = memo(() => {
-    const [currentUser, setCurrentUser] = useState(null);
-    const [adminUser, setAdminUser] = useState(null);
-    const [subUsers, setSubUsers] = useState([]);
-    const [userIndex, setUserIndex] = useState(0);
-    const { colors } = useTheme();
+    const { currentUser, selectUser, userIndex, setUserIndex } = useUser(); // Include setUserIndex
     const { themeStyles } = useTheme();
-
-
-    useEffect(() => {
-        const fetchAdminUser = async () => {
-            const adminUserData = await AdminUserStorage.getAdminUser(); // Simulated function to fetch admin user data
-            setAdminUser(adminUserData);
-            setCurrentUser(adminUserData); // Set current user as admin initially
-        };
-
-        fetchAdminUser();
-    }, []);
+    const [subUsers, setSubUsers] = useState([]);
 
     useEffect(() => {
-        const fetchSubUsers = async () => {
-            if (adminUser) {
-                const subUsersData = await SubUserStorage.getSubUsers(adminUser.email); // Assume email is part of adminUser data
-                setSubUsers(subUsersData);
+        const fetchUsers = async () => {
+            const adminUserData = await AdminUserStorage.getAdminUser();
+            const subUsersData = await SubUserStorage.getSubUsers(adminUserData.email);
+            setSubUsers([adminUserData, ...subUsersData]);
+            if (userIndex === 0) {
+                selectUser(adminUserData, 0);
             }
         };
+        fetchUsers();
+    }, []);
 
-        fetchSubUsers();
-    }, [adminUser?.email]);
-
-    const handleChangeUser = (direction) => {
-        if (direction === 'next' && userIndex < subUsers.length - 1) {
-            setUserIndex(userIndex + 1);
-        } else if (direction === 'prev' && userIndex > 0) {
-            setUserIndex(userIndex - 1);
-        }
+    const handleSwipe = (direction) => {
+        let newIndex = direction === 'left' ? userIndex + 1 : userIndex - 1;
+        newIndex = Math.max(0, Math.min(newIndex, subUsers.length - 1));
+        setUserIndex(newIndex); // Update index using context
+        selectUser(subUsers[newIndex], newIndex); // Update user
     };
-
-    useEffect(() => {
-        if (userIndex === 0) {
-            setCurrentUser(adminUser);
-        } else {
-            setCurrentUser(subUsers[userIndex - 1]);
-        }
-    }, [userIndex, adminUser, subUsers]);
 
     return (
         <SafeAreaView style={[styles.user_detail, { backgroundColor: themeStyles.background }]}>
-            <Swipeable
-                onSwipeableRightOpen={() => handleChangeUser('prev')}
-                onSwipeableLeftOpen={() => handleChangeUser('next')}
-            >
+            <PanGestureHandler
+                onHandlerStateChange={({ nativeEvent }) => {
+                    if (nativeEvent.state === State.END) {
+                        handleSwipe(nativeEvent.translationX < 0 ? 'left' : 'right');
+                    }
+                }}>
                 <View style={[styles.user_text_detail, { backgroundColor: themeStyles.accent }]}>
                     <Text style={[styles.greeting, { color: themeStyles.text, paddingLeft: 15 }]}>
                         Hello, {currentUser?.username || "No Name"}
@@ -73,10 +54,11 @@ const QuickSwitch = memo(() => {
                         )}
                     </View>
                 </View>
-            </Swipeable>
+            </PanGestureHandler>
         </SafeAreaView>
     );
 });
+
 
 const styles = StyleSheet.create({
     user_detail: {
