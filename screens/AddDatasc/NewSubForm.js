@@ -6,11 +6,13 @@ import { subcategories as localSubcategories } from '../../components/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
 import { Picker } from '@react-native-picker/picker'; // Import Picker
 
-const NewSubForm = ({ isVisible, onClose }) => {
+const NewSubForm = ({ isVisible, onClose, categoryname}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
   const [unit, setUnit] = useState('');
+
+  
 
   // Check if the subcategory name is already in use
   const isNameUnique = async (name) => {
@@ -30,14 +32,14 @@ const NewSubForm = ({ isVisible, onClose }) => {
       return;
     }
 
-    if (description.length > 150) {
+    if (description.length > 250) {
       Alert.alert('Validation', 'Description must be within 150 characters.');
       return;
     }
 
     const newSubcategory = {
-      id: Date.now(),
-      categoryname: 'New Category',
+      id: Date.now(), // Unique ID based on timestamp
+      categoryname: categoryname, // Use the passed category name
       subcategory: subcategoryName,
       description,
       units: unit ? [unit] : [],
@@ -58,6 +60,7 @@ const NewSubForm = ({ isVisible, onClose }) => {
       Alert.alert('Error', 'There was an error saving the subcategory.');
     }
   };
+
 
   // Reset form fields
   const resetForm = () => {

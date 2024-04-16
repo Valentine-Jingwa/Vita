@@ -212,7 +212,7 @@ useEffect(() => {
             </View>
         </View>
     )}
-    <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} />
+    <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} categoryname={selectedCategory}/>
     <DataEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} subcategory={selectedSubcategory} onSave={handleSave} />
 </SafeAreaView>
   );
