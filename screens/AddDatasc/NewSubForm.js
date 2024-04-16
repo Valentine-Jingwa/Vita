@@ -5,12 +5,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { subcategories as localSubcategories } from '../../components/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
 import { Picker } from '@react-native-picker/picker'; // Import Picker
+import {useTheme} from '../Settingsc/Theme';
 
 const NewSubForm = ({ isVisible, onClose, categoryname}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
   const [unit, setUnit] = useState('');
+  const { themeStyles } = useTheme();
+
 
   
 
@@ -79,63 +82,67 @@ const NewSubForm = ({ isVisible, onClose, categoryname}) => {
 return (
   <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
     <TouchableWithoutFeedback onPress={handleOnClose}>
-    <KeyboardAvoidingView 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
-            style={{ flex: 1 }} 
-            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} 
-          >
-    <View style={styles.modalOverlay}>
-      <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Add New Subcategory</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter subcategory name"
-          value={subcategoryName}
-          onChangeText={setSubcategoryName}
-          placeholderTextColor="#666" // Neutral color for placeholder text
-        />
-            <View style={styles.dropdownContainer}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+        <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
+          <View style={[styles.formContainer, { backgroundColor: themeStyles.secondary }]}>
+            <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
+            {/* Subcategory Name Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              placeholder="Enter subcategory name"
+              placeholderTextColor={themeStyles.placeholderText}
+              value={subcategoryName}
+              onChangeText={setSubcategoryName}
+            />
+            {/* Picker Style */}
+            <View style={[styles.pickerContainer, { backgroundColor: themeStyles.inputBackground, borderColor: themeStyles.inputBorder }]}>
               <Picker
                 selectedValue={dataType}
                 onValueChange={(itemValue, itemIndex) => setDataType(itemValue)}
-                style={styles.dropdown}
+                style={[styles.pickerStyle, { color: themeStyles.text }]}
+                dropdownIconColor={themeStyles.text}
               >
-                <Picker.Item label="Number" value="number" />
-                <Picker.Item label="Text" value="text" />
-                <Picker.Item label="Date" value="date" />
+                {/* Picker Items */}
               </Picker>
             </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Description (optional)"
-          value={description}
-          onChangeText={text => setDescription(text)}
-          placeholderTextColor="#666"
-          multiline={true} // Allows for multi-line input
-          textAlignVertical="top" // Aligns text to the top
-          maxLength={150}
-          height={75} // Adjust the height based on your design
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Unit (optional)"
-          value={unit}
-          onChangeText={setUnit}
-          placeholderTextColor="#666"
-        />
-        <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-          <Text style={styles.cancelButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-    </KeyboardAvoidingView>
-
-    </TouchableWithoutFeedback>
-
-  </Modal>
+            {/* Description Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              placeholder="Description (optional)"
+              placeholderTextColor={themeStyles.placeholderText}
+              value={description}
+              onChangeText={text => setDescription(text)}
+              multiline
+              textAlignVertical="top"
+              maxLength={150}
+            />
+            {/* Unit Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              placeholder="Unit (optional)"
+              placeholderTextColor={themeStyles.placeholderText}
+              value={unit}
+              onChangeText={setUnit}
+            />
+            {/* Buttons */}
+              <TouchableOpacity 
+                onPress={handleSubmit} 
+                style={[styles.submitButton, { backgroundColor: themeStyles.primary }]}
+              >
+                <Text style={[styles.submitButtonText, { color: themeStyles.text }]}>Save</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                onPress={onClose} 
+                style={[styles.cancelButton, { backgroundColor: themeStyles.accent }]}
+              >
+                <Text style={[styles.cancelButtonText, { color: themeStyles.text }]}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Modal>
 
 );
 };
@@ -167,14 +174,25 @@ formTitle: {
   textAlign: 'center', // Center-aligned title for a balanced look
 },
 input: {
-  backgroundColor: '#FFF', // White background for inputs
   borderWidth: 1,
-  borderColor: '#DDD', // Light border for subtle delineation
   borderRadius: 5,
-  padding: 10,
+  padding: 15,
   marginBottom: 15,
   fontSize: 16,
-  color: '#333', // Text color
+},
+pickerContainer: {
+  borderRadius: 10,
+  borderWidth: 1,
+  marginBottom: 15,
+  justifyContent: 'center',
+},
+pickerStyle: {
+  color: 'red',
+},
+modalOverlay: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 },
 dropdownContainer: {
   height: 40,
