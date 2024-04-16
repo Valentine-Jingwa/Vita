@@ -105,47 +105,47 @@ const AddDataOptions = ({ navigation }) => {
     setModalVisible(true);
   };
 
-  // const handleSave = async (id, value, unit, subcategory, categoryname) => {
-  //   if (value && unit) {
-  //     try {
-  //       const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
-  //       backupOneData(adminUser.email, newDataPoint);
-  //       await DataStorage.Store(newDataPoint);
-  //       setModalVisible(false);
-  //       showNotification('Data successfully saved');
-  //       fetchData();
-  //     } catch (error) {
-  //       console.error('Save error:', error);
-  //       showNotification('Failed to save data');
-  //     }
-  //   } else {
-  //     showNotification('Incorrect data');
-  //   }
-  // };
-
-
-
-const handleSave = async (id, value, unit, subcategory, categoryname) => {
-  if (value && unit) {
-    try {
-      // Get a local date with time stripped off (set to 00:00:00)
-      const now = new Date();
-      const localDateStr = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      
-      const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: localDateStr };
-      backupOneData(adminUser.email, newDataPoint);
-      await DataStorage.Store(newDataPoint);
-      setModalVisible(false);
-      showNotification('Data successfully saved');
-      fetchData();
-    } catch (error) {
-      console.error('Save error:', error);
-      showNotification('Failed to save data');
+  const handleSave = async (id, value, unit, subcategory, categoryname) => {
+    if (value && unit) {
+      try {
+        const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
+        backupOneData(adminUser.email, newDataPoint);
+        await DataStorage.Store(newDataPoint);
+        setModalVisible(false);
+        showNotification('Data successfully saved');
+        fetchData();
+      } catch (error) {
+        console.error('Save error:', error);
+        showNotification('Failed to save data');
+      }
+    } else {
+      showNotification('Incorrect data');
     }
-  } else {
-    showNotification('Incorrect data');
-  }
-};
+  };
+
+
+
+// const handleSave = async (id, value, unit, subcategory, categoryname) => {
+//   if (value && unit) {
+//     try {
+//       // Get a local date with time stripped off (set to 00:00:00)
+//       const now = new Date();
+//       const localDateStr = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+      
+//       const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: localDateStr };
+//       backupOneData(adminUser.email, newDataPoint);
+//       await DataStorage.Store(newDataPoint);
+//       setModalVisible(false);
+//       showNotification('Data successfully saved');
+//       fetchData();
+//     } catch (error) {
+//       console.error('Save error:', error);
+//       showNotification('Failed to save data');
+//     }
+//   } else {
+//     showNotification('Incorrect data');
+//   }
+// };
 
 
 
