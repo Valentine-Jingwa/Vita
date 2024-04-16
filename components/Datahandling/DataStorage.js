@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEY = 'localData';
 
 const DataStorage = {
+
+  
   async Store(newData) {
     try {
       const existingDataJson = await AsyncStorage.getItem(STORAGE_KEY);
@@ -45,7 +47,7 @@ const DataStorage = {
     }
   },
 
-  async Clear() {
+  async clear() {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
       console.log('Storage successfully cleared.');
@@ -87,6 +89,8 @@ export const clearLocalData = async (STORAGE_KEY) => {
         console.error('Failed to clear local storage:', error);
     }
 };
+
+
 
 
 export default DataStorage;
