@@ -61,15 +61,17 @@ export default function Viewing() {
 
   const renderGroupedSubcategories = () => {
     return Object.entries(groupedSubcategories).map(([categoryName, subcategories], index) => (
-      <View key={index} style={styles.categoryContainer}>
-        <Text style={styles.categoryHeader}>{categoryName}</Text>
+      <View key={index} style={[styles.categoryContainer, { backgroundColor: themeStyles.background, shadowColor: themeStyles.text }]}>
+        <Text style={[styles.categoryHeader, { color: themeStyles.text, borderBottomColor: themeStyles.secondary }]}>
+          {categoryName}
+        </Text>
         {subcategories.map((sub, subIndex) => (
-          <View key={subIndex} style={styles.subcategoryContainer}>
+          <View key={subIndex} style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
             <TouchableOpacity
               style={styles.subcategoryItem}
               onPress={() => handleSubcategorySelect(sub)}
             >
-              <Text style={styles.subcategoryText}>{sub.subcategory}</Text>
+              <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
             </TouchableOpacity>
             <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id) }]}>
               <Text style={styles.dotText}>{sub.count > 999 ? "999+" : sub.count}</Text>
