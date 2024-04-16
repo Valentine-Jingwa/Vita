@@ -1,111 +1,85 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image, Modal } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import SubUserForm from './SubUserForm';
-import QuickSwitch from './quickSwitch';
 
 const { width } = Dimensions.get('window');
 
 const ProfileHolder = ({ adminData, subUserData }) => {
-    const [currentUser, setCurrentUser] = useState(adminData);
+    const [currentUser, setCurrentUser] = useState(null); // Start with null or a default loading state
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [userIndex, setUserIndex] = useState(0);
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);  // Start at the admin index
 
-
-    // Handle image update
-    const updateProfilePic = () => {
-        const options = { storageOptions: { skipBackup: true, path: 'images' }};
-        launchImageLibrary(options, (response) => {
-            if (!response.didCancel && !response.error) {
-                setProfilePic({ uri: response.uri });
-            }
-        });
-    };
-
-    // Updates the currentUser when currentIndex changes
+    // Effect to handle initial data loading
     useEffect(() => {
-        updateCurrentUser(currentIndex);
-    }, [currentIndex]);
-    
+        if (adminData) {
+            setCurrentUser(adminData); // Set the current user once the admin data is loaded
+        }
+    }, [adminData]);
 
+    // Handles swiping left and right
     const handleSwipe = (direction) => {
         let newIndex = currentIndex;
-        if (direction === 'left' && currentIndex < subUserData.length) {
-            newIndex = currentIndex + 1; // Move to next user
+        let totalUsers = 1 + subUserData.length; // Total users include admin
+        if (direction === 'left' && currentIndex < totalUsers - 1) {
+            newIndex += 1; // Move to next user
         } else if (direction === 'right' && currentIndex > 0) {
-            newIndex = currentIndex - 1; // Move to previous user
+            newIndex -= 1; // Move to previous user
         }
         if (newIndex !== currentIndex) {
             setCurrentIndex(newIndex);
             updateCurrentUser(newIndex);
         }
     };
-    
-    
+
+    // Update the current user based on the index
     const updateCurrentUser = (index) => {
         if (index === 0) {
             setCurrentUser(adminData);
         } else {
             setCurrentUser(subUserData[index - 1]);
         }
-    }
-    
-
-    const handleSaveSubUser = (subUserData) => {
-        console.log('Sub-user data:', subUserData);
-        setIsFormVisible(false);
-        // Additional logic to save sub-user data
     };
 
     return (
         <SafeAreaView>
-            {/* Modal for SubUserForm */}
-                <SubUserForm 
-                    onSave={handleSaveSubUser} 
-                    onCancel={() => setIsFormVisible(false)} 
-                    isVisible={isFormVisible}
-                    adminUsername={adminData?.username}
-                    />
-
+            <SubUserForm
+                onSave={(data) => {
+                    console.log('Sub-user data:', data);
+                    setIsFormVisible(false);
+                }}
+                onCancel={() => setIsFormVisible(false)}
+                isVisible={isFormVisible}
+                adminUsername={adminData?.username}
+            />
             <View style={styles.user_profile}>
-                {/* User Theme Bubble */}
                 <View style={styles.user_Themebubble}>
                     {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={styles.user_image}>{currentUser?.initials || 'No Image'}</Text>
+                        <Text style={styles.user_image}>{currentUser ? (currentUser.initials || 'No Image') : 'Loading...'}</Text>
                     )}
                     <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
                         <Text style={styles.add_subuserText}>+</Text>
                     </TouchableOpacity>
                 </View>
-                {/* Swipeable user detail view */}
-                <Swipeable
-                    renderLeftActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
-                    renderRightActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
-                    onSwipeableOpen={(direction) => {
-                        if (direction === 'left') {
-                            handleSwipe('left');  // Assuming 'left' means revealing right actions
-                        } else {
-                            handleSwipe('right'); // Assuming 'right' means revealing left actions
+                <PanGestureHandler
+                    onHandlerStateChange={({ nativeEvent }) => {
+                        if (nativeEvent.state === State.END) {
+                            handleSwipe(nativeEvent.translationX < 0 ? 'left' : 'right');
                         }
-                    }}
-                >
+                    }}>
                     <View style={styles.user_detail}>
-                        <Text style={styles.user_name}>{currentUser?.username || currentUser?.email}</Text>
-                        <Text style={styles.user_age}>AGE: {currentUser?.age || 'N/A'}</Text>
+                        <Text style={styles.user_name}>{currentUser ? currentUser.username : 'Loading...'}</Text>
+                        <Text style={styles.user_age}>AGE: {currentUser ? currentUser.age : 'N/A'}</Text>
                     </View>
-                </Swipeable>
-
-
+                </PanGestureHandler>
             </View>
         </SafeAreaView>
     );
 };
+
 const styles = StyleSheet.create({
   user_profile: {
     width: width, // Full width
