@@ -58,21 +58,7 @@ const AddDataOptions = ({ navigation }) => {
     fetchAdminUser();
   }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     const jsonValue = await AsyncStorage.getItem('subcategories');
-  //     const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-  //     console.log('Data successfully fetched');
-  //     setSubcategories(data);
-  //   } catch (e) {
-  //     console.error('Failed to fetch the data from storage', e);
-  //     setSubcategories([]); // Fallback to an empty array on error
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
      // Function to show notification
      const showNotification = (message) => {
