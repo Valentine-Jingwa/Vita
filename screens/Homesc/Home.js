@@ -14,21 +14,11 @@ import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import ReminderModal from './ReminderModal';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useTheme } from '../Settingsc/Theme';
 
 
 
 const { width, height } = Dimensions.get('window');
-// Debounce function to prevent multiple calls
-// const debounce = (func, delay) => {
-//   let inDebounce;
-//   return function() {
-//     const context = this;
-//     const args = arguments;
-//     clearTimeout(inDebounce);
-//     inDebounce = setTimeout(() => func.apply(context, args), delay);
-//   };
-// };
-
 
 
 
@@ -40,6 +30,7 @@ const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [reminderModalVisible, setReminderModalVisible] = useState(false);
   const [swipeFeedback, setSwipeFeedback] = useState(false);
+  const { themeStyles } = useTheme();
 
 
   useEffect(() => {
@@ -58,45 +49,34 @@ const Home = () => {
 
    // Function to handle day press on the calendar
    const handleDayPress = (day) => {
-    setSelectedDate(day.dateString);
+    console.log("Selected Day:", day);
+    // Convert to a Date object and set the time to midnight local time
+    const localDate = new Date(day.year, day.month - 1, day.day);
+    setSelectedDate(localDate.toISOString());
     setSelectedDateModalVisible(true);
   };
 
 
-   // Function to filter data for the selected date
-   const getDataForSelectedDate = () => {
-    return data.filter((item) => {
-      const itemDate = new Date(item.timestamp).toDateString();
-      const selectedDayDate = new Date(selectedDate).toDateString();
-      return itemDate === selectedDayDate;
+// Function to filter data for the selected date
+const getDataForSelectedDate = () => {
+  return data.filter((item) => {
+    const itemDate = new Date(item.timestamp).toDateString();
+    const selectedDayDate = new Date(selectedDate).toDateString();
+    return itemDate === selectedDayDate;
+  });
+};
+
+
+  const getMarkedDates = () => {
+    const marked = {};
+    data.forEach((item) => {
+      const dateKey = new Date(item.timestamp).toISOString().split('T')[0];
+      if (!marked[dateKey]) {
+        marked[dateKey] = { marked: true, dotColor: themeStyles.secondary };
+      }
     });
+    return marked;
   };
-
-    const getMarkedDates = () => {
-      const marked = {};
-      data.forEach((item) => {
-        const dateKey = new Date(item.timestamp).toISOString().split('T')[0]; // Converts timestamp to 'YYYY-MM-DD'
-        if (!marked[dateKey]) {
-          marked[dateKey] = { marked: true, dotColor: 'blue' };
-        }
-      });
-      return marked;
-    };
-
-    const CustomDay = ({ date, state, marking }) => {
-      const isMarked = marking.marked;
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 5 }}>
-          <Text style={{ 
-              textDecorationLine: isMarked ? 'underline' : 'none',
-              color: state === 'disabled' ? 'gray' : 'black',
-          }}>
-            {date.day}
-          </Text>
-        </View>
-      );
-    };
-
 
 
   const fetchData = async () => {
@@ -110,9 +90,11 @@ const Home = () => {
     }
 };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+useEffect(() => {
+  fetchData().then(() => {
+    console.log("Data Loaded:", data);
+  });
+}, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -131,7 +113,7 @@ const Home = () => {
   
 
   return (
-    <SafeAreaView style={styles.screenContainer}>
+    <SafeAreaView style={[styles.screenContainer, {backgroundColor: themeStyles.background}]}>
       <TouchableOpacity style={styles.iconButton} onPress={() => setReminderModalVisible(true)}>
         <Iclock width={40} height={40} />
       </TouchableOpacity>
@@ -145,45 +127,51 @@ const Home = () => {
 
       {/* Modal for Selected Date */}
       <Modal
-        animationType="slide"
-        transparent={true}
-        visible={selectedDateModalVisible}
-        onRequestClose={() => setSelectedDateModalVisible(false)}
-      >
-      <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.selectedDateModalView}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setSelectedDateModalVisible(false)}
-            >
-            </TouchableOpacity>
-            <ScrollView horizontal={false} style={{ width: '95%' }}>
-                  {getDataForSelectedDate(selectedDate).length > 0 ? (
-                    getDataForSelectedDate(selectedDate).map((item, index) => (
-                      <CompactDataCard key={index} item={item} />
-                    ))
-                  ) : (
-                    <Text style={styles.noDataText}>No data inputted for {selectedDate} </Text>
-                  )}
-                </ScrollView>
-          </View>
+      animationType="slide"
+      transparent={true}
+      visible={selectedDateModalVisible}
+      onRequestClose={() => setSelectedDateModalVisible(false)}
+    >
+    <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
+      <View style={[styles.modalOverlay, { backgroundColor: `rgba(0, 0, 0, 0.8)` }]}>
+        <View style={[styles.modalView, {
+            backgroundColor: themeStyles.background,
+            shadowColor: themeStyles.text // Use text color from theme for shadow
+        }]}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setSelectedDateModalVisible(false)}
+          >
+          </TouchableOpacity>
+          <ScrollView horizontal={false}>
+                {getDataForSelectedDate(selectedDate).length > 0 ? (
+                  getDataForSelectedDate(selectedDate).map((item, index) => (
+                    <CompactDataCard key={index} item={item} />
+                  ))
+                ) : (
+                  <Text style={[styles.noDataText, {color: themeStyles.text}]}>No data inputted for {selectedDate} </Text>
+                )}
+              </ScrollView>
         </View>
-      </TouchableWithoutFeedback>
-      </Modal>
+      </View>
+    </TouchableWithoutFeedback>
+    </Modal>
+
 
       {/* Calendar Component */}
       <Calendar
         onDayPress={handleDayPress}
         markedDates={getMarkedDates()}
         theme={{
-          arrowColor: '#007AFF',
-          todayTextColor: '#007AFF',
+          arrowColor: themeStyles.primary,
+          todayTextColor: themeStyles.accent,
+          calendarBackground: themeStyles.background,
         }}
-        // Add style to ensure calendar doesn't change the layout size dynamically
-        style={{
-          ...styles.calendar, // Spread existing styles from your styles.calendar
-        }}
+        style={[styles.calendar, {
+          borderColor: themeStyles.accent, 
+          shadowColor: themeStyles.text, // Use text color for shadow
+          backgroundColor: themeStyles.background, // Use background color for calendar
+        }]}
       />
 
       {/* Card Viewer with Swipe Handling */}
@@ -193,24 +181,28 @@ const Home = () => {
             handleSwipe(nativeEvent.translationX < 0 ? 'left' : 'right');
           }
         }}>
-        <View style={[styles.cardViewer, swipeFeedback ? styles.swipeFeedback : null]}>
+        <View style={[styles.cardViewer, swipeFeedback ? styles.swipeFeedback : null, {
+          borderColor: themeStyles.secondary, // Use secondary color for border
+          shadowColor: themeStyles.text, // Use text color for shadow
+        }]}>
           {data.length > 0 && currentIndex < data.length ? (
             <DataCard item={data[currentIndex]} />
           ) : (
-            <Text style={styles.noDataText}>No Data Available</Text>
+            <Text style={[styles.noDataText, {color: themeStyles.text}]}>No Data Available</Text>
           )}
         </View>
       </PanGestureHandler>
 
 
 
+
       {/* Navigation Arrows */}
       <View style={styles.arrowContainer}>
         <TouchableOpacity onPress={() => handleSwipe('right')}>
-          <Icon name="chevron-left" size={30} color="#000" />
+          <Icon name="chevron-left" size={30} color={themeStyles.primary} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleSwipe('left')}>
-          <Icon name="chevron-right" size={30} color="#000" />
+          <Icon name="chevron-right" size={30} color={themeStyles.primary} />
         </TouchableOpacity>
       </View>
 
@@ -252,19 +244,17 @@ const styles = StyleSheet.create({
   },
   calendar: {
     paddingTop: 10,
-    marginTop: height*0.12,     // Keeps top margin
-    marginBottom: 20,  // Adds bottom margin for spacing
-    marginLeft: 20,    // Adds left margin
-    marginRight: 20,   // Adds right margin
-    height: 350,
-    borderRadius: 15,  // Rounded corners for the calendar
-    borderWidth: 1,    // Light grey border
-    borderColor: '#ccc',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },  // Reduces shadow vertical offset
-    shadowOpacity: 0.15,  // Reduces shadow opacity for a subtler effect
-    shadowRadius: 10,     // Reduces shadow blur radius
-    elevation: 5,         // Reduces elevation for Android
+    marginTop: height*0.12,
+    marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    height: 370,
+    borderRadius: 15,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
   deckContainer: {
     flex: 1,
@@ -276,15 +266,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 20,    // Adds left margin
-    marginRight: 20,   // Adds right margin
-    borderRadius: 15,  // Rounded corners for the calendar
-    borderColor: '#ccc',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },  // Reduces shadow vertical offset
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 15,
+    shadowOffset: { width: 0, height: 5 },
   },
   swipeFeedback: {
-    opacity: 0.5, // Adjust as needed for visible feedback
+    opacity: 0.8, // Adjust as needed for visible feedback
   },
   arrowContainer: {
     flexDirection: 'row',
@@ -317,18 +305,17 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    width: '100%',
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
+    width: '100%',
+    maxHeight: '90%',
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
-    shadowColor: '#000',
+    justifyContent: 'center',
     shadowOffset: {
       width: 0,
       height: 2,
