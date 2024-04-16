@@ -25,7 +25,6 @@ const Welcome = ({ navigation }) => {
             </View>
             {/* <Text style={styles.brandName}>Health Tracker</Text> */}
             <View style={styles.textbox}>
-                <Text style={styles.slogan}>Extra ready for appointment</Text>
                 <Text style={styles.description}>
                     Input data and get it processed for your next appointment
                 </Text>
@@ -78,7 +77,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         paddingHorizontal: 20,
-        marginTop: 10,
+        marginTop: 30,
     },
     buttonContainer: {
         width: width,
