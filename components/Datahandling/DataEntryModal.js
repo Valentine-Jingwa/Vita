@@ -61,11 +61,17 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   }
  
   return (
-    <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
-      <KeyboardAvoidingView 
-        behavior={Platform.OS === "ios" ? "padding" : "height"} 
-        style={styles.centeredView}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+      <Modal
+        visible={isVisible}
+        animationType="slide"
+        onRequestClose={onClose}
+        transparent={true}
+        style={{ backgroundColor: 'transparent' }} // Ensure transparency
+      >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={[styles.centeredView, { backgroundColor: themeStyles.background }]} // Ensure the background matches the theme
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
       <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.modalOverlay} />
@@ -80,22 +86,23 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
             value={inputValue}
             onChangeText={setInputValue}
             placeholder="Enter value (0-999)"
-            placeholderTextColor={themeStyles.placeholderText}
+            placeholderTextColor={themeStyles.text}
             keyboardType="numeric"
             maxLength={3}
           />
-          {subcategory.units && (
-            <View style={[styles.picker, { backgroundColor: themeStyles.background }]}>
-              <Picker
-                selectedValue={selectedUnit}
-                onValueChange={setSelectedUnit}
-                style={{ color: themeStyles.text }}
-                itemStyle={{ backgroundColor: themeStyles.background }}
-              >
-                {/* Picker items */}
-              </Picker>
-            </View>
-          )}
+            {subcategory.units && (
+              <View style={[styles.picker]}>
+                <Picker
+                  selectedValue={selectedUnit}
+                  onValueChange={setSelectedUnit}
+                  itemStyle={{ color: themeStyles.text, backgroundColor: themeStyles.secondary }}
+                >
+                  {subcategory.units.map(unit => (
+                    <Picker.Item label={unit} value={unit} key={unit} />
+                  ))}
+                </Picker>
+              </View>
+            )}
           <TouchableOpacity style={[styles.saveButton, { backgroundColor: themeStyles.primary }]} onPress={validateAndSave}>
             <Text style={[styles.buttonText, { color: themeStyles.text }]}>Save</Text>
           </TouchableOpacity>
@@ -114,6 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   modalOverlay: {
     position: 'absolute',
@@ -122,7 +130,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   modalView: {
-    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
     width: '90%',
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   saveButton: {
-    padding: 10,
+    padding: 20,
     borderRadius: 10,
     elevation: 2,
     flex: 1,
