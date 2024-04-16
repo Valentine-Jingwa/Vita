@@ -1,53 +1,94 @@
-// SubUserForm.js
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, KeyboardAvoidingView, Platform,
+  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform, Button,
+  Keyboard
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import SubUserStorage from './subUser';
 
 const { width } = Dimensions.get('window');
 
 const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
-  const [formState, setFormState] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    dob: '',
-  });
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [dob, setDob] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (!isVisible) {
-      setFormState({ firstName: '', lastName: '', username: '', dob: '' });
+      setFirstName('');
+      setLastName('');
+      setUsername('');
+      setDob(new Date());
     }
   }, [isVisible]);
 
-  const handleInputChange = (name, value) => {
-    setFormState(prevState => ({ ...prevState, [name]: value }));
+  const onDateChange = (event, selectedDate) => {
+    setShowDatePicker(Platform.OS === 'ios');  // Keeps the picker open on iOS after selection.
+    if (selectedDate) {
+      setDob(selectedDate);
+    }
   };
 
-  // Determine if the form can be submitted
-  const canSubmit = Object.values(formState).every(value => value.trim());
+  const formatDate = (date) => {
+    return date.toLocaleDateString();  // You can adjust the format as needed
+  };
 
-  const saveSubUser = () => {
+  const canSubmit = firstName.trim() !== '' && lastName.trim() !== '' && username.trim() !== '' && dob instanceof Date;
+
+  const saveSubUser = async () => {
     if (canSubmit) {
-      onSave({ ...formState, accountHolder: adminUsername });
-      onCancel(); 
+      const subUserData = { firstName, lastName, username, dob: formatDate(dob), adminUsername };
+      try {
+        await SubUserStorage.addSubUser(subUserData);
+        onSave(subUserData); // Assuming onSave is meant to handle the UI update/notification
+        onCancel(); // Close the modal
+      } catch (error) {
+        console.error("Failed to save sub-user:", error);
+        // Handle errors (e.g., show a message to the user)
+      }
     }
   };
 
   return (
     <Modal visible={isVisible} animationType="slide" transparent onRequestClose={onCancel}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null } style={styles.modalOverlay}>
+      <View style={styles.modalOverlay}>
         <View style={styles.container}>
-          <Text style={styles.input}>{`Account Holder: ${adminUsername}`}</Text>
-          {['firstName', 'lastName', 'username', 'dob'].map((field) => (
-            <TextInput
-              key={field}
-              style={styles.input}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              onChangeText={value => handleInputChange(field, value)}
-              value={formState[field]}
+          <Text style={styles.inputLabel}>{`Account Holder: ${adminUsername}`}</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            onChangeText={setFirstName}
+            value={firstName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            onChangeText={setLastName}
+            value={lastName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Username"
+            onChangeText={setUsername}
+            value={username}
+          />
+          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+            <Text style={styles.datePickerButtonText}>Select Date of Birth</Text>
+          </TouchableOpacity>
+          <Text style={styles.selectedDateText}>Selected Date: {formatDate(dob)}</Text>
+          {showDatePicker && (
+            <DateTimePicker
+              value={dob}
+              mode="date"
+              display="default"
+              onChange={onDateChange}
+              maximumDate={new Date()}
             />
-          ))}
+          )}
+
           <TouchableOpacity onPress={saveSubUser} style={[styles.submitButton, !canSubmit && styles.disabledButton]} disabled={!canSubmit}>
             <Text style={styles.submitButtonText}>Save</Text>
           </TouchableOpacity>
@@ -55,7 +96,7 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
             <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
+      </View>
     </Modal>
   );
 };
@@ -65,10 +106,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   container: {
-    width: width*0.8, // Adjusted for the modal
+    width: width * 0.8,
     backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 10,
@@ -81,19 +122,24 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  inputLabel: {
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#000',
+  },
   input: {
-    width: width*0.7,
-    backgroundColor: '#FFF', // White background for inputs
+    width: width * 0.7,
+    backgroundColor: '#FFF',
     borderWidth: 1,
-    borderColor: '#DDD', // Light border for subtle delineation
+    borderColor: '#DDD',
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
     fontSize: 16,
-    color: '#000', // Text color
+    color: '#000',
   },
   submitButton: {
-    backgroundColor: '#4F4F4F', // Dark neutral for contrast
+    backgroundColor: '#4F4F4F',
     paddingVertical: 12,
     borderRadius: 5,
     marginBottom: 10,
@@ -104,7 +150,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cancelButton: {
-    backgroundColor: '#A5A5A5', // Lighter neutral for differentiation
+    backgroundColor: '#A5A5A5',
     paddingVertical: 12,
     borderRadius: 5,
   },
@@ -114,8 +160,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: '#CCCCCC', // Light grey to indicate disabled
+    backgroundColor: '#CCCCCC',
   },
+  datePickerButton: {
+    backgroundColor: '#5578ff',
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  datePickerButtonText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#000',
+  },
+  selectedDateText: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 15,
+  }
 });
 
 export default SubUserForm;

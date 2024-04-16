@@ -21,12 +21,14 @@ export default function ProfileSettings({ }) {
     const fetchAdminUser = async () => {
       const adminData = await AdminUserStorage.getAdminUser(); 
       setAdminUser(adminData);
+      console.log(adminData, 'adminData');
     };
 
     const fetchSubUsers = async () => {
       if (adminUser) {
-        const subUsersData = await SubUserStorage.getSubUsers(adminUser.email); // Assume email is part of adminUser data
+        const subUsersData = await SubUserStorage.getSubUsers();
         setSubUsers(subUsersData);
+        console.log(subUsersData, 'subUsersData');
       }
     };
 

@@ -62,7 +62,6 @@ const AddDataOptions = ({ navigation }) => {
   }, []);
 
 
-
      // Function to show notification
      const showNotification = (message) => {
       setNotification(message);

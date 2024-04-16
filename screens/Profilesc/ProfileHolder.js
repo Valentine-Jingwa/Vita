@@ -12,7 +12,9 @@ const ProfileHolder = ({ adminData, subUserData }) => {
     const [currentUser, setCurrentUser] = useState(adminData);
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [userIndex, setUserIndex] = useState(0); // To keep track of current user index
+    const [userIndex, setUserIndex] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
 
     // Handle image update
     const updateProfilePic = () => {
@@ -24,19 +26,34 @@ const ProfileHolder = ({ adminData, subUserData }) => {
         });
     };
 
+    // Updates the currentUser when currentIndex changes
     useEffect(() => {
-        if (adminData) setCurrentUser(adminData);
-    }, [adminData, subUserData]);
+        updateCurrentUser(currentIndex);
+    }, [currentIndex]);
+    
 
-    const handleChangeUser = (direction) => {
-        if (direction === 'next' && userIndex < subUserData.length) {
-            setUserIndex(userIndex + 1);
-            setCurrentUser(subUserData[userIndex]);
-        } else if (direction === 'prev' && userIndex > 0) {
-            setUserIndex(userIndex - 1);
-            setCurrentUser(userIndex === 1 ? adminData : subUserData[userIndex - 2]);
+    const handleSwipe = (direction) => {
+        let newIndex = currentIndex;
+        if (direction === 'left' && currentIndex < subUserData.length) {
+            newIndex = currentIndex + 1; // Move to next user
+        } else if (direction === 'right' && currentIndex > 0) {
+            newIndex = currentIndex - 1; // Move to previous user
+        }
+        if (newIndex !== currentIndex) {
+            setCurrentIndex(newIndex);
+            updateCurrentUser(newIndex);
         }
     };
+    
+    
+    const updateCurrentUser = (index) => {
+        if (index === 0) {
+            setCurrentUser(adminData);
+        } else {
+            setCurrentUser(subUserData[index - 1]);
+        }
+    }
+    
 
     const handleSaveSubUser = (subUserData) => {
         console.log('Sub-user data:', subUserData);
@@ -47,14 +64,13 @@ const ProfileHolder = ({ adminData, subUserData }) => {
     return (
         <SafeAreaView>
             {/* Modal for SubUserForm */}
-            <Modal visible={isFormVisible} animationType="slide" transparent={true}>
                 <SubUserForm 
                     onSave={handleSaveSubUser} 
                     onCancel={() => setIsFormVisible(false)} 
                     isVisible={isFormVisible}
                     adminUsername={adminData?.username}
                     />
-            </Modal>
+
             <View style={styles.user_profile}>
                 {/* User Theme Bubble */}
                 <View style={styles.user_Themebubble}>
@@ -69,14 +85,23 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                 </View>
                 {/* Swipeable user detail view */}
                 <Swipeable
-                    onSwipeableRightOpen={() => handleChangeUser('prev')}
-                    onSwipeableLeftOpen={() => handleChangeUser('next')}
+                    renderLeftActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
+                    renderRightActions={() => <View style={{width: 10, backgroundColor: 'grey'}}/>}
+                    onSwipeableOpen={(direction) => {
+                        if (direction === 'left') {
+                            handleSwipe('left');  // Assuming 'left' means revealing right actions
+                        } else {
+                            handleSwipe('right'); // Assuming 'right' means revealing left actions
+                        }
+                    }}
                 >
                     <View style={styles.user_detail}>
                         <Text style={styles.user_name}>{currentUser?.username || currentUser?.email}</Text>
-                        <Text style={styles.user_age}>Age: {currentUser?.age}</Text>
+                        <Text style={styles.user_age}>AGE: {currentUser?.age || 'N/A'}</Text>
                     </View>
                 </Swipeable>
+
+
             </View>
         </SafeAreaView>
     );
@@ -92,7 +117,7 @@ const styles = StyleSheet.create({
         width: 180, // 100 width
         height: 175, // 100 height
         borderRadius: 100, // Set border radius to match design
-        backgroundColor: '#f89090', // Light grey background
+        backgroundColor: '#000', // Light grey background
         fontSize: 24, // Larger font size
         fontWeight: 'bold', // Bold font
         marginTop: 10, // Add some top margin
