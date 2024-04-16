@@ -3,26 +3,29 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimeCalculator from './TimeCalculator';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme} from '../../screens/Settingsc/Theme'
 
 const DataCard = ({ item }) => {
+    const { themeStyles } = useTheme(); // Use themeStyles
+
     if (!item) {
-        return <View style={styles.placeholder}><Text>Loading...</Text></View>;
+        return <View style={[styles.placeholder, { backgroundColor: themeStyles.background }]}><Text style={{ color: themeStyles.text }}>Loading...</Text></View>;
     }
 
     return (
-        <TouchableOpacity activeOpacity={0.7} style={styles.dataBox}>
+        <TouchableOpacity activeOpacity={0.7} style={[styles.dataBox, { shadowColor: themeStyles.text }]}>
             <LinearGradient
-                colors={['#e6e6e6', '#ffffff']}
+                colors={[themeStyles.secondary, themeStyles.background]} // Use theme colors for gradient
                 style={styles.gradient}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
             >
-                <Icon name="database" size={24} color="#007AFF" style={styles.icon} />
+                <Icon name="database" size={24} color={themeStyles.primary} style={styles.icon} />
                 <View style={styles.textGroup}>
-                    <Text style={styles.subcatName}>{item.subcategory}</Text>
+                    <Text style={[styles.subcatName, { color: themeStyles.text }]}>{item.subcategory}</Text>
                     <View style={styles.valueContainer}>
-                        <Text style={styles.textvalue}>{item.value}</Text>
-                        <Text style={styles.textunit}>{item.unit}</Text>
+                        <Text style={[styles.textvalue, { color: themeStyles.primary }]}>{item.value}</Text>
+                        <Text style={[styles.textunit, { color: themeStyles.secondary }]}>{item.unit}</Text>
                     </View>
                 </View>
                 <View style={styles.timeContainer}>
