@@ -4,13 +4,15 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, Touc
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { subcategories as localSubcategories } from '../../components/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Picker } from '@react-native-picker/picker'; // Import Picker
 
-const NewSubForm = ({ isVisible, onClose }) => {
+const NewSubForm = ({ isVisible, onClose, categoryname}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
   const [unit, setUnit] = useState('');
+
+  
 
   // Check if the subcategory name is already in use
   const isNameUnique = async (name) => {
@@ -30,14 +32,14 @@ const NewSubForm = ({ isVisible, onClose }) => {
       return;
     }
 
-    if (description.length > 150) {
+    if (description.length > 250) {
       Alert.alert('Validation', 'Description must be within 150 characters.');
       return;
     }
 
     const newSubcategory = {
-      id: Date.now(),
-      categoryname: 'New Category',
+      id: Date.now(), // Unique ID based on timestamp
+      categoryname: categoryname, // Use the passed category name
       subcategory: subcategoryName,
       description,
       units: unit ? [unit] : [],
@@ -53,11 +55,12 @@ const NewSubForm = ({ isVisible, onClose }) => {
       await AsyncStorage.setItem('subcategories', JSON.stringify(updatedData));
       Alert.alert('Success', 'Subcategory added successfully.');
       resetForm();
-      onClose(); // Close the form upon successful submission.
+      onClose(); 
     } catch (error) {
       Alert.alert('Error', 'There was an error saving the subcategory.');
     }
   };
+
 
   // Reset form fields
   const resetForm = () => {
@@ -91,23 +94,17 @@ return (
           onChangeText={setSubcategoryName}
           placeholderTextColor="#666" // Neutral color for placeholder text
         />
-        <DropDownPicker
-          items={[
-            { label: 'Number', value: 'number' },
-            { label: 'Text', value: 'text' },
-            { label: 'Date', value: 'date' },
-          ]}
-          defaultValue={dataType}
-          containerStyle={styles.dropdownContainer}
-          style={styles.dropdown}
-          itemStyle={{
-            justifyContent: 'flex-start',
-          }}
-          dropDownStyle={styles.dropdown}
-          onChangeItem={item => setDataType(item.value)}
-          placeholderStyle={{ color: "#666" }} // Neutral placeholder color
-          labelStyle={{ color: "#333" }} // Neutral label color
-        />
+            <View style={styles.dropdownContainer}>
+              <Picker
+                selectedValue={dataType}
+                onValueChange={(itemValue, itemIndex) => setDataType(itemValue)}
+                style={styles.dropdown}
+              >
+                <Picker.Item label="Number" value="number" />
+                <Picker.Item label="Text" value="text" />
+                <Picker.Item label="Date" value="date" />
+              </Picker>
+            </View>
         <TextInput
           style={styles.input}
           placeholder="Description (optional)"
