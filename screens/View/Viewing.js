@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   searchAndFilterContainer: {
     flexDirection: 'row',
     padding: 16,
+    paddingVertical: 30,
     alignItems: 'center',
   },
   input: {
@@ -159,6 +160,7 @@ const styles = StyleSheet.create({
   subcategoryContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
@@ -176,6 +178,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    left:11,
   },
   dotText: {
     color: 'white',
