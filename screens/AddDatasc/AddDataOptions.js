@@ -163,8 +163,12 @@ useEffect(() => {
     {!selectedCategory ? (
         <View style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
         {['Vitals', 'Medication', 'Nutrition', 'Others'].map((category, index) => (
-                <TouchableOpacity key={index} onPress={() => setSelectedCategory(category)} style={styles.categoryBox}>
-                    <Text style={styles.categoryText}>{category}</Text>
+                  <TouchableOpacity 
+                  key={index} 
+                  onPress={() => setSelectedCategory(category)} 
+                  style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
+                >
+                  <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
                     {category === 'Vitals' && <Ihealth width={30} height={30} />}
                     {category === 'Medication' && <Imed width={30} height={30} />}
                     {category === 'Nutrition' && <Ifood width={30} height={30} />}
@@ -189,8 +193,12 @@ useEffect(() => {
             </View>
             <View style={styles.BentoBoxlayout}>
               {filteredSubcategories.map((subcategory, index) => (
-                <TouchableOpacity key={index} onPress={() => handleSubcategorySelect(subcategory)} style={styles.subcategoryBox}>
-                  <Text style={styles.subcategoryText}>{subcategory.subcategory}</Text>
+                  <TouchableOpacity 
+                  key={index} 
+                  onPress={() => handleSubcategorySelect(subcategory)} 
+                  style={[styles.subcategoryBox, { backgroundColor: themeStyles.primary }]} 
+                >
+                  <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
                 </TouchableOpacity>
               ))}
               <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
@@ -215,7 +223,6 @@ const styles = StyleSheet.create({
   categoryContainerHeader: {
     fontSize: 14, // Increase font size for category header
     margin: 10, // Add margin around the header
-    backgroundColor: '#ffffff', // Set background color to a light grey
     padding: 10, // Add padding around the header
     paddingHorizontal: 30, // Add horizontal padding
     borderRadius: 25, // Set border radius to match design
@@ -340,7 +347,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1, // Keep the boxes square-shaped
     justifyContent: 'center', // Center the content vertically
     alignItems: 'center', // Center the content horizontally
-    backgroundColor: 'white', // White background for the boxes
+    backgroundColor: 'white', // ||CHANGE HERE
     borderRadius: 20, // Rounded corners for the boxes
     padding: 10, // Padding inside the boxes
     marginVertical: 10, // Vertical margin for spacing between rows
