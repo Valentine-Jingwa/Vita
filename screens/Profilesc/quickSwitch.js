@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from 'react-native';
-import { useTheme } from '@react-navigation/native';
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import {useTheme} from '../Settingsc/Theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,6 +13,8 @@ const QuickSwitch = memo(() => {
     const [subUsers, setSubUsers] = useState([]);
     const [userIndex, setUserIndex] = useState(0);
     const { colors } = useTheme();
+    const { themeStyles } = useTheme();
+
 
     useEffect(() => {
         const fetchAdminUser = async () => {
@@ -52,20 +54,22 @@ const QuickSwitch = memo(() => {
     }, [userIndex, adminUser, subUsers]);
 
     return (
-        <SafeAreaView style={styles.user_detail}>
+        <SafeAreaView style={[styles.user_detail, { backgroundColor: themeStyles.background }]}>
             <Swipeable
                 onSwipeableRightOpen={() => handleChangeUser('prev')}
                 onSwipeableLeftOpen={() => handleChangeUser('next')}
             >
-                <View style={styles.user_text_detail}>
-                    <Text style={[styles.greeting, { color: colors.text }]}>
+                <View style={[styles.user_text_detail, { backgroundColor: themeStyles.accent }]}>
+                    <Text style={[styles.greeting, { color: themeStyles.text, paddingLeft: 15 }]}>
                         Hello, {currentUser?.username || "No Name"}
                     </Text>
-                    <View style={styles.user_Themebubble}>
+                    <View style={[styles.user_Themebubble, { backgroundColor: themeStyles.secondary }]}>
                         {currentUser?.profilePic ? (
                             <Image source={{ uri: currentUser.profilePic }} style={styles.user_image} />
                         ) : (
-                            <Text style={styles.user_image}>{currentUser?.initials || 'No Image'}</Text>
+                            <Text style={[styles.user_image, { color: themeStyles.text }]}>
+                                {currentUser?.initials || 'No Image'}
+                            </Text>
                         )}
                     </View>
                 </View>
