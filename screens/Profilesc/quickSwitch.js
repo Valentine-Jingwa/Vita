@@ -86,21 +86,23 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     user_Themebubble: {
-        width: width * 0.13,
-        height: height * 0.06,
-        borderRadius: 55,
+        width: 67,
+        height: 65,
+        borderRadius: 33,
         backgroundColor: '#000',
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: width * 0.06,
     },
     user_image: {
-        width: width * 0.11,
-        height: height * 0.05,
-        borderRadius: 55,
+        width: 62,
+        height: 60,
+        borderRadius: 30,
         backgroundColor: '#f5f5f5',
         textAlign: 'center',
         textAlignVertical: 'center',
+        overflow: 'hidden',
+
     },
 });
 

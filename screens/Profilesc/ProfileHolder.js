@@ -85,12 +85,13 @@ const styles = StyleSheet.create({
     user_image: {
         width: 175, // 100 width
         height: 170, // 100 height
-        borderRadius: 100, // Set border radius to match design
+        borderRadius: 85, // Set border radius to match design
         backgroundColor: '#d3d3d3', // Light grey background
         textAlign: 'center', // Center the text
         textAlignVertical: 'center', // Center the text vertically
         fontSize: 24, // Larger font size
         fontWeight: 'bold', // Bold font
+        overflow: 'hidden', // Hide overflow
     },
     user_detail: {
         width: width*0.5, // Full width
