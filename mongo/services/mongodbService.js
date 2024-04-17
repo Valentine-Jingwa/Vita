@@ -134,7 +134,7 @@ export const createUser = async (userData) => {
         collection: collectionName, 
         database: "Vita_user", 
         dataSource: DATA_SOURCE,
-        document: userData, 
+        document: subUserData, 
       });
 
       // Call to the serverless function to handle sub user upload
