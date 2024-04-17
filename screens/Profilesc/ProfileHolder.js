@@ -35,7 +35,7 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                 }}
                 onCancel={() => setIsFormVisible(false)}
                 isVisible={isFormVisible}
-                adminUsername={currentUser?.username}
+                dataOwner={currentUser?.username}
             />
             <View style={styles.user_profile}>
                 <View style={styles.user_Themebubble}>

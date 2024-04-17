@@ -5,24 +5,38 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubUserStorage from './subUser';
+import AdminUserStorage from './AdminUser';
+
 
 const { width } = Dimensions.get('window');
 
-const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
+const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
   const [dob, setDob] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [adminUsername, setAdminUsername] = useState('');
+
 
   useEffect(() => {
-    if (!isVisible) {
+    const fetchAdmin = async () => {
+      const admin = await AdminUserStorage.getAdminUser();
+      if (admin) {
+        setAdminUsername(admin.username);
+      }
+    };
+
+    if (isVisible) {
+      fetchAdmin();
+    } else {
       setFirstName('');
       setLastName('');
       setUsername('');
       setDob(new Date());
     }
   }, [isVisible]);
+
 
   const onDateChange = (event, selectedDate) => {
     setShowDatePicker(Platform.OS === 'ios');
@@ -56,7 +70,7 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
     if (canSubmit) {
       const age = calculateAge(dob);
       const initials = getInitials(firstName, lastName);
-      const subUserData = { firstName, lastName, username, dob: formatDate(dob), age, initials, adminUsername };
+      const subUserData = { firstName, lastName, username, dob: formatDate(dob), age, initials, adminUsername, dataOwner};
       try {
         await SubUserStorage.addSubUser(subUserData);
         onSave(subUserData);
