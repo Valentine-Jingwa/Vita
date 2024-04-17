@@ -27,19 +27,17 @@ export const ThemeProvider = ({ children }) => {
   const themeStyles = theme === 'light' ? {
     text: '#0a090c',
     background: '#f7f7f8',
-    primary: '#7c7391',       
-    secondary: '#c2b3bd',     
-    accent: '#8a84a3',        
+    primary: '#7c7391',
+    secondary: '#beaed7', // A lighter purple that complements the primary
+    accent: '#a390bc', // A softer purple to blend well with the primary and secondary
   } : {
     text: '#f4f3f6',
     background: '#070708',
-    primary: '#8f88a3',       
-    secondary: '#605d6b',     
-    accent: '#7d778e',        
+    primary: '#776e8c',
+    secondary: '#6d6480', // A darker shade that provides subtlety
+    accent: '#857da1', // A muted purple to serve as a neutral yet complementary accent
   };
   
-  
-
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, themeStyles }}>
       {children}
