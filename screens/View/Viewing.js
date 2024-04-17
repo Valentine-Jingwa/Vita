@@ -22,13 +22,10 @@ export default function Viewing() {
   const [userData, setUserData] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState(FILTER_OPTIONS.SHOW_ALL);
-
   const [groupedSubcategories, setGroupedSubcategories] = useState({});
 
   const { themeStyles } = useTheme();
   const { currentUser } = useUser();
-
-  
 
   useEffect(() => {
     const fetchSubcategories = async () => {
@@ -44,7 +41,7 @@ export default function Viewing() {
       item.dataOwner === currentUser.username &&
       item.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  
+
     switch (selectedFilter) {
       case FILTER_OPTIONS.ALPHABETICAL_ASC:
         filteredData.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
@@ -53,16 +50,13 @@ export default function Viewing() {
         filteredData.sort((a, b) => b.subcategory.localeCompare(a.subcategory));
         break;
       case FILTER_OPTIONS.MOST_DATA:
-        // Assuming count data is correctly accumulated or provided
         filteredData.sort((a, b) => b.count - a.count);
         break;
       case FILTER_OPTIONS.RECENT_DATA:
         filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         break;
-      default:
-        break;
     }
-  
+
     const grouped = filteredData.reduce((acc, item) => {
       const categoryKey = item.categoryname;
       if (!acc[categoryKey]) {
@@ -74,19 +68,18 @@ export default function Viewing() {
       });
       return acc;
     }, {});
-  
+
     setGroupedSubcategories(grouped);
   };
-  
-  
+
+   
   const toggleFilter = () => {
     const filters = Object.values(FILTER_OPTIONS);
     const currentIndex = filters.indexOf(selectedFilter);
     const nextIndex = (currentIndex + 1) % filters.length;
     setSelectedFilter(filters[nextIndex]);
   };
-  
-  
+   
   const handleSubcategorySelect = async (subcategory) => {
     setSelectedSubcategory(subcategory);
     const data = await DataStorage.getDataForSubcategory(subcategory.subcategory);
@@ -95,8 +88,10 @@ export default function Viewing() {
     setIsGraphModalVisible(true);
   };
   
-
   const renderGroupedSubcategories = () => {
+    if (Object.keys(groupedSubcategories).length === 0) {
+      return <Text style={styles.noDataText}>No data here yet.</Text>;
+    }
     return Object.entries(groupedSubcategories).map(([categoryName, subcategories], index) => (
       <View key={index} style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
         <Text style={[styles.categoryHeader, { color: themeStyles.text }]}>{categoryName}</Text>
@@ -113,8 +108,6 @@ export default function Viewing() {
     ));
   };
   
-  
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
       <View style={styles.searchAndFilterContainer}>
@@ -146,6 +139,7 @@ export default function Viewing() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -227,5 +221,12 @@ const styles = StyleSheet.create({
   dotText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  noDataText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 200,
+    color: '#666',
   },
 });
