@@ -1,11 +1,19 @@
 //This will contain the stuff to modifying the profile
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpacity} from 'react-native';
+import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpacity, Modal, TouchableWithoutFeedback} from 'react-native';
 import Profile from './ProfileHolder'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../Settingsc/Theme';
+import ThemedText from '../Settingsc/ThemedText';
+import { useFocusEffect } from '@react-navigation/native';
+import DataStorage from '../../components/Datahandling/DataStorage';
+import {Day, Night, RLogout} from '../../assets/Icon';
+import { useAuth } from '../../security/AuthContext';
+
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -16,6 +24,54 @@ export default function ProfileSettings({ }) {
   const [adminUser, setAdminUser] = useState(null);
   const [subUsers, setSubUsers] = useState([]);
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const { logout } = useAuth();
+  const { theme, themeStyles, toggleTheme } = useTheme();
+  const [settingsModalVisible, setSettingsModalVisible] = useState(false);
+
+
+  const handleClearSubUserStorage = async () => {
+    try {
+      await SubUserStorage.clearSubUsers(); // Ensure this method is implemented in SubUserStorage
+      alert('Subuser storage has been wiped!');
+    } catch (error) {
+      alert('Failed to clear subuser storage: ' + error.message);
+    }
+  };
+
+  const handleClearStorage = async () => {
+    try {
+      await DataStorage.clear();
+      setModalVisible(false);
+      alert('Storage has been wiped!');
+    } catch (error) {
+      alert('Failed to clear storage: ' + error.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // This clears the token and updates isAuthenticated
+      // You might not even need to navigate manually if your navigation listens to isAuthenticated
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
+
+    // Toggle settings modal
+    const toggleSettingsModal = () => {
+      setSettingsModalVisible(!settingsModalVisible);
+    };
+  
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Perform actions on screen focus
+      return () => {
+        // Optional: Perform actions on screen unfocus
+      };
+    }, [])
+  );
 
   useEffect(() => {
     const fetchAdminUser = async () => {
@@ -41,9 +97,10 @@ export default function ProfileSettings({ }) {
         {/* The user profile section the Profile will take parameters */}     
         {/* <Profile userData={adminUser}/>  */}
         <Profile adminData={adminUser} subUserData={subUsers} />
-        {/* The options below are a scroll view "userThemes" compo
-*/}
+
+
         <View style={styles.profileOptions}>
+
           <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UpdatePage')} >
         
             <Text style={styles.Option_Text}>Update Profile</Text>
@@ -57,9 +114,70 @@ export default function ProfileSettings({ }) {
           <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserLogs')}>
             <Text style={styles.Option_Text}>View Logs</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserThemes')}>
-            <Text style={styles.Option_Text}>User Themes</Text>
+        </View>
+
+        <View>
+          {/* Settings Button */}
+          <TouchableOpacity
+            onPress={toggleSettingsModal}
+            style={styles.settingsButton}
+          >
+            <Text style={styles.settingsButtonText}>Settings</Text>
           </TouchableOpacity>
+
+
+                {/* Settings Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={settingsModalVisible}
+        onRequestClose={toggleSettingsModal}
+      >
+        <TouchableWithoutFeedback onPress={toggleSettingsModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Settings</Text>
+
+                {/* Theme Toggle */}
+                <View style={styles.ldbtnwrapper}>
+                  <TouchableOpacity style={[styles.button, ]} onPress={toggleTheme}>
+                    {theme === 'light' ? (
+                      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <Day width={35} height={35}/>
+                      </View>
+                    ) : (
+                      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <Night width={35} height={35}/>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                </View>
+
+                {/* Wipe SubUsers */}
+                <TouchableOpacity onPress={handleClearSubUserStorage} style={styles.modalOption}>
+                  <Text style={styles.modalOptionText}>Wipe SubUsers</Text>
+                </TouchableOpacity>
+
+                {/* Wipe Storage */}
+                <TouchableOpacity onPress={handleClearStorage} style={styles.modalOption}>
+                  <Text style={styles.modalOptionText}>Wipe Storage</Text>
+                </TouchableOpacity>
+
+                {/* Logout */}
+                <View style={styles.logoutButtonWrapper}>
+                  <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, {backgroundColor: themeStyles.accent}]}>
+                    <View style={[styles.buttonText, { color: themeStyles.text }]}>
+                      <RLogout width={40} height={40}/>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
         </View>
     </SafeAreaView>
     );
@@ -70,6 +188,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  ldbtnwrapper: {
+    position: 'absolute',
+    top: 5,
+    left: 10,
+  },
+  settingsButton: {
+    position: 'absolute',
+    button: 40, // Adjust the position as needed
+    right: 5,
+    // Add more styling as per your app's theme
+  },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    height: '60%',
+    // Add shadow or other styling as per your app's theme
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    // Color and other text styles
+  },
+  modalOption: {
+    padding: 10,
+    // Add border or background styles for the options
+  },
+  modalOptionText: {
+    fontSize: 18,
+    // Color and other text styles
   },
 
   profileOptions: {
