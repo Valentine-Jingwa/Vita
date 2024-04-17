@@ -28,8 +28,8 @@ const GraphModal = ({ isVisible, onClose, userData }) => {
           height={220}
           chartConfig={{
             backgroundColor: themeStyles.background,
-            backgroundGradientFrom: themeStyles.background,
-            backgroundGradientTo: themeStyles.background,
+            backgroundGradientFrom: themeStyles.accent,
+            backgroundGradientTo: themeStyles.accent,
             decimalPlaces: 2,
             color: () => themeStyles.text.color,
             labelColor: () => themeStyles.text.color,
