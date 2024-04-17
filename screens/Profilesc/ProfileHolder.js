@@ -41,11 +41,11 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
                         <Text style={[styles.user_image, { color: themeStyles.text }]}>
-                            {currentUser?.initials || 'No Image'}
+                            {currentUser?.initials || 'John'}
                         </Text>
                     )}
-                    <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
-                        <Text style={styles.add_subuserText}>+</Text>
+                    <TouchableOpacity onPress={() => setIsFormVisible(true)} style={[styles.add_subuser, {backgroundColor: themeStyles.text}]}>
+                        <Text style={[styles.add_subuserText, {color: themeStyles.secondary}]}>+</Text>
                     </TouchableOpacity>
                 </View>
                 <PanGestureHandler
@@ -75,14 +75,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
-    user_Themebubble: {
-        width: 180,
-        height: 175,
-        borderRadius: 100,
-        marginTop: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+  user_Themebubble: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: '#DCE1E9', // This will be overridden by theme styles
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
     user_image: {
         width: 175,
         height: 170,
@@ -98,6 +99,14 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
     },
+    user_initials: {
+        // Style if there's no image
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        position: 'absolute',
+        lineHeight: 170, // For vertical center, should match the user_image height
+      },
     user_name: {
         textAlign: 'center',
         fontSize: 32, 
@@ -121,10 +130,10 @@ const styles = StyleSheet.create({
         right: -10,
     },
     add_subuserText: {
-        flex: 1,
         textAlign: 'center',
         alignItems: 'center',
-        fontSize: 44,
+        padding: 7,
+        fontSize: 25,
         justifyContent: 'center',
     },
 });
