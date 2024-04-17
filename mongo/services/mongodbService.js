@@ -2,6 +2,7 @@ import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL, JWT_SECRET} from '@env';
 import axios from 'axios';
 import jwt from 'react-native-pure-jwt';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addSubUser} from '../../screens/Profilesc/subUser';
 
 
 const apiClient = axios.create({
@@ -155,25 +156,32 @@ export const createUser = async (userData) => {
     }
 };
 
-
+// fetchAndStoreSubcategories Retrives all subuser data execpt _id and age.Dob is used to calculate age.
 export const fetchAndStoreSubcategories = async (userEmail) => {
   try {
-      const collectionName = `${userEmail}subcategories`;
+      const collectionName = `${userEmail}subusers`;
       const payload = {
-          collection: collectionName, 
-          database: "Vita_user", 
+          collection: collectionName,
+          database: "Vita_user",
           dataSource: DATA_SOURCE,
       };
+
       const response = await apiClient.post('/find', JSON.stringify(payload), {
           headers: {
               'Content-Type': 'application/json',
               'api-key': API_KEY,
           }
       });
+
       if (response.data.documents) {
-          const subcategories = response.data.documents.map(({ _id, ...sub }) => sub);
-          await AsyncStorage.setItem('subcategories', JSON.stringify(subcategories));
-          console.log('Subcategories downloaded and stored locally');
+          const subcategories = response.data.documents.map(({ _id, dob, ...sub }) => {
+              // Calculate age from dob
+              const age = calculateAge(dob);
+              return { ...sub, dob, age };
+          });
+
+          // Store modified subcategories with calculated ages instead of fetched ages
+          await AsyncStorage.setItem('subUsers', JSON.stringify(subcategories));
       } else {
           console.error('No subcategories found');
       }
@@ -181,3 +189,16 @@ export const fetchAndStoreSubcategories = async (userEmail) => {
       console.error('Error fetching and storing subcategories:', error);
   }
 };
+
+// Helper function to calculate age from dob
+function calculateAge(dob) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+  }
+  return age;
+}
+

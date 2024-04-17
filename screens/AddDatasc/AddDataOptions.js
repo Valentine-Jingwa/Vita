@@ -21,7 +21,9 @@ import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
-import { useUser } from '../../UserContext'; 
+import { useUser } from '../../UserContext';
+import { storeData, readData } from '../../components/DataList'; // Adjust the import path as necessary
+
 
 const { width, height: screenHeight } = Dimensions.get('window');
 
@@ -44,17 +46,33 @@ const AddDataOptions = ({ navigation }) => {
   const [allSubcategories, setAllSubcategories] = useState([]);
  const [filteredSubcategories, setFilteredSubcategories] = useState([]);
 
- useEffect(() => {
-  const initializeData = async () => {
-    const existingData = await AsyncStorage.getItem('subcategories');
-    if (!existingData) {
-      const jsonValue = JSON.stringify(defaultSubcategories);
-      await AsyncStorage.setItem('subcategories', jsonValue);
-    }
-    fetchData();
-  };
+
+useEffect(() => {
+  async function initializeData() {
+
+      const existingData = await AsyncStorage.getItem('subcategories');
+      if (!existingData) {
+          console.log('No existing subcategories found, setting default data.');
+          await storeData(); // Initialize with default data
+      } else {
+          console.log('Existing data found:', existingData);
+      }
+      fetchData(); // This should load data into your component's state
+  }
+
   initializeData();
 }, []);
+
+async function fetchData() {
+  const data = await readData();
+  if (data) {
+    setAllSubcategories(data);
+    setFilteredSubcategories(data); // Initialize filtered data
+  }
+}
+
+
+
 
   useEffect(() => {
     const fetchAdminUser = async () => {
@@ -149,16 +167,19 @@ const handleNewSubcategoryAdded = (newSubcategory) => {
     }
 }, [selectedCategory]);
 
-const fetchData = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('subcategories');
-    const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-    setAllSubcategories(data);
-    setFilteredSubcategories(data); // Initially, filtered list shows all items
-  } catch (e) {
-    console.error('Failed to fetch the data from storage', e);
-  }
-};
+// const fetchData = async () => {
+//   try {
+//     const data = await readData(); // Use readData to fetch subcategories
+//     if (data) {
+//         setSubcategories(data);
+
+//     }
+//     setAllSubcategories(data);
+//     setFilteredSubcategories(data); // Initially, filtered list shows all items
+//   } catch (e) {
+//     console.error('Failed to fetch the data from storage', e);
+//   }
+// };
 
 useEffect(() => {
   if (selectedCategory) {
