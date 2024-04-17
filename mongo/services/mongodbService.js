@@ -251,8 +251,9 @@ export const fetchAndStoreUserData = async (adminEmail) => {
       });
 
       if (response.data.documents) {
-          await AsyncStorage.setItem('userData', JSON.stringify(response.data.documents));
+          await AsyncStorage.setItem('localData', JSON.stringify(response.data.documents));
           console.log('User data successfully retrieved and stored locally.');
+          console.log(response.data.documents);
       } else {
           console.error('No user data found to retrieve.');
       }
