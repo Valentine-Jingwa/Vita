@@ -6,6 +6,8 @@ import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '../Settingsc/Theme'; // Adjust the path as necessary
+
 
 
 const { width, height } = Dimensions.get('window');
@@ -15,6 +17,7 @@ const { width, height } = Dimensions.get('window');
 export default function ProfileSettings({ }) {
   const [adminUser, setAdminUser] = useState(null);
   const [subUsers, setSubUsers] = useState([]);
+  const { themeStyles } = useTheme(); // Destructure to get theme styles
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -37,28 +40,26 @@ export default function ProfileSettings({ }) {
   }, [adminUser?.email]);
     
   return (
-    <SafeAreaView style={styles.container}>
-        {/* The user profile section the Profile will take parameters */}     
-        {/* <Profile userData={adminUser}/>  */}
+    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
         <Profile adminData={adminUser} subUserData={subUsers} />
         {/* The options below are a scroll view "userThemes" compo
 */}
-        <View style={styles.profileOptions}>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UpdatePage')} >
+        <View style={[styles.profileOptions, { backgroundColor: themeStyles.background }]}>
+          <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.primary }]} onPress={() => navigation.navigate('UpdatePage')} >
         
-            <Text style={styles.Option_Text}>Update Profile</Text>
+            <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Update Profile</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserSynch')}>
-            <Text style={styles.Option_Text}>Account Synch</Text>
+          <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.primary }]} onPress={() => navigation.navigate('UserSynch')}>
+            <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Synch</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('NotificationPage')}>
-            <Text style={styles.Option_Text}>Notifications</Text>
+          <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.primary }]} onPress={() => navigation.navigate('NotificationPage')}>
+            <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Notifications</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserLogs')}>
-            <Text style={styles.Option_Text}>View Logs</Text>
+          <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.primary }]} onPress={() => navigation.navigate('UserLogs')}>
+            <Text style={[styles.Option_Text, { color: themeStyles.text }]}>View Logs</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserThemes')}>
-            <Text style={styles.Option_Text}>User Themes</Text>
+          <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.primary }]} onPress={() => navigation.navigate('UserThemes')}>
+            <Text style={[styles.Option_Text, { color: themeStyles.text }]}>User Themes</Text>
           </TouchableOpacity>
         </View>
     </SafeAreaView>
