@@ -5,6 +5,7 @@ import DataStorage from '../../components/Datahandling/DataStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../Settingsc/Theme';
 import ColorId from '../../constants/ColorId';
+import { useUser } from '../../UserContext';
 
 export default function Viewing() {
   const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
@@ -14,6 +15,7 @@ export default function Viewing() {
   const [groupedSubcategories, setGroupedSubcategories] = useState({});
 
   const { themeStyles } = useTheme();
+  const { currentUser } = useUser();
 
   useEffect(() => {
     const fetchSubcategories = async () => {
@@ -27,7 +29,7 @@ export default function Viewing() {
     };
 
     fetchSubcategories();
-  }, [searchQuery, selectedFilter]);
+  }, [searchQuery, selectedFilter, currentUser]);
 
   const applyFilters = async (initialSubcategories) => {
     const dataWithCounts = await Promise.all(initialSubcategories.map(async (sub) => {

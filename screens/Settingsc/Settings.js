@@ -4,14 +4,12 @@ import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, 
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
-import * as d3 from 'd3';
-import { Svg, Line, Path, G, Text as SvgText } from 'react-native-svg';
 import { useTheme } from './Theme'; 
 import ThemedText from './ThemedText';
 import {Day, Night, RLogout} from '../../assets/Icon';
 import { useNavigation } from '@react-navigation/native';
-import { navigationRef } from '../../NavigationService';
 import { useAuth } from '../../security/AuthContext';
+import SubUserStorage from '../../screens/Profilesc/subUser';
 
 
 const fullWidth = Dimensions.get('window').width;
@@ -22,7 +20,14 @@ export default function Settings() {
   const { logout } = useAuth();
   const { theme, themeStyles, toggleTheme } = useTheme();
 
-
+  const handleClearSubUserStorage = async () => {
+    try {
+      await SubUserStorage.clearSubUsers(); // Ensure this method is implemented in SubUserStorage
+      alert('Subuser storage has been wiped!');
+    } catch (error) {
+      alert('Failed to clear subuser storage: ' + error.message);
+    }
+  };
 
   const handleClearStorage = async () => {
     try {
@@ -129,6 +134,13 @@ export default function Settings() {
             </View>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonClose, { backgroundColor: themeStyles.secondary }]}
+          onPress={handleClearSubUserStorage}
+        >
+          <Text style={{ color: themeStyles.text }}>Wipe SubUsers</Text>
+        </TouchableOpacity>
+
         <View style={styles.logoutButtonWrapper}>
           <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, {backgroundColor: themeStyles.accent}]}>
             <View style={[styles.buttonText, { color: themeStyles.text }]}>

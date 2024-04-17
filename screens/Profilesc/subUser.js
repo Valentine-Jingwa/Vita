@@ -73,5 +73,16 @@ const SubUserStorage = {
       console.error('Failed to update sub-user.', error);
     }
   },
+
+  async clearSubUsers() {
+    try {
+      await AsyncStorage.removeItem(subUserStorageKey);
+      console.log('All sub-user data has been cleared.');
+      return true;
+    } catch (error) {
+      console.error('Failed to clear sub-user data.', error);
+      return false;
+    }
+  },
 };
 export default SubUserStorage;

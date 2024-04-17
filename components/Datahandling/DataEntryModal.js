@@ -17,6 +17,9 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import { AntDesign } from '@expo/vector-icons';
 import { useTheme } from '../../screens/Settingsc/Theme';
+import { useUser } from '../../UserContext'; 
+
+
  
 const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   const { themeStyles } = useTheme();
@@ -25,6 +28,7 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
   const [inputValue, setInputValue] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(subcategory.dunit || '');
   const [notificationOpacity] = useState(new Animated.Value(0));
+  const { currentUser } = useUser(); // Get currentUser from UserContext
  
   const validateAndSave = () => {
     const value = Number(inputValue.trim());
@@ -32,7 +36,8 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
       Alert.alert('Invalid data', 'Please enter a valid number (0-999)');
       return;
     }
-    onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname);
+    // Attach currentUser.username as dataOwner
+    onSave(subcategory.id, value.toString(), selectedUnit, subcategory.subcategory, subcategory.categoryname, currentUser.username);
     setInputValue('');
     onClose();
   };
