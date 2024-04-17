@@ -1,7 +1,6 @@
 // Settings.js
 import React, { useEffect, useState, } from 'react';
 import { SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Switch, Modal, Button, Dimensions, TouchableWithoutFeedback } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Ensure AsyncStorage is imported
 import DataStorage from '../../components/Datahandling/DataStorage'; // Adjust the import path as necessary
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from './Theme'; 
@@ -39,7 +38,6 @@ export default function Settings() {
     }
   };
 
-  const navigation = useNavigation();
 
   const handleLogout = async () => {
     try {
@@ -51,18 +49,6 @@ export default function Settings() {
   };
 
   
-  const handleCancel = () => {
-    setModalVisible(false); // Just hide the modal
-  };
-  const handleSaveChanges = async () => {
-    try {
-      await AsyncStorage.setItem('notificationsEnabled', JSON.stringify(notificationsEnabled));
-      await AsyncStorage.setItem('darkModeEnabled', JSON.stringify(darkModeEnabled));
-      // Display some confirmation to the user
-    } catch (e) {
-      // Handle error, could not save settings
-    }
-  };
   useFocusEffect(
     React.useCallback(() => {
       // Perform actions on screen focus
@@ -124,13 +110,6 @@ export default function Settings() {
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={[styles.wipebtn, {backgroundColor: themeStyles.secondary}]}>
               <ThemedText style={{ color: themeStyles.text }}>Wipe Storage</ThemedText>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.notificationbtnwrapper}>
-          <TouchableOpacity onPress={() => setNotificationsEnabled(!notificationsEnabled)}>
-            <View style={[styles.notificationbtn, {backgroundColor: themeStyles.secondary}]}>
-              <ThemedText style={{ color: themeStyles.text }}>Notification</ThemedText>
             </View>
           </TouchableOpacity>
         </View>
