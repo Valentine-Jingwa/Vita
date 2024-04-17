@@ -1,27 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe, Dimensions, Alert } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Calendar } from 'react-native-calendars';
-import DeckSwiper from 'react-native-deck-swiper';
 import { Iclock } from '../../assets/Icon';
 import DataCard from '../../components/Home/DataCard';
 import CompactDataCard from '../../components/Home/CompactDataCard';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useFocusEffect } from '@react-navigation/native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import ReminderModal from './ReminderModal';
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useTheme } from '../Settingsc/Theme';
-
+import { useUser } from '../../UserContext';
 
 
 const { width, height } = Dimensions.get('window');
-
-
-
 
 const Home = () => {
   const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
@@ -32,12 +24,20 @@ const Home = () => {
   const [swipeFeedback, setSwipeFeedback] = useState(false);
   const { themeStyles } = useTheme();
 
+  const [isGraphModalVisible, setIsGraphModalVisible] = useState(false);
+  const { currentUser } = useUser();
 
   useEffect(() => {
-    
-  }, [currentIndex, data.length]);
+    fetchData();
+  }, []);
 
-
+  const fetchData = async () => {
+    const storedData = await DataStorage.Retrieve();
+    if (storedData && Array.isArray(storedData)) {
+      const currentUserData = storedData.filter(item => item.dataOwner === currentUser.username);
+      setData(currentUserData);
+    }
+  };
 
     // Function to handle saving the reminder
     const handleSaveReminder = (date, repeat) => {
@@ -49,13 +49,10 @@ const Home = () => {
 
    // Function to handle day press on the calendar
    const handleDayPress = (day) => {
-    console.log("Selected Day:", day);
-    // Convert to a Date object and set the time to midnight local time
     const localDate = new Date(day.year, day.month - 1, day.day);
     setSelectedDate(localDate.toISOString());
     setSelectedDateModalVisible(true);
   };
-
 
 // Function to filter data for the selected date
 const getDataForSelectedDate = () => {
@@ -67,28 +64,19 @@ const getDataForSelectedDate = () => {
 };
 
 
-  const getMarkedDates = () => {
-    const marked = {};
-    data.forEach((item) => {
-      const dateKey = new Date(item.timestamp).toISOString().split('T')[0];
-      if (!marked[dateKey]) {
-        marked[dateKey] = { marked: true, dotColor: themeStyles.secondary };
-      }
-    });
-    return marked;
-  };
-
-
-  const fetchData = async () => {
-    const storedData = await DataStorage.Retrieve();
-    if (storedData && Array.isArray(storedData)) {
-        // Assuming `timestamp` is in a format that can be directly compared
-        const formattedData = storedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-        setData(formattedData);
-    } else {
-        setData([]); 
+const getMarkedDates = () => {
+  const marked = {};
+  data.forEach((item) => {
+    const dateKey = new Date(item.timestamp).toISOString().split('T')[0];
+    if (!marked[dateKey]) {
+      marked[dateKey] = { marked: true, dotColor: themeStyles.secondary };
     }
+  });
+  return marked;
 };
+
+
+
 
 useEffect(() => {
   fetchData().then(() => {
@@ -193,7 +181,26 @@ useEffect(() => {
         </View>
       </PanGestureHandler>
 
-
+      {isGraphModalVisible && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isGraphModalVisible}
+          onRequestClose={() => setIsGraphModalVisible(false)}
+        >
+          <TouchableWithoutFeedback onPress={() => setIsGraphModalVisible(false)}>
+            <View style={styles.modalOverlay}>
+              <ScrollView style={styles.selectedDateModalView}>
+                {getDataForSelectedDate().length > 0 ? (
+                  getDataForSelectedDate().map((item, index) => <CompactDataCard key={index} item={item} />)
+                ) : (
+                  <Text style={styles.noDataText}>No data for this date.</Text>
+                )}
+              </ScrollView>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      )}
 
 
       {/* Navigation Arrows */}
