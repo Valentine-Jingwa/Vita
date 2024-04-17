@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform,
-  Keyboard, DateTimePicker
+  Keyboard
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
+import { UploadSubUser } from '../../mongo/services/mongodbService';
 
 
 const { width } = Dimensions.get('window');
@@ -67,12 +69,16 @@ const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
   const canSubmit = firstName.trim() !== '' && lastName.trim() !== '' && username.trim() !== '';
 
   const saveSubUser = async () => {
+    const admin = await AdminUserStorage.getAdminUser();
     if (canSubmit) {
       const age = calculateAge(dob);
       const initials = getInitials(firstName, lastName);
       const subUserData = { firstName, lastName, username, dob: formatDate(dob), age, initials, adminUsername, dataOwner};
       try {
         onSave(subUserData);
+        await UploadSubUser(admin.email, subUserData);
+        console.log("Sub-user saved successfully");
+
         onCancel();
       } catch (error) {
         console.error("Failed to save sub-user:", error);
