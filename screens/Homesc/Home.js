@@ -49,17 +49,20 @@ const Home = () => {
 
    // Function to handle day press on the calendar
    const handleDayPress = (day) => {
-    const localDate = new Date(day.year, day.month - 1, day.day);
-    setSelectedDate(localDate.toISOString());
+    const utcDate = new Date(Date.UTC(day.year, day.month - 1, day.day));
+    const formattedDate = utcDate.toISOString().split('T')[0]; // Ensures the date is in YYYY-MM-DD format
+    setSelectedDate(formattedDate);
     setSelectedDateModalVisible(true);
   };
 
 // Function to filter data for the selected date
 const getDataForSelectedDate = () => {
   return data.filter((item) => {
-    const itemDate = new Date(item.timestamp).toDateString();
-    const selectedDayDate = new Date(selectedDate).toDateString();
-    return itemDate === selectedDayDate;
+    const itemDate = new Date(item.timestamp); // Assuming timestamp is in UTC
+    const selectedDayDate = new Date(selectedDate);
+    return itemDate.getUTCFullYear() === selectedDayDate.getUTCFullYear() &&
+           itemDate.getUTCMonth() === selectedDayDate.getUTCMonth() &&
+           itemDate.getUTCDate() === selectedDayDate.getUTCDate();
   });
 };
 
@@ -130,7 +133,7 @@ useEffect(() => {
             onPress={() => setSelectedDateModalVisible(false)}
           >
           </TouchableOpacity>
-          <ScrollView horizontal={false}>
+          <ScrollView horizontal={false} contentContainerStyle={{ justifyContent: 'center' }}>
             {getDataForSelectedDate().length > 0 ? (
               getDataForSelectedDate().map((item, index) => (
                 <CompactDataCard key={index} item={item} />
@@ -190,7 +193,7 @@ useEffect(() => {
         >
           <TouchableWithoutFeedback onPress={() => setIsGraphModalVisible(false)}>
             <View style={styles.modalOverlay}>
-              <ScrollView style={styles.selectedDateModalView}>
+              <ScrollView style={[styles.selectedDateModalView, ]}>
                 {getDataForSelectedDate().length > 0 ? (
                   getDataForSelectedDate().map((item, index) => <CompactDataCard key={index} item={item} />)
                 ) : (
@@ -294,6 +297,12 @@ const styles = StyleSheet.create({
   noDataText: {
     fontSize: 18,
     color: '#666',
+    textAlign: 'center',
+    marginTop: 20, // Adjust as needed based on your design
+    marginBottom: 20, // Provides a balanced space around the text
+    flex: 1, // Takes full height of its container to center vertically within the ScrollView
+    justifyContent: 'center', // Centers content vertically in the flex container
+    alignItems: 'center', // Centers content horizontally in the flex container
   },
   card: {
     height: 200,
@@ -321,8 +330,8 @@ const styles = StyleSheet.create({
     maxHeight: '90%',
     borderRadius: 20,
     padding: 35,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'center', // Ensures all content in the modal is centered horizontally
+    justifyContent: 'center', // Ensures all content in the modal is centered vertically
     shadowOffset: {
       width: 0,
       height: 2,

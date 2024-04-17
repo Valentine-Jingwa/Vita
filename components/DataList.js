@@ -106,6 +106,8 @@ export const subcategories = [
           id: 11, 
           categoryname: 'Nutrition', 
           subcategory: 'Liquid-Intake',
+          units: ['ml', 'oz'],
+          dunit: 'ml',
           datatype: 'text', 
           intakeType: 'Liquid',
           items: ['Water', 'Juice', 'Alcohol', 'Soup'] 
@@ -143,6 +145,7 @@ const storeData = async () => {
       console.error('Failed to save the data to the storage', e);
   }
 };
+
 
 // Function to read data from AsyncStorage
 const readData = async () => {
