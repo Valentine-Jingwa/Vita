@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Animated,
-  Dimensions,
 } from 'react-native';
 // import { useTheme } from '@react-navigation/native';
 import { Ihealth, Imed, Ifood, Ibandaid, Ibackbtn } from '../../assets/Icon.js';
@@ -20,8 +19,12 @@ import { backupOneData } from '../../mongo/services/mongodbService.js';
 import { subcategories as defaultSubcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Dimensions } from 'react-native';
 
-const { width } = Dimensions.get('window');
+
+const { width, height: screenHeight } = Dimensions.get('window');
+
 
 const AddDataOptions = ({ navigation }) => {
   const { colors } = useTheme();
@@ -157,57 +160,65 @@ useEffect(() => {
 }, [selectedCategory, allSubcategories]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
-    <UserHead />
-    {!selectedCategory ? (
-        <View style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
-        {['Vitals', 'Medication', 'Nutrition', 'Others'].map((category, index) => (
-                  <TouchableOpacity 
-                  key={index} 
-                  onPress={() => setSelectedCategory(category)} 
-                  style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
-                >
-                  <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
-                    {category === 'Vitals' && <Ihealth width={30} height={30} />}
-                    {category === 'Medication' && <Imed width={30} height={30} />}
-                    {category === 'Nutrition' && <Ifood width={30} height={30} />}
-                    {category === 'Others' && <Ibandaid width={30} height={30} />}
-                </TouchableOpacity>
-            ))}
-        </View>
-    ) : (
-      <View style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
-          <View style={[styles.subcategoryContainerHeader, { backgroundColor: themeStyles.background }]}>
-          <TouchableOpacity style={[styles.backButton, { backgroundColor: themeStyles.primary }]} onPress={() => setSelectedCategory(null)}>
-                    <Ibackbtn width={30} height={30} />
-                </TouchableOpacity>
-                <View style={styles.selectedTitleIcon}>
-                <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>
-                {/* Matching Icon */}
-                {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
-                {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
-                {selectedCategory === 'Nutrition' && <Ifood width={30} height={30} />}
-                {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
-            </View>
-            </View>
-            <View style={styles.BentoBoxlayout}>
-              {filteredSubcategories.map((subcategory, index) => (
-                  <TouchableOpacity 
-                  key={index} 
-                  onPress={() => handleSubcategorySelect(subcategory)} 
-                  style={[styles.subcategoryBox, { backgroundColor: themeStyles.primary }]} 
-                >
-                  <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
-                </TouchableOpacity>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background } ]}>
+      <UserHead />
+      {!selectedCategory ? (
+          <View style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
+          {['Vitals', 'Medication', 'Nutrition', 'Others'].map((category, index) => (
+                    <TouchableOpacity 
+                    key={index} 
+                    onPress={() => setSelectedCategory(category)} 
+                    style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
+                  >
+                    <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
+                      {category === 'Vitals' && <Ihealth width={30} height={30} />}
+                      {category === 'Medication' && <Imed width={30} height={30} />}
+                      {category === 'Nutrition' && <Ifood width={30} height={30} />}
+                      {category === 'Others' && <Ibandaid width={30} height={30} />}
+                  </TouchableOpacity>
               ))}
-              <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
-                <Text style={styles.addNewText}>Add New</Text>
-              </TouchableOpacity>
-            </View>
-        </View>
-    )}
-    <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} categoryname={selectedCategory}/>
-    <DataEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} subcategory={selectedSubcategory} onSave={handleSave} />
+          </View>
+      ) : (
+        <View style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
+            <View style={[styles.subcategoryContainerHeader, { backgroundColor: themeStyles.background }]}>
+            <TouchableOpacity style={[styles.backButton, { backgroundColor: themeStyles.primary }]} onPress={() => setSelectedCategory(null)}>
+                      <Ibackbtn width={30} height={30} />
+                  </TouchableOpacity>
+                  <View style={styles.selectedTitleIcon}>
+                  <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>
+                  {/* Matching Icon */}
+                  {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
+                  {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
+                  {selectedCategory === 'Nutrition' && <Ifood width={30} height={30} />}
+                  {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
+              </View>
+              </View>
+              <ScrollView
+              contentContainerStyle={{
+                paddingBottom: 20,
+                flexGrow: 1,
+              }}
+            >
+                <View style={styles.BentoBoxlayout}>
+                  {filteredSubcategories.map((subcategory, index) => (
+                    <TouchableOpacity 
+                      key={index} 
+                      onPress={() => handleSubcategorySelect(subcategory)} 
+                      style={[styles.subcategoryBox, { backgroundColor: themeStyles.primary }]}
+                    >
+                      <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
+                    </TouchableOpacity>
+                  ))}
+                  <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
+                    <Text style={styles.addNewText}>Add New</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </ScrollView>
+          </View>
+      )}
+      <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} categoryname={selectedCategory}/>
+      <DataEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} subcategory={selectedSubcategory} onSave={handleSave} />
 </SafeAreaView>
   );
 };
@@ -215,8 +226,8 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingTop: 20,
+    paddingTop: 0,
+
   },
 
   categoryContainerHeader: {
