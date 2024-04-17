@@ -7,7 +7,7 @@ import { useAuth } from './AuthContext'; // Ensure this path matches your AuthCo
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
 import {useTheme} from '../screens/Settingsc/Theme';
 import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
-import { fetchAndStoreSubcategories } from '../mongo/services/mongodbService'; // Ensure this is properly imported
+import { fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService'; // Ensure this is properly imported
 
 
 export default function Login({ navigation }) {
@@ -23,6 +23,7 @@ export default function Login({ navigation }) {
             // Assuming loginResponse returns a token and user email
             await login(loginResponse.token); // Login context update
             await fetchAndStoreSubcategories(loginResponse.user.email); // Fetch and store subcategories
+            await fetchAndStoreUserData(loginResponse.user.email);  // Fetch and store user data
         } else {
             console.error('Login failed:', loginResponse.message);
         }

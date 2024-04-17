@@ -202,3 +202,61 @@ function calculateAge(dob) {
   return age;
 }
 
+// Assuming the base URL and headers setup are similar to previous implementations
+export const UploadUserData = async (adminEmail, data) => {
+  const collectionName = `${adminEmail}_data`;
+  const payload = {
+    collection: collectionName,
+    database: "Vita_user",
+    dataSource: DATA_SOURCE,
+    document: data
+  };
+
+  try {
+    const response = await apiClient.post('/insertOne', JSON.stringify(payload), {
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': API_KEY
+      }
+    });
+
+    if (response.data.ack) {
+      console.log('Data successfully uploaded to MongoDB.');
+      return true;
+    } else {
+      return false;
+    }
+    
+  } catch (error) {
+    console.error('Failed to upload data:', error);
+    return false;
+  }
+};
+
+// This function fetches user-specific data and stores it locally.
+export const fetchAndStoreUserData = async (adminEmail) => {
+  const collectionName = `${adminEmail}_data`;  // Assuming user data is stored in a specific collection named after the admin email
+  const payload = {
+      collection: collectionName,
+      database: "Vita_user",
+      dataSource: DATA_SOURCE,
+  };
+
+  try {
+      const response = await apiClient.post('/find', JSON.stringify(payload), {
+          headers: {
+              'Content-Type': 'application/json',
+              'api-key': API_KEY,
+          }
+      });
+
+      if (response.data.documents) {
+          await AsyncStorage.setItem('userData', JSON.stringify(response.data.documents));
+          console.log('User data successfully retrieved and stored locally.');
+      } else {
+          console.error('No user data found to retrieve.');
+      }
+  } catch (error) {
+      console.error('Error fetching and storing user data:', error);
+  }
+};

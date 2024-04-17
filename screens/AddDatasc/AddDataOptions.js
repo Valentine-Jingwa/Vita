@@ -15,7 +15,7 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
-import { UploadData } from '../../mongo/services/mongodbService.js';
+import { UploadUserData } from '../../mongo/services/mongodbService.js';
 import { subcategories as defaultSubcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
@@ -144,11 +144,15 @@ const handleNewSubcategoryAdded = (newSubcategory) => {
           subcategory,
           categoryname,
           timestamp: new Date().toISOString(),
-          dataOwner: currentUser.username  
+          dataOwner: currentUser.username
         };
-        await DataStorage.Store(newDataPoint);
+  
+        await DataStorage.Store(newDataPoint); // Store data locally
+  
+        // Additionally upload data to MongoDB
+        await UploadUserData(adminUser.email, newDataPoint); 
+  
         setModalVisible(false);
-        // fetchData();  // Optionally re-fetch data if needed
       } catch (error) {
         console.error('Save error:', error);
         showNotification('Failed to save data');
@@ -167,19 +171,7 @@ const handleNewSubcategoryAdded = (newSubcategory) => {
     }
 }, [selectedCategory]);
 
-// const fetchData = async () => {
-//   try {
-//     const data = await readData(); // Use readData to fetch subcategories
-//     if (data) {
-//         setSubcategories(data);
 
-//     }
-//     setAllSubcategories(data);
-//     setFilteredSubcategories(data); // Initially, filtered list shows all items
-//   } catch (e) {
-//     console.error('Failed to fetch the data from storage', e);
-//   }
-// };
 
 useEffect(() => {
   if (selectedCategory) {
