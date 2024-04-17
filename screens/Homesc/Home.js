@@ -1,130 +1,211 @@
-import React, { useState, useEffect, useCallback } from 'react'; // Import useCallback
-import { SafeAreaView, Text, StyleSheet, View, ScrollView, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
-import CalendarComponent from '../../components/Home/CalendarComponent';
-import DataStorage from '../../components/Datahandling/DataStorage';
-import { useFocusEffect } from '@react-navigation/native'; // Import useFocusEffect
-import ColorId from '../../constants/ColorId';
-import TimeCalculator from '../../components/Home/TimeCalculator';
-import DataModal from '../../components/Datahandling/CalendarModal';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Modal, SafeAreaView, StyleSheet, View, Text, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Switch, TextInput, visible, onClose, date, handleDateChange, repeat, onSwipe, Dimensions, Alert } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Calendar } from 'react-native-calendars';
+import DeckSwiper from 'react-native-deck-swiper';
+import { Iclock } from '../../assets/Icon';
 import DataCard from '../../components/Home/DataCard';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import globalStyles from '../../global';
-import { Icalendar1 } from '../../assets/Icon';
+import CompactDataCard from '../../components/Home/CompactDataCard';
+import DataStorage from '../../components/Datahandling/DataStorage';
+import { useFocusEffect } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import ReminderModal from './ReminderModal';
+import { LinearGradient } from 'expo-linear-gradient';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useTheme } from '../Settingsc/Theme';
 
+
+
+const { width, height } = Dimensions.get('window');
+
+
+
+
 const Home = () => {
+  const [selectedDateModalVisible, setSelectedDateModalVisible] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('');
   const [data, setData] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedDay, setSelectedDay] = useState('');
-  const [dayData, setDayData] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [reminderModalVisible, setReminderModalVisible] = useState(false);
+  const [swipeFeedback, setSwipeFeedback] = useState(false);
+  const { themeStyles } = useTheme();
 
-  const [calendarModalVisible, setCalendarModalVisible] = useState(false); // Declare the state variable here
 
-  const { theme, toggleTheme } = useTheme();
+  useEffect(() => {
+    
+  }, [currentIndex, data.length]);
 
-  const themeStyles = {
-    backgroundColor: theme === 'light' ? '#FFFFFF' : '#000000',
-    color: theme === 'light' ? '#000000' : '#FFFFFF',
+
+
+    // Function to handle saving the reminder
+    const handleSaveReminder = (date, repeat) => {
+      Alert.alert('Reminder Saved', 'Your reminder has been saved successfully');
+      // You can now use this to set up local notifications or save the reminder data
+      setReminderModalVisible(false);
+    };
+
+
+   // Function to handle day press on the calendar
+   const handleDayPress = (day) => {
+    console.log("Selected Day:", day);
+    // Convert to a Date object and set the time to midnight local time
+    const localDate = new Date(day.year, day.month - 1, day.day);
+    setSelectedDate(localDate.toISOString());
+    setSelectedDateModalVisible(true);
   };
 
+
+// Function to filter data for the selected date
+const getDataForSelectedDate = () => {
+  return data.filter((item) => {
+    const itemDate = new Date(item.timestamp).toDateString();
+    const selectedDayDate = new Date(selectedDate).toDateString();
+    return itemDate === selectedDayDate;
+  });
+};
+
+
+  const getMarkedDates = () => {
+    const marked = {};
+    data.forEach((item) => {
+      const dateKey = new Date(item.timestamp).toISOString().split('T')[0];
+      if (!marked[dateKey]) {
+        marked[dateKey] = { marked: true, dotColor: themeStyles.secondary };
+      }
+    });
+    return marked;
+  };
 
 
   const fetchData = async () => {
     const storedData = await DataStorage.Retrieve();
-    if (storedData) {
-      // Make sure each item in storedData has a 'date' property
-      const formattedData = storedData.map(item => ({
-        ...item,
-        date: item.date || '', // Provide an empty string if date is undefined
-      })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort data by timestamp in descending order
-  
-      setData(Array.isArray(formattedData) ? formattedData : [formattedData]);
+    if (storedData && Array.isArray(storedData)) {
+        // Assuming `timestamp` is in a format that can be directly compared
+        const formattedData = storedData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        setData(formattedData);
+    } else {
+        setData([]); 
     }
-  };
-  
-  
-  const handleDayPress = (dateString) => {
-    // Format the date to 'YYYY-MM-DD' if it's not already in that format
-    const formattedDateString = dateString.includes('T') ? dateString.split('T')[0] : dateString;
-  
-    // Filter the data to match the selected day
-    const filteredDayData = data.filter((item) => item.date && typeof item.date === 'string' && item.date.startsWith(formattedDateString));
-    console.log("Filtered Data:", filteredDayData); // Debug logging to see filtered results
+};
 
-    setDayData(filteredDayData);
-    setSelectedDay(formattedDateString);
-    setModalVisible(true);
-  };
-  
+useEffect(() => {
+  fetchData().then(() => {
+    console.log("Data Loaded:", data);
+  });
+}, []);
 
-  // Function to format the day information
-  const getDayInfo = (dateString) => {
-    const date = new Date(dateString);
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options);
-  };
-
-  // Fetch data on component mount
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Fetch data when the screen is focused
   useFocusEffect(
     useCallback(() => {
       fetchData();
     }, [])
   );
 
+
+  const handleSwipe = useCallback((direction) => {
+    setSwipeFeedback(true);
+    setTimeout(() => setSwipeFeedback(false), 300);
+    setCurrentIndex(prevIndex => (direction === 'left' ? (prevIndex + 1) % data.length : (prevIndex - 1 + data.length) % data.length));
+  }, [data.length]);
+
+
+  
+
   return (
-    <SafeAreaView style={[styles.screenContainer, {backgroundColor: themeStyles.backgroundColor}]}>
-      <TouchableOpacity 
-        style={styles.calendarIcon} 
-        onPress={() => setCalendarModalVisible(true)}
-      >
-      <Icalendar1 width={35} height={35} />
+    <SafeAreaView style={[styles.screenContainer, {backgroundColor: themeStyles.background}]}>
+      <TouchableOpacity style={styles.iconButton} onPress={() => setReminderModalVisible(true)}>
+        <Iclock width={40} height={40} />
       </TouchableOpacity>
 
+      <ReminderModal
+        visible={reminderModalVisible}
+        onClose={() => setReminderModalVisible(false)}
+        onSave={handleSaveReminder}
+      />
+
+
+      {/* Modal for Selected Date */}
       <Modal
-  animationType="slide"
-  transparent={true}
-  visible={calendarModalVisible}
-  onRequestClose={() => setCalendarModalVisible(false)}
->
-  <TouchableWithoutFeedback onPress={() => setCalendarModalVisible(false)}>
-    <View style={styles.modalOverlay}>
-      <TouchableWithoutFeedback>
-        <View style={styles.calendarModal}>
-          <CalendarComponent data={data} onDayPress={handleDayPress} />
-          {/* Displaying data for the selected date */}
-          {dayData.length > 0 && (
-            <View style={styles.selectedDayDataContainer}>
-              <Text style={styles.selectedDayTitle}>Data for {getDayInfo(selectedDay)}:</Text>
-              {dayData.map((item, index) => (
-                // Assuming DataCard is a component that can display your data appropriately
-                <DataCard key={index} item={item} />
-              ))}
-            </View>
+      animationType="slide"
+      transparent={true}
+      visible={selectedDateModalVisible}
+      onRequestClose={() => setSelectedDateModalVisible(false)}
+    >
+    <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
+      <View style={[styles.modalOverlay, { backgroundColor: `rgba(0, 0, 0, 0.8)` }]}>
+        <View style={[styles.modalView, {
+            backgroundColor: themeStyles.background,
+            shadowColor: themeStyles.text // Use text color from theme for shadow
+        }]}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setSelectedDateModalVisible(false)}
+          >
+          </TouchableOpacity>
+          <ScrollView horizontal={false}>
+                {getDataForSelectedDate(selectedDate).length > 0 ? (
+                  getDataForSelectedDate(selectedDate).map((item, index) => (
+                    <CompactDataCard key={index} item={item} />
+                  ))
+                ) : (
+                  <Text style={[styles.noDataText, {color: themeStyles.text}]}>No data inputted for {selectedDate} </Text>
+                )}
+              </ScrollView>
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+    </Modal>
+
+
+      {/* Calendar Component */}
+      <Calendar
+        onDayPress={handleDayPress}
+        markedDates={getMarkedDates()}
+        theme={{
+          arrowColor: themeStyles.primary,
+          todayTextColor: themeStyles.accent,
+          calendarBackground: themeStyles.background,
+        }}
+        style={[styles.calendar, {
+          borderColor: themeStyles.accent, 
+          shadowColor: themeStyles.text, // Use text color for shadow
+          backgroundColor: themeStyles.background, // Use background color for calendar
+        }]}
+      />
+
+      {/* Card Viewer with Swipe Handling */}
+      <PanGestureHandler
+        onHandlerStateChange={({ nativeEvent }) => {
+          if (nativeEvent.state === State.END) {
+            handleSwipe(nativeEvent.translationX < 0 ? 'left' : 'right');
+          }
+        }}>
+        <View style={[styles.cardViewer, swipeFeedback ? styles.swipeFeedback : null, {
+          borderColor: themeStyles.secondary, // Use secondary color for border
+          shadowColor: themeStyles.text, // Use text color for shadow
+        }]}>
+          {data.length > 0 && currentIndex < data.length ? (
+            <DataCard item={data[currentIndex]} />
+          ) : (
+            <Text style={[styles.noDataText, {color: themeStyles.text}]}>No Data Available</Text>
           )}
         </View>
-      </TouchableWithoutFeedback>
-    </View>
-  </TouchableWithoutFeedback>
-</Modal>
+      </PanGestureHandler>
 
-      <View style={styles.borderedBox}>
-        <Text>Inside the Box</Text>
+
+
+
+      {/* Navigation Arrows */}
+      <View style={styles.arrowContainer}>
+        <TouchableOpacity onPress={() => handleSwipe('right')}>
+          <Icon name="chevron-left" size={30} color={themeStyles.primary} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleSwipe('left')}>
+          <Icon name="chevron-right" size={30} color={themeStyles.primary} />
+        </TouchableOpacity>
       </View>
 
-
-      <View style={styles.ListContainer}>
-        <Text style={styles.summaryTitle}>Recent Data</Text>
-        <ScrollView style={styles.homescroll}>
-          {data.map((item, index) => (
-            <DataCard key={index} item={item} />
-          ))}
-        </ScrollView>
-      </View>
     </SafeAreaView>
   );
 };
@@ -132,80 +213,130 @@ const Home = () => {
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-start', // Adjust this as necessary
-    backgroundColor: '#FAF7F8', // Or any background color you prefer
+    justifyContent: 'flex-start',
+    backgroundColor: '#FFFFFF', // Bright and clean background color
   },
-  borderedBox: {
-    borderWidth: 1,
-    borderColor: '#000', // Adjust the border color as needed
-    height: 300, // Adjust the height as needed
-    width: '95%', // Adjust the width as needed
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '17%', // Adjust the margin as needed
-  },
-  calendarIcon: {
-    position: 'absolute',
-    top: 35,
-    left: 30,
-    zIndex: 10,
-  },
-  modalOverlay: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Adjust the opacity as needed
-    alignItems: 'center',
-  },
-  calendarModal: {
-    marginTop: '20%',
-    backgroundColor: 'white',
+  selectedDateModalView: {
+    width: '100%',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '75%',
+    backgroundColor: '#f9f9f9', // Light grey for modal background
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    padding: 20, // Add padding for visual spacing
-    height: '100%', // You might adjust this based on your content
-    width: '100%', // Use the full width of the modal overlay
-    alignItems: 'center', // Center content horizontally
+    padding: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
-  selectedDayDataContainer: {
-    marginTop: 20, // Add some space between the calendar and the data list
-    width: '100%', // Use the full width available within the modal
+  closeButton: {
+    alignSelf: 'flex-end', // Move close button to the right
+    marginBottom: 10, // Space from the top content
   },
-  selectedDayTitle: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginBottom: 10, // Space before the list starts
+  iconButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
+    zIndex: 2,
+    backgroundColor: 'transparent', 
+    borderRadius: 30,
+    padding: 10,
   },
-  
-  homescroll: {
+  calendar: {
+    paddingTop: 10,
+    marginTop: height*0.12,
+    marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    height: 370,
+    borderRadius: 15,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  deckContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 50,
+  },
+  cardViewer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 20,
+    marginRight: 20,
+    borderRadius: 15,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  swipeFeedback: {
+    opacity: 0.8, // Adjust as needed for visible feedback
+  },
+  arrowContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 65,
+    opacity: 0.8,
+  },
+  gestureArea: {
     width: '100%',
+    height: '100%',
   },
-  summaryTitle: {
+  noDataText: {
     fontSize: 18,
-    color: '#4a4a4a',
-    marginBottom: 10,
-    alignSelf: 'center',
+    color: '#666',
   },
-
-  headerText: {
+  card: {
+    height: 200,
+    width: '90%',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    elevation: 4,
+    zIndex: 100,
+  },
+  cardText: {
     fontSize: 22,
     fontWeight: 'bold',
   },
-  colorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: '#ff0000', 
-    marginRight: 10,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  ListContainer: {
-    marginVertical: 20,
-    padding: 5,
-    borderRadius: 10,
-    width: '90%',
-    height: '48%',
-  },
-  homescroll: {
+  modalView: {
     width: '100%',
+    maxHeight: '90%',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  dateText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  noDataText: {
+    fontSize: 18,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: '50%',
+    marginBottom: 'auto',
+
   },
 });
 

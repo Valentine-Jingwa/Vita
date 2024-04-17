@@ -19,7 +19,7 @@ const AnimatedScreenWrapper = ({ children }) => {
 
   const firstShadeTranslateX = useSharedValue(screenWidth);
   const secondShadeTranslateX = useSharedValue(screenWidth);
-  const thirdShadeTranslateX = useSharedValue(screenWidth);
+  // const thirdShadeTranslateX = useSharedValue(screenWidth);
 
   const backgroundColor = '#0E0E0E';
 
@@ -48,16 +48,16 @@ const AnimatedScreenWrapper = ({ children }) => {
     zIndex: 2, // Below the first shade
   }));
 
-  const thirdShadeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: thirdShadeTranslateX.value }],
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: '#A38280', // Third shade color
-    zIndex: 1, // Below the second shade
-  }));
+  // const thirdShadeAnimatedStyle = useAnimatedStyle(() => ({
+  //   transform: [{ translateX: thirdShadeTranslateX.value }],
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   right: 0,
+  //   bottom: 0,
+  //   backgroundColor: '#A38280', // Third shade color
+  //   zIndex: 1, // Below the second shade
+  // }));
 
     // Animated style for children opacity
     const childrenAnimatedStyle = useAnimatedStyle(() => ({
@@ -65,10 +65,10 @@ const AnimatedScreenWrapper = ({ children }) => {
     }));
 
     const animateShades = () => {
-      firstShadeTranslateX.value = withTiming(0, { duration: 300 }, () => {
-        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 300 });
-        secondShadeTranslateX.value = withTiming(0, { duration: 300 }, () => {
-          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 300 }, () => {
+      firstShadeTranslateX.value = withTiming(0, { duration: 20 }, () => {
+        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 20 });
+        secondShadeTranslateX.value = withTiming(0, { duration: 20 }, () => {
+          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 20 }, () => {
 
             childrenOpacity.value = withTiming(1, { duration: 500 }); // Fade in the children
             runOnJS(setShowContent)(true);

@@ -1,69 +1,99 @@
-//DataCard.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import ColorId from '../../constants/ColorId';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import TimeCalculator from './TimeCalculator';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme} from '../../screens/Settingsc/Theme'
 
-const DataCard = ({index, item}) => {
+const DataCard = ({ item }) => {
+    const { themeStyles } = useTheme(); // Use themeStyles
+
+    if (!item) {
+        return <View style={[styles.placeholder, { backgroundColor: themeStyles.background }]}><Text style={{ color: themeStyles.text }}>Loading...</Text></View>;
+    }
+
     return (
-        <View key={index} style={styles.dataBox}>
-            <View style={styles.contentBox}>
-                <Text style={styles.idcolor}><ColorId id={item.id}/></Text>
-                <Text style={styles.subcatName}>{item.subcategory} </Text>
-                <Text style={styles.textvalue}>{item.value}</Text>
-                <Text style={styles.textunit}>{item.unit}</Text>  
-            </View>
-            <Text><TimeCalculator timestamp={item.timestamp} /></Text>
-       </View>
+        <TouchableOpacity activeOpacity={0.7} style={[styles.dataBox, { shadowColor: themeStyles.text }]}>
+            <LinearGradient
+                colors={[themeStyles.secondary, themeStyles.background]} // Use theme colors for gradient
+                style={styles.gradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+            >
+                <Icon name="database" size={24} color={themeStyles.primary} style={styles.icon} />
+                <View style={styles.textGroup}>
+                    <Text style={[styles.subcatName, { color: themeStyles.text }]}>{item.subcategory}</Text>
+                    <View style={styles.valueContainer}>
+                        <Text style={[styles.textvalue, { color: themeStyles.primary }]}>{item.value}</Text>
+                        <Text style={[styles.textunit, { color: themeStyles.secondary }]}>{item.unit}</Text>
+                    </View>
+                </View>
+                <View style={styles.timeContainer}>
+                    <TimeCalculator timestamp={item.timestamp} />
+                </View>
+            </LinearGradient>
+        </TouchableOpacity>
     );
 };
+
 export default DataCard;
 
 const styles = StyleSheet.create({
     dataBox: {
-        flexDirection: 'column',
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 5,
-        borderRadius: 10,
-        marginVertical: 5,
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignContent: 'center',
-    
+        borderRadius: 15,
+        backgroundColor: 'transparent',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6.27,
+        elevation: 10,
+        marginVertical: 10,
+        width: '90%',
+        height: 100,
+        alignSelf: 'center',
     },
-    contentBox: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+    gradient: {
+        flex: 1,
+        borderRadius: 15,
+        padding: 20,
         flexDirection: 'row',
-        width:'90%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+    icon: {
+        marginRight: 10,
+    },
+    textGroup: {
+        flex: 4,  // Increase flex to give more space to the content
     },
     subcatName: {
-        fontSize: 25,
-        width:'60%',
-        textAlign: 'center',
-    },
-    textvalue: {
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#333',
-        width:'20%',
-        textAlign: 'center',
+    },
+    valueContainer: {
+        flexDirection: 'row',
+        alignItems: 'baseline',
+        marginTop: 5, // Additional spacing from the category name
+    },
+    textvalue: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#007AFF',
+        marginRight: 5, // Ensures space between the value and unit
     },
     textunit: {
-        fontSize: 12,
-        color: '#333',
-        width:'15%',
-
-    },
-
-    idcolor: {
-        flex: 1,
-        justifyContent: 'center', // Centers items vertically in the container
-        alignItems: 'start', // Centers items horizontally in the container
         fontSize: 18,
-        width: '10%',
+        color: '#777',
     },
-    
+    timeContainer: {
+        flex: 2.5,  // Reduced flex, ensures it does not take too much space
+    },
+    placeholder: {
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f9f9f9',
+        borderRadius: 15,
+    },
 });

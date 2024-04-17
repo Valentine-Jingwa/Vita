@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "3mptyspac3",
     "name": "Vita",
     "slug": "Vita",
     "version": "1.0.0",
@@ -27,6 +28,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "75fc985d-74e9-49ed-9564-a200e142de18"
+      }
     }
   }
 }

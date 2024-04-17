@@ -1,18 +1,41 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light'); // Default theme
+  const [theme, setTheme] = useState('light'); // Default theme initialization
 
-  const toggleTheme = () => {
-    setTheme(current => (current === 'light' ? 'dark' : 'light'));
+  useEffect(() => {
+    const loadTheme = async () => {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (storedTheme) {
+        setTheme(storedTheme);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  const toggleTheme = async () => {
+    setTheme(current => {
+      const newTheme = current === 'light' ? 'dark' : 'light';
+      AsyncStorage.setItem('theme', newTheme); // Save the new theme to AsyncStorage
+      return newTheme;
+    });
   };
 
-  const themeStyles = {
-    color: theme === 'light' ? '#120D0E' : '#F2EDEE',
-    backgroundColor: theme === 'light' ? '#F9F6F7' : '#090607',
-    btnMainBackgroundColorDark: '#384E51'
+  const themeStyles = theme === 'light' ? {
+    text: '#0a090c',
+    background: '#f7f7f8',
+    primary: '#7c7391',
+    secondary: '#c2b3bd',
+    accent: '#b09ba0',
+  } : {
+    text: '#f4f3f6',
+    background: '#070708',
+    primary: '#776e8c',
+    secondary: '#4c3d47',
+    accent: '#644f54',
   };
 
   return (
@@ -22,5 +45,4 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the theme context
 export const useTheme = () => useContext(ThemeContext);

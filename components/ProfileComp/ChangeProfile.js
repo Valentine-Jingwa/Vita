@@ -1,1 +1,0 @@
-//This change profile component does the very neat animation found on the profile Page

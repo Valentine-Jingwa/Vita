@@ -1,11 +1,16 @@
 // GraphModal.js
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Includes} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import DataStorage from '../Datahandling/DataStorage';
+import { AntDesign } from '@expo/vector-icons';
+import {useTheme} from '../../screens/Settingsc/Theme';
 
 const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   const [content, setContent] = useState(null);
+  const { themeStyles } = useTheme();
+
+
 
   useEffect(() => {
     fetchDataForSubcategory();
@@ -30,40 +35,65 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
 
   const prepareChartData = (data) => {
     const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const labels = sortedData.map(item => new Date(item.timestamp).toLocaleDateString());
+    const labels = sortedData.map(item => {
+      const date = new Date(item.timestamp);
+      return `${date.getDate()} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+    });
+  
+    const values = sortedData.map(item => parseFloat(item.value));
+  
+    const chartWidth = Math.max(labels.length * 80, Dimensions.get('window').width);
+  
     const chartData = {
       labels,
-      datasets: [{ data: sortedData.map(item => parseFloat(item.value)) }],
+      datasets: [{ data: values }],
     };
+
+  
     setContent(
-      <LineChart
-        data={chartData}
-        width={Dimensions.get('window').width * 0.9}
-        height={220}
-        chartConfig={{
-          backgroundColor: '#ffffff',
-          backgroundGradientFrom: '#ffffff',
-          backgroundGradientTo: '#ffffff',
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          style: {
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={{ flexGrow: 0, width: '100%', height: 400 }}
+      contentContainerStyle={{ alignItems: 'center' }}
+    >
+        <LineChart
+          data={chartData}
+          width={chartWidth} // Use the dynamic width
+          height={400}
+          // height={Dimensions.get('window').height * 0.4}
+          chartConfig={{
+            backgroundGradientFrom: '#ffffff',
+            backgroundGradientTo: '#ffffff',
+            decimalPlaces: 2,
+            color: () => `rgba(0, 0, 0, 1)`,
+            labelColor: (opacity = 1, index) => index % 2 === 0 ? `rgba(255, 0, 0, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+            style: {
+              borderRadius: 16,
+            },
+            propsForDots: {
+              r: '6',
+              strokeWidth: '1',
+              stroke: 'blue',
+            },
+            propsForBackgroundLines: {
+              strokeDasharray: '',
+            },
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
             borderRadius: 16,
-          },
-          propsForDots: {
-            r: '6',
-            strokeWidth: '2',
-            stroke: '#ffa726',
-          },
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16,
-        }}
-      />
+          }}
+        />
+      </ScrollView>
+      </View>
     );
   };
+  
+  
+  
 
   const prepareTextualData = (data) => {
     const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
@@ -82,24 +112,37 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
   return (
     <Modal
       visible={isVisible}
-      transparent={true}
+      transparent
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+    <TouchableOpacity
+      style={styles.overlay}
+      activeOpacity={1} // Maintain the overlay's visibility when pressed
+      onPressOut={onClose} // Close the modal when the overlay is pressed
+      >
+      <View
+      style={styles.modalView}
+      onStartShouldSetResponder={() => true} // Prevents the overlay's onPress event from triggering when the modal view is interacted with
+      >
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <AntDesign name="close" size={24} color="black" />
+          </TouchableOpacity>
           <Text style={styles.modalTitle}>Data for {selectedSubcategory}</Text>
           {content}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+    </TouchableOpacity>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   centeredView: {
     flex: 1,
     justifyContent: 'center',
@@ -108,7 +151,8 @@ const styles = StyleSheet.create({
   },
   modalView: {
     width: '90%',
-    height: 'auto',
+    minHeight: '50%', // Ensure the modal has a minimum height
+    maxHeight: '80%', // Adjust the height as needed
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 15,
@@ -126,16 +170,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   closeButton: {
-    marginTop: 15,
-    backgroundColor: '#2196F3',
+    marginTop: 5,
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    alignSelf: 'flex-end',
+
   },
   closeButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
+    alignSelf: 'flex-end',
   },
   textItem: {
     padding: 10,

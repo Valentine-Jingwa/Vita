@@ -1,142 +1,112 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
-import * as Keychain from 'react-native-keychain';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
+import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
+import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData, restoreData} from '../components/Datahandling/DataStorage'; 
+import {useTheme} from '../screens/Settingsc/Theme';
 
-
-const loginValidationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  password: Yup.string().min(8, 'Password must be at least 8 characters').required('Password is required'),
-});
 
 export default function Login({ navigation }) {
+  const { login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [rememberUser, setRememberUser] = useState(false);
-
+  const { themeStyles } = useTheme();
 
   const handleLogin = async (values) => {
     setLoading(true);
-    console.log(values);
-    // Implement your actual login logic here
-    // For demonstration, after a fake delay, navigate to the main app
-    setTimeout(async () => {
-      setLoading(false);
-      
-      // Here, instead of just stopping the loader, navigate to the main part of your app
-      // For example, if using AsyncStorage to store a user token:
-      await AsyncStorage.setItem('@user_token', 'your_token_here');
-      
-      navigation.navigate('Home');
-    }, 2000);
-};
+    try {
+        const { token } = await authenticateUser(values.loginId, values.password);
+        const currentEmail = await getCurrentUserEmail();
+        const loginResponse = await authenticateUser(values.loginId, values.password);
+        if (loginResponse.success) {
+          if (currentEmail !== email) {
+              await clearLocalData(); // Clear data if different user
+              console.log('Cleared local data due to different user login');
+          }
 
-const handleGoogleLogin = async () => {
-  try {
-    await GoogleSignin.hasPlayServices();
-    const userInfo = await GoogleSignin.signIn();
-    // Use userInfo to log in or sign up with your backend
-    // Navigate to the main app on successful login
-    navigation.navigate('Home');
-  } catch (error) {
-    console.error(error);
-    // Handle the error, e.g., show an error message
-  }
-};
+          // Always check for new data from the database to keep local up-to-date
+          await restoreData(email);
+          await setCurrentUserEmail(email); // Update the current user email in storage
 
-const handleFacebookLogin = async () => {
-  try {
-    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-    if (result.isCancelled) {
-      throw new Error('User cancelled the login process');
+          // Proceed with user login success actions
+      } else {
+          console.error('Login failed:', loginResponse.message);
+      }
+         await login(token);
+        // navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
+    } catch (error) {
+        // Assuming error.response.data contains a descriptive error message
+        const errorMessage = error.response?.data?.error || 'Failed to login';
+        alert(errorMessage);
+    } finally {
+        setLoading(false);
     }
-    const data = await AccessToken.getCurrentAccessToken();
-    if (!data) {
-      throw new Error('Something went wrong obtaining access token');
-    }
-    // Use data.accessToken to log in or sign up with your backend
-    // Navigate to the main app on successful login
-    navigation.navigate('Home');
-  } catch (error) {
-    console.error(error);
-    // Handle the error, e.g., show an error message
-  }
 };
 
-  
+
+
   const navigateToPasswordRecovery = () => {
-    // Navigate to Password Recovery Screen
     navigation.navigate('PasswordRecovery');
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginCard}>
-        <Text style={styles.title}>Login</Text>
-        <Text style={styles.subtitle}>Login to continue using the app</Text>
-        <Formik
-          validationSchema={loginValidationSchema}
-          initialValues={{ email: '', password: '' }}
-          onSubmit={values => handleLogin(values)}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
-            <>
-              <TextInput
-                name="email"
-                placeholder="Email"
-                style={styles.textInput}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
-              />
-              {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
-              <TextInput
-                name="password"
-                placeholder="Password"
-                style={styles.textInput}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                secureTextEntry
-              />
-              {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
-              <TouchableOpacity onPress={navigateToPasswordRecovery} style={styles.forgotPasswordButton}>
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleSubmit} style={styles.button} disabled={loading}>
+
+    <View style={[styles.container, { backgroundColor: themeStyles.background }]}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidView}
+        keyboardVerticalOffset={Platform.select({ ios: 60, android: 0 })}
+      >
+      <View style={[styles.loginCard, { shadowColor: themeStyles.text, backgroundColor: themeStyles.background, borderColor: themeStyles.accent }]}>
+        <Text style={[styles.title, { color: themeStyles.text }]}>Login</Text>
+        <Text style={[styles.subtitle, { color: themeStyles.text }]}>Login to continue using the app</Text>
+      <Formik
+          initialValues={{ loginId: '', password: '' }}
+          onSubmit={handleLogin}
+          validationSchema={Yup.object({
+              loginId: Yup.string().required('Username or Email is required'), // Updated validation schema
+              password: Yup.string().required('Required'),
+          })}
+      >
+          {({ handleChange, handleBlur, handleSubmit, values }) => (
+              <>
+                  <TextInput
+                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
+                      onChangeText={handleChange('loginId')} // Changed from email to loginId
+                      onBlur={handleBlur('loginId')} // Changed from email to loginId
+                      value={values.loginId}
+                      placeholder="Username or Email" // Updated placeholder
+                      placeholderTextColor={'black'}
+                      autoCapitalize="none"
+                  />
+                  <TextInput
+                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      value={values.password}
+                      placeholder="Password"
+                      placeholderTextColor={'black'}
+                      secureTextEntry
+                  />
+                    <TouchableOpacity 
+                    onPress={handleSubmit} 
+                    style={[styles.button, { backgroundColor: themeStyles.accent }]} 
+                    disabled={loading}
+                    >
                 <Text style={styles.buttonText}>Login</Text>
               </TouchableOpacity>
-              <Text style={styles.orText}>Or login with</Text>
-              <View style={styles.socialLoginButtons}>
-                <TouchableOpacity onPress={handleGoogleLogin} style={[styles.socialButton, styles.googleButton]}>
-                  <Text style={styles.socialButtonText}>G</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleFacebookLogin} style={[styles.socialButton, styles.facebookButton]}>
-                  <Text style={styles.socialButtonText}>f</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.switchContainer}>
-                <Switch
-                  value={rememberUser}
-                  onValueChange={setRememberUser}
-                  style={styles.switch}
-                />
-                <Text style={styles.label}>Remember me</Text>
-              </View>
-              <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.registerText}>Don't have an account? Register</Text>
-              </TouchableOpacity>
-            </>
+              </>
           )}
-        </Formik>
+      </Formik>
+
       </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -144,11 +114,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#95B5BB',
   },
   loginCard: {
     width: '100%',
-    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
     elevation: 10,
@@ -163,6 +131,9 @@ const styles = StyleSheet.create({
     color: '#2C4151',
     textAlign: 'center',
     marginBottom: 10,
+  },
+  keyboardAvoidView: {
+    width: '100%', 
   },
   subtitle: {
     fontSize: 16,
