@@ -5,8 +5,8 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
-import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData, restoreData} from '../components/Datahandling/DataStorage'; 
 import {useTheme} from '../screens/Settingsc/Theme';
+import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
 
 
 export default function Login({ navigation }) {
@@ -27,7 +27,6 @@ export default function Login({ navigation }) {
           }
 
           // Always check for new data from the database to keep local up-to-date
-          await restoreData(email);
           await setCurrentUserEmail(email); // Update the current user email in storage
 
           // Proceed with user login success actions

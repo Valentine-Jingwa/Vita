@@ -72,7 +72,6 @@ const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
       const initials = getInitials(firstName, lastName);
       const subUserData = { firstName, lastName, username, dob: formatDate(dob), age, initials, adminUsername, dataOwner};
       try {
-        await SubUserStorage.addSubUser(subUserData);
         onSave(subUserData);
         onCancel();
       } catch (error) {

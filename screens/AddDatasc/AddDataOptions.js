@@ -15,13 +15,13 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
-import { backupOneData } from '../../mongo/services/mongodbService.js';
+import { UploadData } from '../../mongo/services/mongodbService.js';
 import { subcategories as defaultSubcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
-
+import { useUser } from '../../UserContext'; 
 
 const { width, height: screenHeight } = Dimensions.get('window');
 
@@ -33,7 +33,7 @@ const AddDataOptions = ({ navigation }) => {
   const [notificationOpacity] = useState(new Animated.Value(0));
   const [formVisible, setFormVisible] = useState(false);
   const { themeStyles } = useTheme();
-
+  const { currentUser } = useUser(); // Get currentUser from UserContext
 
 
   const [subcategories, setSubcategories] = useState([]);
@@ -113,12 +113,18 @@ const AddDataOptions = ({ navigation }) => {
   const handleSave = async (id, value, unit, subcategory, categoryname) => {
     if (value && unit) {
       try {
-        const newDataPoint = { id, value, unit, subcategory, categoryname, timestamp: new Date().toISOString() };
-        backupOneData(adminUser.email, newDataPoint);
+        const newDataPoint = {
+          id,
+          value,
+          unit,
+          subcategory,
+          categoryname,
+          timestamp: new Date().toISOString(),
+          dataOwner: currentUser.username  
+        };
         await DataStorage.Store(newDataPoint);
         setModalVisible(false);
-        showNotification('Data successfully saved');
-        fetchData();
+        // fetchData();  // Optionally re-fetch data if needed
       } catch (error) {
         console.error('Save error:', error);
         showNotification('Failed to save data');
@@ -127,6 +133,7 @@ const AddDataOptions = ({ navigation }) => {
       showNotification('Incorrect data');
     }
   };
+  
 
   useEffect(() => {
     if (selectedCategory) {
@@ -140,7 +147,6 @@ const fetchData = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('subcategories');
     const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-    console.log('Data successfully fetched');
     setAllSubcategories(data);
     setFilteredSubcategories(data); // Initially, filtered list shows all items
   } catch (e) {

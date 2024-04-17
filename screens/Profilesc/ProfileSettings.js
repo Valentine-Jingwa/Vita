@@ -6,13 +6,12 @@ import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNavigation } from '@react-navigation/native';
-import { useTheme } from '../Settingsc/Theme';
 import ThemedText from '../Settingsc/ThemedText';
 import { useFocusEffect } from '@react-navigation/native';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import {Day, Night, RLogout} from '../../assets/Icon';
 import { useAuth } from '../../security/AuthContext';
-
+import { useTheme } from '../Settingsc/Theme'; // Adjust the path as necessary
 
 
 
@@ -23,6 +22,7 @@ const { width, height } = Dimensions.get('window');
 export default function ProfileSettings({ }) {
   const [adminUser, setAdminUser] = useState(null);
   const [subUsers, setSubUsers] = useState([]);
+  const { themeStyles } = useTheme(); // Destructure to get theme styles
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const { logout } = useAuth();
@@ -77,14 +77,12 @@ export default function ProfileSettings({ }) {
     const fetchAdminUser = async () => {
       const adminData = await AdminUserStorage.getAdminUser(); 
       setAdminUser(adminData);
-      console.log(adminData, 'adminData');
     };
 
     const fetchSubUsers = async () => {
       if (adminUser) {
         const subUsersData = await SubUserStorage.getSubUsers();
         setSubUsers(subUsersData);
-        console.log(subUsersData, 'subUsersData');
       }
     };
 
@@ -162,6 +160,7 @@ export default function ProfileSettings({ }) {
         </View>
       </TouchableWithoutFeedback>
     </Modal>
+
         </View>
     </SafeAreaView>
     );
