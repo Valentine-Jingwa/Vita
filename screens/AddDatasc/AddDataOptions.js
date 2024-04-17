@@ -15,7 +15,7 @@ import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
-import { backupOneData } from '../../mongo/services/mongodbService.js';
+import { UploadData } from '../../mongo/services/mongodbService.js';
 import { subcategories as defaultSubcategories } from '../../components/DataList';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
