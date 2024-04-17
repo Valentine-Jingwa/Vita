@@ -47,7 +47,7 @@ const NewSubForm = ({ isVisible, onClose, categoryname}) => {
       description,
       units: unit ? [unit] : [],
       datatype: dataType,
-      max: dataType === 'number' ? 9999 : undefined,
+      max: dataType === 'number' ? 999 : undefined,
       min: dataType === 'number' ? 0 : undefined,
     };
 
@@ -84,32 +84,21 @@ return (
     <TouchableWithoutFeedback onPress={handleOnClose}>
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
         <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
-          <View style={[styles.formContainer, { backgroundColor: themeStyles.secondary }]}>
+          <View style={[styles.formContainer, { backgroundColor: themeStyles.accent }]}>
             <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
             {/* Subcategory Name Input */}
             <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
               placeholder="Enter subcategory name"
-              placeholderTextColor={themeStyles.placeholderText}
+              placeholderTextColor={themeStyles.text}
               value={subcategoryName}
               onChangeText={setSubcategoryName}
             />
-            {/* Picker Style */}
-            <View style={[styles.pickerContainer, { backgroundColor: themeStyles.inputBackground, borderColor: themeStyles.inputBorder }]}>
-              <Picker
-                selectedValue={dataType}
-                onValueChange={(itemValue, itemIndex) => setDataType(itemValue)}
-                style={[styles.pickerStyle, { color: themeStyles.text }]}
-                dropdownIconColor={themeStyles.text}
-              >
-                {/* Picker Items */}
-              </Picker>
-            </View>
             {/* Description Input */}
             <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background, height: 100}]}
               placeholder="Description (optional)"
-              placeholderTextColor={themeStyles.placeholderText}
+              placeholderTextColor={themeStyles.text}
               value={description}
               onChangeText={text => setDescription(text)}
               multiline
@@ -118,23 +107,25 @@ return (
             />
             {/* Unit Input */}
             <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.inputBorder }]}
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
               placeholder="Unit (optional)"
-              placeholderTextColor={themeStyles.placeholderText}
+              placeholderTextColor={themeStyles.text}
               value={unit}
               onChangeText={setUnit}
+              maxLength={10}
+
             />
             {/* Buttons */}
               <TouchableOpacity 
                 onPress={handleSubmit} 
-                style={[styles.submitButton, { backgroundColor: themeStyles.primary }]}
+                style={[styles.submitButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
               >
                 <Text style={[styles.submitButtonText, { color: themeStyles.text }]}>Save</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
                 onPress={onClose} 
-                style={[styles.cancelButton, { backgroundColor: themeStyles.accent }]}
+                style={[styles.cancelButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
               >
                 <Text style={[styles.cancelButtonText, { color: themeStyles.text }]}>Close</Text>
               </TouchableOpacity>

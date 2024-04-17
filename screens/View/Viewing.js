@@ -126,7 +126,11 @@ export default function Viewing() {
         </TouchableOpacity>
 
       </View>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 55, 
+        }}
+        >
         {renderGroupedSubcategories()}
       </ScrollView>
       {selectedSubcategory && (

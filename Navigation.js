@@ -175,13 +175,13 @@ function BottomTabs() {
     )}
   </Tab.Screen>
   
-  <Tab.Screen name="Settings" options={{ headerShown: false }}>
+  {/* <Tab.Screen name="Settings" options={{ headerShown: false }}>
     {() => (
       <AnimatedScreenWrapper style={{ flex: 1 }}>
         <Settings />
       </AnimatedScreenWrapper>
     )}
-  </Tab.Screen>
+  </Tab.Screen> */}
     </Tab.Navigator>
   );
 }

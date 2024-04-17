@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, SafeAreaView, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '../../Settingsc/Theme';
 
 const Update = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -7,62 +8,60 @@ const Update = ({ navigation }) => {
     const [newPassword, setNewPassword] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const { themeStyles } = useTheme();
 
     const handleSubmit = async () => {
-        // Logic to update the profile
-        // Here, let's simulate a successful update
         setModalMessage('Profile has been successfully updated!');
         setModalVisible(true);
     };
 
     const handleModalClose = () => {
         setModalVisible(false);
-        // Optionally navigate back or refresh the page
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={handleModalClose}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalText}>{modalMessage}</Text>
+                <View style={[styles.centeredView, { backgroundColor: themeStyles.modalOverlay }]}>
+                    <View style={[styles.modalView, { backgroundColor: themeStyles.secondary }]}>
+                        <Text style={[styles.modalText, { color: themeStyles.text }]}>{modalMessage}</Text>
                         <TouchableOpacity
-                            style={styles.button}
+                            style={[styles.button, { backgroundColor: themeStyles.primary }]}
                             onPress={handleModalClose}
                         >
-                            <Text style={styles.buttonText}>Close</Text>
+                            <Text style={[styles.buttonText, { color: themeStyles.text }]}>Close</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             </Modal>
             <View style={styles.form}>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Current Password"
                     secureTextEntry
                 />
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
                     value={username}
                     onChangeText={setUsername}
                     placeholder="New Username"
                 />
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
                     value={newPassword}
                     onChangeText={setNewPassword}
                     placeholder="New Password"
                     secureTextEntry
                 />
-                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Update Profile</Text>
+                <TouchableOpacity style={[styles.button, { backgroundColor: themeStyles.accent }]} onPress={handleSubmit}>
+                    <Text style={[styles.buttonText, { color: themeStyles.text }]}>Update Profile</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -74,7 +73,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
     },
     centeredView: {
         flex: 1,
@@ -84,17 +82,9 @@ const styles = StyleSheet.create({
     },
     modalView: {
         margin: 20,
-        backgroundColor: "white",
         borderRadius: 20,
         padding: 20,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
         elevation: 5
     },
     modalText: {
@@ -111,18 +101,15 @@ const styles = StyleSheet.create({
         padding: 10,
         marginVertical: 10,
         borderWidth: 1,
-        borderColor: '#ccc',
         borderRadius: 5,
     },
     button: {
-        backgroundColor: '#0066cc',
         paddingVertical: 10,
         paddingHorizontal: 20,
         borderRadius: 5,
         marginTop: 20,
     },
     buttonText: {
-        color: 'white',
         fontSize: 16,
     },
 });

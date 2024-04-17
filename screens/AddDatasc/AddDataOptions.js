@@ -187,11 +187,15 @@ useEffect(() => {
       ) : (
         <View style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
             <View style={[styles.subcategoryContainerHeader, { backgroundColor: themeStyles.background }]}>
-            <TouchableOpacity style={[styles.backButton, { backgroundColor: themeStyles.primary }]} onPress={() => setSelectedCategory(null)}>
+            <TouchableOpacity style={[styles.backButton, { backgroundColor: themeStyles.accent }]} onPress={() => setSelectedCategory(null)}>
                       <Ibackbtn width={30} height={30} />
                   </TouchableOpacity>
-                  <View style={styles.selectedTitleIcon}>
-                  <Text style={styles.selectedCategoryTitle}>{selectedCategory}</Text>
+                  <View style={[styles.selectedTitleIcon, {
+                    backgroundColor: "white",
+                    borderColor: themeStyles.primary,
+                    borderWidth: 1 // Set this to the desired width of your border
+                    }]}>
+                  <Text style={[styles.selectedCategoryTitle]}>{selectedCategory}</Text>
                   {/* Matching Icon */}
                   {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
                   {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
@@ -202,7 +206,6 @@ useEffect(() => {
               <ScrollView
               contentContainerStyle={{
                 paddingBottom: 20,
-                flexGrow: 1,
               }}
             >
                 <View style={styles.BentoBoxlayout}>
@@ -215,8 +218,8 @@ useEffect(() => {
                       <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
                     </TouchableOpacity>
                   ))}
-                  <TouchableOpacity onPress={() => setFormVisible(true)} style={styles.subcategoryBox}>
-                    <Text style={styles.addNewText}>Add New</Text>
+                  <TouchableOpacity onPress={() => setFormVisible(true)} style={[styles.subcategoryBox, {backgroundColor: themeStyles.accent}]}>
+                    <Text style={[styles.addNewText, {color: themeStyles.text}]}>Add New</Text>
                   </TouchableOpacity>
                 </View>
 
