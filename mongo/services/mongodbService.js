@@ -2,6 +2,7 @@ import { API_KEY, DATA_SOURCE, NODE_BASE_URL, BASE_URL, JWT_SECRET} from '@env';
 import axios from 'axios';
 import jwt from 'react-native-pure-jwt';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {addSubUser} from '../../screens/Profilesc/subUser';
 
 
 const apiClient = axios.create({
@@ -106,9 +107,6 @@ export const createUser = async (userData) => {
         // Add calculated age and initials to user data, retain dob
         const userDataWithAgeAndInitials = { ...safeUserData, age, initials };
   
-        // Log for debugging
-        console.log("User Data with Age and Initials:", userDataWithAgeAndInitials);
-  
         // Store user data without sensitive information, including calculated age, dob, and initials
         await AsyncStorage.setItem('adminUser', JSON.stringify(userDataWithAgeAndInitials));
   
@@ -125,36 +123,141 @@ export const createUser = async (userData) => {
     }
   };
 
-    export const UploadSubUser = async (adminEmail, subUserData) => {
+  export const UploadSubUser = async (adminEmail, subUserData) => {
     try {
-      // Construct the unique collection name
-      const collectionName = `${adminEmail}subusers`;
+        // Construct the unique collection name
+        const collectionName = `${adminEmail}subusers`;
 
-      const data = JSON.stringify({
-        collection: collectionName, 
-        database: "Vita_user", 
-        dataSource: DATA_SOURCE,
-        document: subUserData, 
-      });
+        const payload = {
+            collection: collectionName, 
+            database: "Vita_user", 
+            dataSource: DATA_SOURCE,
+            document: subUserData, // Ensure this matches the backend expectation
+        };
 
-      // Call to the serverless function to handle sub user upload
-      const response = await apiClient.post('/insertOne', {
-        collectionName,
-        subUserData,
-        dataSource: DATA_SOURCE,
-      });
+        // Ensure the endpoint and method match your server configuration
+        const response = await apiClient.post('/insertOne', JSON.stringify(payload), {
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': API_KEY,
+            }
+        });
 
-      if (response.data.success) {
-        // Optionally update local storage if needed
-        console.log('Sub-user successfully added to MongoDB.');
-        return true;
-      } else {
-        console.log('Failed to add sub-user to MongoDB.');
-        return false;
-      }
+        if (response.data.success) {
+            console.log('Sub-user successfully added to MongoDB.');
+            return true;
+        } else {
+            console.log('Failed to add sub-user to MongoDB.');
+            return false;
+        }
     } catch (error) {
-      console.error('Failed to add sub-user.', error);
+        console.error('Failed to add sub-user:', error);
+        return false;
+    }
+};
+
+// fetchAndStoreSubcategories Retrives all subuser data execpt _id and age.Dob is used to calculate age.
+export const fetchAndStoreSubcategories = async (userEmail) => {
+  try {
+      const collectionName = `${userEmail}subusers`;
+      const payload = {
+          collection: collectionName,
+          database: "Vita_user",
+          dataSource: DATA_SOURCE,
+      };
+
+      const response = await apiClient.post('/find', JSON.stringify(payload), {
+          headers: {
+              'Content-Type': 'application/json',
+              'api-key': API_KEY,
+          }
+      });
+
+      if (response.data.documents) {
+          const subcategories = response.data.documents.map(({ _id, dob, ...sub }) => {
+              // Calculate age from dob
+              const age = calculateAge(dob);
+              return { ...sub, dob, age };
+          });
+
+          // Store modified subcategories with calculated ages instead of fetched ages
+          await AsyncStorage.setItem('subUsers', JSON.stringify(subcategories));
+      } else {
+          console.error('No subcategories found');
+      }
+  } catch (error) {
+      console.error('Error fetching and storing subcategories:', error);
+  }
+};
+
+// Helper function to calculate age from dob
+function calculateAge(dob) {
+  const birthDate = new Date(dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+  }
+  return age;
+}
+
+// Assuming the base URL and headers setup are similar to previous implementations
+export const UploadUserData = async (adminEmail, data) => {
+  const collectionName = `${adminEmail}_data`;
+  const payload = {
+    collection: collectionName,
+    database: "Vita_user",
+    dataSource: DATA_SOURCE,
+    document: data
+  };
+
+  try {
+    const response = await apiClient.post('/insertOne', JSON.stringify(payload), {
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': API_KEY
+      }
+    });
+
+    if (response.data.ack) {
+      console.log('Data successfully uploaded to MongoDB.');
+      return true;
+    } else {
       return false;
     }
+    
+  } catch (error) {
+    console.error('Failed to upload data:', error);
+    return false;
+  }
+};
+
+// This function fetches user-specific data and stores it locally.
+export const fetchAndStoreUserData = async (adminEmail) => {
+  const collectionName = `${adminEmail}_data`;  // Assuming user data is stored in a specific collection named after the admin email
+  const payload = {
+      collection: collectionName,
+      database: "Vita_user",
+      dataSource: DATA_SOURCE,
   };
-  
+
+  try {
+      const response = await apiClient.post('/find', JSON.stringify(payload), {
+          headers: {
+              'Content-Type': 'application/json',
+              'api-key': API_KEY,
+          }
+      });
+
+      if (response.data.documents) {
+          await AsyncStorage.setItem('localData', JSON.stringify(response.data.documents));
+          console.log('User data successfully retrieved and stored locally.');
+          console.log(response.data.documents);
+      } else {
+          console.error('No user data found to retrieve.');
+      }
+  } catch (error) {
+      console.error('Error fetching and storing user data:', error);
+  }
+};

@@ -2,6 +2,7 @@
 //DataList
 
 import React, { useState, useTheme} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const subcategories = [
         //Vitals
@@ -128,8 +129,6 @@ export const subcategories = [
           outputType: 'Dieper Change',
           items: ['Urine', 'Poop'] 
         },
-        
-
       ];
 
 
@@ -152,6 +151,7 @@ const readData = async () => {
   try {
       const jsonValue = await AsyncStorage.getItem('subcategories');
       return jsonValue != null ? JSON.parse(jsonValue) : null; // Parse the string back to JSON
+      console.log(jsonValue);
   } catch(e) {
       // Error reading value
       console.error('Failed to fetch the data from storage', e);
