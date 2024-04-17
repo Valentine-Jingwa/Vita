@@ -41,7 +41,7 @@ export default function Viewing() {
       item.dataOwner === currentUser.username &&
       item.subcategory.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
+  
     switch (selectedFilter) {
       case FILTER_OPTIONS.ALPHABETICAL_ASC:
         filteredData.sort((a, b) => a.subcategory.localeCompare(b.subcategory));
@@ -50,27 +50,35 @@ export default function Viewing() {
         filteredData.sort((a, b) => b.subcategory.localeCompare(a.subcategory));
         break;
       case FILTER_OPTIONS.MOST_DATA:
+        // Assuming each item has a count property
         filteredData.sort((a, b) => b.count - a.count);
         break;
       case FILTER_OPTIONS.RECENT_DATA:
         filteredData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         break;
     }
-
+  
+    // Group by subcategory and sum counts
     const grouped = filteredData.reduce((acc, item) => {
-      const categoryKey = item.categoryname;
-      if (!acc[categoryKey]) {
-        acc[categoryKey] = [];
+      const key = item.categoryname + item.subcategory; // Combine category and subcategory for unique key
+      if (!acc[key]) {
+        acc[key] = { ...item, count: 1 }; // Initialize if not yet created
+      } else {
+        acc[key].count += 1; // Increment count for existing subcategory
       }
-      acc[categoryKey].push({
-        ...item,
-        count: 1 // Initialize or adjust based on actual data structure
-      });
       return acc;
     }, {});
-
-    setGroupedSubcategories(grouped);
+  
+    // Convert the map back to grouped by category
+    const result = Object.values(grouped).reduce((acc, item) => {
+      if (!acc[item.categoryname]) acc[item.categoryname] = [];
+      acc[item.categoryname].push(item);
+      return acc;
+    }, {});
+  
+    setGroupedSubcategories(result);
   };
+  
 
    
   const toggleFilter = () => {
