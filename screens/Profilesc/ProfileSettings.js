@@ -103,9 +103,9 @@ export default function ProfileSettings({ }) {
         <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserSynch')}>
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Synch</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('NotificationPage')}>
+        {/* <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('NotificationPage')}>
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Notifications</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserLogs')}>
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>View Logs</Text>
         </TouchableOpacity>
