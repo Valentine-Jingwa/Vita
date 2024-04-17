@@ -3,6 +3,7 @@ import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Ima
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import SubUserForm from './SubUserForm';
 import { useUser } from '../../UserContext'; // Import the context hook
+import { useTheme } from '../Settingsc/Theme';
 
 const { width } = Dimensions.get('window');
 
@@ -10,6 +11,8 @@ const ProfileHolder = ({ adminData, subUserData }) => {
     const { currentUser, selectUser, userIndex } = useUser(); // Use context to manage user state
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const { themeStyles } = useTheme(); // Destructure to get theme styles
+
 
     // Handles swiping left and right
     const handleSwipe = (direction) => {
@@ -30,7 +33,6 @@ const ProfileHolder = ({ adminData, subUserData }) => {
         <SafeAreaView>
             <SubUserForm
                 onSave={(data) => {
-                    console.log('Sub-user data:', data);
                     setIsFormVisible(false);
                 }}
                 onCancel={() => setIsFormVisible(false)}
@@ -42,7 +44,7 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                     {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={styles.user_image}>{currentUser?.initials || 'No Image'}</Text>
+                        <Text style={[styles.user_image,{ color: themeStyles.text }]}>{currentUser?.initials || 'No Image'}</Text>
                     )}
                     <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
                         <Text style={styles.add_subuserText}>+</Text>

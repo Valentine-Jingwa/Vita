@@ -1,7 +1,6 @@
 
 // subUser.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { addSubUser as addSubUserToDb, deleteSubUser as deleteSubUserFromDb, updateSubUser as updateSubUserInDb } from '../../mongo/services/mongodbService'; // Assuming these functions are implemented similarly to your mongoDbService structure
 import { Alert } from 'react-native';
 
 const subUserStorageKey = 'subUsers';

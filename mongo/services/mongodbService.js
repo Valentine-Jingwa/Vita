@@ -124,97 +124,37 @@ export const createUser = async (userData) => {
       throw error;
     }
   };
-  
-  
-  
-  
-  export const getSubUsers = async (adminUsername) => {
-    const adminUserQuery = { username: adminUsername };
-    
-    try {
-      // Fetch the admin user
-      const adminResponse = await findOne("users", "Vita_user", adminUserQuery);
-      const { password, _id, ...adminUserData } = adminResponse.document;
-  
-      // Fetch subusers if needed, handle this according to your logic
-      // const subUsersResponse = await findOne(adminUsername+"_subUsers", "Vita_user", {});
-      // const subUsersData = subUsersResponse.documents; // Or however your data is structured
-      
-      console.log(adminUserData); // Log the admin user data without password and _id
-      return adminUserData;
-  
-      // If needed, also handle and return the subUsersData
-      // return { adminUserData, subUsersData };
-    } catch (error) {
-      console.error("Error fetching admin and sub-users:", error);
-      throw error;
-    }
-  };
-  
-  
-  export const addSubUser = async (adminUsername, subUserData) => {
-    
-    const data = JSON.stringify({
-      collection: adminUsername+"_SubUsers", // Assuming your collection name is "users"
-      database: "Vita_user", 
-      dataSource: DATA_SOURCE,
-      document: userData, // This contains the new user data
-    });
-    try {
-      const newUser = await apiClient.post('/insertOne', subUserData);
-      console.log(newUser.data);
-      return newUser.data;
-    } catch (error) {
-      console.error("Error creating sub-user:", error);
-      throw error;
-    }
- 
-  };
 
-
-//Features for dealing with user app data
-  export const backupData = async (email, data) => {
-    const collectionName = `${email}_data`;
+    export const UploadSubUser = async (adminEmail, subUserData) => {
     try {
-        const response = await apiClient.post('/insertMany', {
-            collection: collectionName,
-            database: "Vita_Data",
-            dataSource: DATA_SOURCE,
-            documents: data,
-        });
-        console.log('Backup successful:', response.data);
-    } catch (error) {
-        console.error('Backup failed:', error);
-    }
-};
+      // Construct the unique collection name
+      const collectionName = `${adminEmail}subusers`;
 
-export const backupOneData = async (email, data) => {
-  const collectionName = `${email}_data`;
-  try {
+      const data = JSON.stringify({
+        collection: collectionName, 
+        database: "Vita_user", 
+        dataSource: DATA_SOURCE,
+        document: userData, 
+      });
+
+      // Call to the serverless function to handle sub user upload
       const response = await apiClient.post('/insertOne', {
-          collection: collectionName,
-          database: "Vita_Data",
-          dataSource: DATA_SOURCE,
-          documents: data,
+        collectionName,
+        subUserData,
+        dataSource: DATA_SOURCE,
       });
-      console.log('Backup successful:', response.data);
-  } catch (error) {
-      console.error('Backup failed:', error);
-  }
-};
 
-export const restoreData = async (email) => {
-  const collectionName = `${email}_data`;
-  try {
-      const response = await apiClient.post('/find', {
-          collection: collectionName,
-          database: "Vita_Data",
-          dataSource: DATA_SOURCE,
-      });
-      const newData = response.data.documents || [];
-      await AsyncStorage.setItem('localData', JSON.stringify(newData));
-      console.log('Data restored and updated successfully');
-  } catch (error) {
-      console.error('Failed to restore and update data:', error);
-  }
-};
+      if (response.data.success) {
+        // Optionally update local storage if needed
+        console.log('Sub-user successfully added to MongoDB.');
+        return true;
+      } else {
+        console.log('Failed to add sub-user to MongoDB.');
+        return false;
+      }
+    } catch (error) {
+      console.error('Failed to add sub-user.', error);
+      return false;
+    }
+  };
+  
