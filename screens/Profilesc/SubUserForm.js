@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
   Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform,
-  Keyboard, DateTimePicker
+  Keyboard
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import { UploadSubUser } from '../../mongo/services/mongodbService';
