@@ -12,33 +12,34 @@ import {
     Button,
   } from 'react-native';
 import {Hlogo} from '../assets/Icon'
+import { useTheme } from '../screens/Settingsc/Theme'; // Import the theme hook
 
 const { width, height } = Dimensions.get('window');
 
 const Welcome = ({ navigation }) => {
-    
+    const { themeStyles } = useTheme(); // Assuming themeStyles contains your color and font styles
+
     return (
-        <SafeAreaView style={styles.container}>
-            {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
+        <SafeAreaView style={[styles.container]}>
             <View style={styles.image}>
-                <Image source={require('../assets/logo/logo12.png')}  />
+                {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
+                <Image source={require('../assets/logo/logo12.png')} style={{ width: '100%', height: '100%' }} resizeMode='contain' />
             </View>
-            {/* <Text style={styles.brandName}>Health Tracker</Text> */}
             <View style={styles.textbox}>
-                <Text style={styles.description}>
+                <Text style={[styles.description, ]}>
                     Input data and get it processed for your next appointment
                 </Text>
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity
-                    style={[styles.button, styles.loginButton]}
+                    style={[styles.button, styles.loginButton, { borderColor: themeStyles.secondary, backgroundColor: themeStyles.background}]}
                     onPress={() => navigation.navigate('Login')}>
-                    <Text style={styles.buttonText}>Login</Text>
+                    <Text style={[styles.buttonText, { color: themeStyles.text }]}>Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.button, styles.signupButton]}
+                    style={[styles.button, styles.signupButton, { borderColor: themeStyles.secondary, backgroundColor: themeStyles.background }]}
                     onPress={() => navigation.navigate('Signup')}>
-                    <Text style={styles.buttonText}>Register</Text>
+                    <Text style={[styles.buttonText, { color: themeStyles.text }]}>Register</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#f9f6f7',
+        backgroundColor: '#f7f7f8',
         width: width, 
         height: height,
     },
@@ -104,5 +105,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-
