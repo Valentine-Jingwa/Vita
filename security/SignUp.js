@@ -1,9 +1,23 @@
-// Import necessary modules from React, React Native, Formik, and Yup
+// SignUp.js
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, StyleSheet, Switch, Modal } from 'react-native';
+import {
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Switch,
+  KeyboardAvoidingView,
+  Platform,
+  Modal,
+  Alert
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { createUser } from '../mongo/services/mongodbService';
+import { useTheme} from '../screens/Settingsc/Theme'; 
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to install the react-native-vector-icons package
+
 
 // Define the schema for validation using Yup
 const signupValidationSchema = Yup.object().shape({
@@ -25,6 +39,11 @@ export default function Signup({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
+  const { themeStyles } = useTheme();
+
+  const showErrorAlert = (errorMessage) => {
+    Alert.alert("Validation Error", errorMessage);
+  };
 
   const handleSignup = async (values) => {
     setLoading(true);
@@ -53,59 +72,59 @@ export default function Signup({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      <Text style={styles.subtitle}>Enter Your Personal Information</Text>
-      <Formik
-        initialValues={{first_name: '', last_name: '', username: '', email: '', password: '', confirmPassword: '', dob: '', termsAccepted: false, subscribeNewsletter: false }}
-        validationSchema={signupValidationSchema}
-        onSubmit={values => handleSignup(values)}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
-          <>
-            <TextInput
-              first_name="first_name"
-              placeholder="First Name"
-              style={styles.textInput}
-              onChangeText={handleChange('first_name')}
-              onBlur={handleBlur('first_name')}
-              value={values.first_name}
-              keyboardType="default"
-              placeholderTextColor={'black'}
+    <KeyboardAvoidingView
+      style={[styles.keyboardAvoidingView, { backgroundColor: themeStyles.background }]}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.select({ ios: 0, android: 0 })}
+    >
+      <View style={styles.container}>
+        <Text style={[styles.title, { color: themeStyles.text }]}>Register</Text>
+        <Text style={[styles.subtitle, { color: themeStyles.text }]}>Enter Your Personal Information</Text>
 
-            />  
-            {errors.first_name && touched.first_name && <Text style={styles.errorText}>{errors.first_name}</Text>}
+        <Formik
+          initialValues={{
+            first_name: '',
+            last_name: '',
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            dob: '',
+            termsAccepted: false,
+            subscribeNewsletter: false,
+          }}
+          validationSchema={signupValidationSchema}
+          onSubmit={handleSignup}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+            <View style={styles.formContainer}>
+              <View style={styles.row}>
+                <TextInput
+                  name="first_name"
+                  placeholder="First Name"
+                  style={[styles.textInput, styles.halfInput, { borderColor: themeStyles.accent }]}
+                  onChangeText={handleChange('first_name')}
+                  onBlur={handleBlur('first_name')}
+                  value={values.first_name}
+                  placeholderTextColor={themeStyles.text}
+                />
+                <TextInput
+                  name="last_name"
+                  placeholder="Last Name"
+                  style={[styles.textInput, styles.halfInput, { borderColor: themeStyles.accent }]}
+                  onChangeText={handleChange('last_name')}
+                  onBlur={handleBlur('last_name')}
+                  value={values.last_name}
+                  placeholderTextColor={themeStyles.text}
+                />
+              </View>
+              {errors.first_name && touched.first_name && <Text style={styles.errorText}>{errors.first_name}</Text>}
+              {errors.last_name && touched.last_name && <Text style={styles.errorText}>{errors.last_name}</Text>}
 
-            <TextInput
-              last_name="last_name"
-              placeholder="Last Name"
-              style={styles.textInput}
-              onChangeText={handleChange('last_name')}
-              onBlur={handleBlur('last_name')}
-              value={values.last_name}
-              keyboardType="default"
-              placeholderTextColor={'black'}
-
-            />
-            {errors.last_name && touched.last_name && <Text style={styles.errorText}>{errors.last_name}</Text>}
-
-            <TextInput
-              name="username"
-              placeholder="Username"
-              style={styles.textInput}
-              onChangeText={handleChange('username')}
-              onBlur={handleBlur('username')}
-              value={values.username}
-              keyboardType="default"
-              placeholderTextColor={'black'}
-
-            />
-            {errors.username && touched.username && <Text style={styles.errorText}>{errors.username}</Text>}
-
-            <TextInput
+              <TextInput
               name="email"
               placeholder="Email"
-              style={styles.textInput}
+              style={[styles.textInput, { borderColor: themeStyles.accent }]}
               onChangeText={handleChange('email')}
               onBlur={handleBlur('email')}
               value={values.email}
@@ -115,23 +134,34 @@ export default function Signup({ navigation }) {
             />
             {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-            <TextInput
-              name="password"
-              placeholder="Password"
-              style={styles.textInput}
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              secureTextEntry
-              placeholderTextColor={'black'}
-
-            />
-            {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
+            <View style={styles.row}>
+                <TextInput
+                  name="username"
+                  placeholder="Username"
+                  style={[styles.textInput, styles.halfInput, { borderColor: themeStyles.accent }]}
+                  onChangeText={handleChange('username')}
+                  onBlur={handleBlur('username')}
+                  value={values.username}
+                  placeholderTextColor={themeStyles.text}
+                />
+                <TextInput
+                  name="password"
+                  placeholder="Password"
+                  style={[styles.textInput, styles.halfInput, { borderColor: themeStyles.accent }]}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  secureTextEntry
+                  placeholderTextColor={themeStyles.text}
+                />
+              </View>
+              {errors.username && touched.username && <Text style={styles.errorText}>{errors.username}</Text>}
+              {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
             <TextInput
               name="confirmPassword"
               placeholder="Confirm Password"
-              style={styles.textInput}
+              style={[styles.textInput, { borderColor: themeStyles.accent }]}
               onChangeText={handleChange('confirmPassword')}
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
@@ -144,7 +174,7 @@ export default function Signup({ navigation }) {
             <TextInput
               name="dob"
               placeholder="Date of Birth (YYYY-MM-DD)"
-              style={styles.textInput}
+              style={[styles.textInput, { borderColor: themeStyles.accent }]}
               onChangeText={handleChange('dob')}
               onBlur={handleBlur('dob')}
               value={values.dob}
@@ -154,40 +184,46 @@ export default function Signup({ navigation }) {
             />
             {errors.dob && touched.dob && <Text style={styles.errorText}>{errors.dob}</Text>}
 
-            <View style={styles.switchContainer}>
-              <Switch
-                value={termsAccepted}
-                onValueChange={(newValue) => {
-                  setTermsAccepted(newValue);
-                  setFieldValue('termsAccepted', newValue);
-                }}
-              />
-              <Text style={styles.label}>I accept the Terms and Conditions</Text>
-            </View>
-            {errors.termsAccepted && touched.termsAccepted && <Text style={styles.errorText}>{errors.termsAccepted}</Text>}
+            <View style={[styles.switchContainer, { backgroundColor: themeStyles.background }]}>
+  <Switch
+    trackColor={{ false: themeStyles.secondary, true: themeStyles.primary }}
+    thumbColor={termsAccepted ? themeStyles.accent : '#f4f3f6'}
+    ios_backgroundColor={themeStyles.secondary}
+    value={termsAccepted}
+    onValueChange={(newValue) => {
+      setTermsAccepted(newValue);
+      setFieldValue('termsAccepted', newValue);
+    }}
+  />
+  <Text style={[styles.label, { color: themeStyles.text }]}>I accept the Terms and Conditions</Text>
+</View>
+{errors.termsAccepted && touched.termsAccepted && <Text style={[styles.errorText, { color: themeStyles.accent }]}>{errors.termsAccepted}</Text>}
 
-            <View style={styles.switchContainer}>
-              <Switch
-                value={subscribeNewsletter}
-                onValueChange={(newValue) => {
-                  setSubscribeNewsletter(newValue);
-                  setFieldValue('subscribeNewsletter', newValue);
-                }}
-              />
-              <Text style={styles.label}>Subscribe to Newsletter</Text>
-            </View>
+<View style={[styles.switchContainer, { backgroundColor: themeStyles.background }]}>
+  <Switch
+    trackColor={{ false: themeStyles.secondary, true: themeStyles.primary }}
+    thumbColor={subscribeNewsletter ? themeStyles.accent : '#f4f3f6'}
+    ios_backgroundColor={themeStyles.secondary}
+    value={subscribeNewsletter}
+    onValueChange={(newValue) => {
+      setSubscribeNewsletter(newValue);
+      setFieldValue('subscribeNewsletter', newValue);
+    }}
+  />
+  <Text style={[styles.label, { color: themeStyles.text }]}>Subscribe to Newsletter</Text>
+</View>
 
-            <TouchableOpacity onPress={handleSubmit} style={styles.button} disabled={loading}>
-              <Text style={styles.buttonText}>Register</Text>
-            </TouchableOpacity>
+<TouchableOpacity onPress={handleSubmit} style={[styles.button, { backgroundColor: themeStyles.primary }]} disabled={loading}>
+  <Text style={[styles.buttonText, { color: themeStyles.text }]}>Register</Text>
+</TouchableOpacity>
             <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                setModalVisible(!modalVisible);
-              }}
-            >
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                   <Text style={styles.modalText}>Account successfully created!</Text>
@@ -203,30 +239,45 @@ export default function Signup({ navigation }) {
                 </View>
               </View>
             </Modal>
-          </>
+          </View>
         )}
       </Formik>
-    </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 // Define your styles for the Signup component here
 const styles = StyleSheet.create({
+
+  keyboardAvoidingView: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    // backgroundColor set dynamically from theme
+  },
+  formContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+  },
+  halfInput: {
+    width: '48%', // Take up less than half the row to account for margin
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   textInput: {
     height: 40,
-    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 20,
-    marginBottom: 20,
-    width: '100%',
+    marginBottom: 10,
     padding: 10,
+
   },
   button: {
     backgroundColor: 'blue',
