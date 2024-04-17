@@ -46,19 +46,7 @@ const AddDataOptions = ({ navigation }) => {
   const [allSubcategories, setAllSubcategories] = useState([]);
  const [filteredSubcategories, setFilteredSubcategories] = useState([]);
 
-//  useEffect(() => {
-//   const initializeData = async () => {
-//     const existingData = await AsyncStorage.getItem('subcategories');
-//     if (!existingData) {
-//       const jsonValue = JSON.stringify(defaultSubcategories);
-//       await AsyncStorage.setItem('subcategories', jsonValue);
-//       console.log('Default data has been set');
-//       console.log(jsonValue);
-//     }
-//     fetchData();
-//   };
-//   initializeData();
-// }, []);
+
 useEffect(() => {
   async function initializeData() {
 
