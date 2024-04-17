@@ -1,44 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import SubUserForm from './SubUserForm';
+import { useUser } from '../../UserContext'; // Import the context hook
 
 const { width } = Dimensions.get('window');
 
 const ProfileHolder = ({ adminData, subUserData }) => {
-    const [currentUser, setCurrentUser] = useState(null); // Start with null or a default loading state
+    const { currentUser, selectUser, userIndex } = useUser(); // Use context to manage user state
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);  // Start at the admin index
-
-    // Effect to handle initial data loading
-    useEffect(() => {
-        if (adminData) {
-            setCurrentUser(adminData); // Set the current user once the admin data is loaded
-        }
-    }, [adminData]);
 
     // Handles swiping left and right
     const handleSwipe = (direction) => {
-        let newIndex = currentIndex;
-        let totalUsers = 1 + subUserData.length; // Total users include admin
-        if (direction === 'left' && currentIndex < totalUsers - 1) {
-            newIndex += 1; // Move to next user
-        } else if (direction === 'right' && currentIndex > 0) {
-            newIndex -= 1; // Move to previous user
+        let newIndex = userIndex;
+        let totalUsers = 1 + subUserData.length; // Includes admin
+        if (direction === 'left' && userIndex < totalUsers - 1) {
+            newIndex += 1;
+        } else if (direction === 'right' && userIndex > 0) {
+            newIndex -= 1;
         }
-        if (newIndex !== currentIndex) {
-            setCurrentIndex(newIndex);
-            updateCurrentUser(newIndex);
-        }
-    };
-
-    // Update the current user based on the index
-    const updateCurrentUser = (index) => {
-        if (index === 0) {
-            setCurrentUser(adminData);
-        } else {
-            setCurrentUser(subUserData[index - 1]);
+        if (newIndex !== userIndex) {
+            const newUser = newIndex === 0 ? adminData : subUserData[newIndex - 1];
+            selectUser(newUser, newIndex); // Use context function to update user
         }
     };
 
@@ -51,14 +35,14 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                 }}
                 onCancel={() => setIsFormVisible(false)}
                 isVisible={isFormVisible}
-                adminUsername={adminData?.username}
+                adminUsername={currentUser?.username}
             />
             <View style={styles.user_profile}>
                 <View style={styles.user_Themebubble}>
                     {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={styles.user_image}>{currentUser ? (currentUser.initials || 'No Image') : 'Loading...'}</Text>
+                        <Text style={styles.user_image}>{currentUser?.initials || 'No Image'}</Text>
                     )}
                     <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
                         <Text style={styles.add_subuserText}>+</Text>
@@ -72,7 +56,7 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                     }}>
                     <View style={styles.user_detail}>
                         <Text style={styles.user_name}>{currentUser ? currentUser.username : 'Loading...'}</Text>
-                        <Text style={styles.user_age}>AGE: {currentUser ? currentUser.age : 'N/A'}</Text>
+                        <Text style={styles.user_age}>{currentUser ? `AGE: ${currentUser.age}` : 'N/A'}</Text>
                     </View>
                 </PanGestureHandler>
             </View>
