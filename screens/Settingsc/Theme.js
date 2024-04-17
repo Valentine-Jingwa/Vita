@@ -27,16 +27,18 @@ export const ThemeProvider = ({ children }) => {
   const themeStyles = theme === 'light' ? {
     text: '#0a090c',
     background: '#f7f7f8',
-    primary: '#7c7391',
-    secondary: '#c2b3bd',
-    accent: '#b09ba0',
+    primary: '#7c7391',       
+    secondary: '#c2b3bd',     
+    accent: '#8a84a3',        
   } : {
     text: '#f4f3f6',
     background: '#070708',
-    primary: '#776e8c',
-    secondary: '#4c3d47',
-    accent: '#644f54',
+    primary: '#8f88a3',       
+    secondary: '#605d6b',     
+    accent: '#7d778e',        
   };
+  
+  
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, themeStyles }}>
