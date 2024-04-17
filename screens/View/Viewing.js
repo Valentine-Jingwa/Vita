@@ -90,7 +90,11 @@ export default function Viewing() {
           <Text style={{ color: themeStyles.text }}>Toggle Filter</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 55, 
+        }}
+        >
         {renderGroupedSubcategories()}
       </ScrollView>
       {selectedSubcategory && (
