@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 5,
-    width: '90%', // Ensure it takes the full width of the modal
+    width: '80%', // Ensure it takes the full width of the modal
     flexDirection: 'row', // Arrange text in a row if suitable
     justifyContent: 'space-between', // Space out elements
     marginTop: 25, 
@@ -36,5 +36,4 @@ const styles = StyleSheet.create({
     fontSize: 16, // Smaller font size
     color: '#333', // Neutral text color
   },
-  // Modal and other styles...
 });

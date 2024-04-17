@@ -113,13 +113,14 @@ useEffect(() => {
 
       {/* Modal for Selected Date */}
       <Modal
-      animationType="slide"
-      transparent={true}
-      visible={selectedDateModalVisible}
-      onRequestClose={() => setSelectedDateModalVisible(false)}
-    >
-    <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
-      <View style={[styles.modalOverlay, { backgroundColor: `rgba(0, 0, 0, 0.8)` }]}>
+  animationType="slide"
+  transparent={true}
+  visible={selectedDateModalVisible}
+  onRequestClose={() => setSelectedDateModalVisible(false)}
+>
+  <TouchableWithoutFeedback onPress={() => setSelectedDateModalVisible(false)}>
+    <View style={styles.modalOverlay}>
+      <TouchableWithoutFeedback onPress={(event) => event.stopPropagation()}>
         <View style={[styles.modalView, {
             backgroundColor: themeStyles.background,
             shadowColor: themeStyles.text // Use text color from theme for shadow
@@ -130,18 +131,19 @@ useEffect(() => {
           >
           </TouchableOpacity>
           <ScrollView horizontal={false}>
-                {getDataForSelectedDate(selectedDate).length > 0 ? (
-                  getDataForSelectedDate(selectedDate).map((item, index) => (
-                    <CompactDataCard key={index} item={item} />
-                  ))
-                ) : (
-                  <Text style={[styles.noDataText, {color: themeStyles.text}]}>No data inputted for {selectedDate} </Text>
-                )}
-              </ScrollView>
+            {getDataForSelectedDate().length > 0 ? (
+              getDataForSelectedDate().map((item, index) => (
+                <CompactDataCard key={index} item={item} />
+              ))
+            ) : (
+              <Text style={[styles.noDataText, {color: themeStyles.text}]}>No data inputted for {selectedDate}</Text>
+            )}
+          </ScrollView>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
-    </Modal>
+      </TouchableWithoutFeedback>
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
 
 
       {/* Calendar Component */}
@@ -155,8 +157,8 @@ useEffect(() => {
         }}
         style={[styles.calendar, {
           borderColor: themeStyles.accent, 
-          shadowColor: themeStyles.text, // Use text color for shadow
-          backgroundColor: themeStyles.background, // Use background color for calendar
+          shadowColor: themeStyles.text, 
+          backgroundColor: themeStyles.background, 
         }]}
       />
 
@@ -312,7 +314,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
   },
   modalView: {
     width: '100%',
