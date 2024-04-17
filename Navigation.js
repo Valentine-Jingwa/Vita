@@ -21,7 +21,7 @@ import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
 import Settings from "./screens/Settingsc/Settings";
 import { useAuth } from './security/AuthContext'; 
-
+import RLogout from './screens/Profilesc/ProfileSettings';
 import Profile from "./screens/Profilesc/ProfileSettings";
 
 import { isTokenValid } from './security/auth/authUtils'; // Adjust the path as necessary
@@ -30,7 +30,6 @@ import { isTokenValid } from './security/auth/authUtils'; // Adjust the path as 
 //Bottom Tab animation
 import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
 import { navigationRef } from './NavigationService';
 
 //Icon Importation
