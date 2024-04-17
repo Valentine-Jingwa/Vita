@@ -129,7 +129,7 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('email')}
               value={values.email}
               keyboardType="email-address"
-              placeholderTextColor={'black'}
+              placeholderTextColor={themeStyles.text}
 
             />
             {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
@@ -166,7 +166,7 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
               secureTextEntry
-              placeholderTextColor={'black'}
+              placeholderTextColor={themeStyles.text}
 
             />
             {errors.confirmPassword && touched.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
@@ -179,7 +179,7 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('dob')}
               value={values.dob}
               keyboardType="default"
-              placeholderTextColor={'black'}
+              placeholderTextColor={themeStyles.text}
 
             />
             {errors.dob && touched.dob && <Text style={styles.errorText}>{errors.dob}</Text>}

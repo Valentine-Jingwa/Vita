@@ -25,18 +25,20 @@ export const ThemeProvider = ({ children }) => {
   };
 
   const themeStyles = theme === 'light' ? {
-    text: '#0a090c',
-    background: '#f7f7f8',
-    primary: '#7c7391',
-    secondary: '#c2b3bd',
-    accent: '#b09ba0',
+    text: '#2E2E2E', // Richer dark for text
+    background: '#FFFFFF', // Pure white for a clean, crisp background
+    primary: '#626D7A', // Cooler grey-blue for primary elements
+    secondary: '#A8B2C1', // Lighter grey-blue for secondary elements
+    accent: '#DCE1E9', // Very light grey-blue for accents
   } : {
-    text: '#f4f3f6',
-    background: '#070708',
-    primary: '#776e8c',
-    secondary: '#4c3d47',
-    accent: '#644f54',
+    // Dark mode styles unchanged
+    text: '#C7C7C7',
+    background: '#121212',
+    primary: '#27293D',
+    secondary: '#3D4050',
+    accent: '#555770',
   };
+  
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, themeStyles }}>
