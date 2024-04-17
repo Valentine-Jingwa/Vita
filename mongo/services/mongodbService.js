@@ -124,37 +124,38 @@ export const createUser = async (userData) => {
       throw error;
     }
   };
-
-    export const UploadSubUser = async (adminEmail, subUserData) => {
+  
+  export const UploadSubUser = async (adminEmail, subUserData) => {
     try {
-      // Construct the unique collection name
-      const collectionName = `${adminEmail}subusers`;
+        // Construct the unique collection name
+        const collectionName = `${adminEmail}subusers`;
 
-      const data = JSON.stringify({
-        collection: collectionName, 
-        database: "Vita_user", 
-        dataSource: DATA_SOURCE,
-        document: subUserData, 
-      });
+        const payload = {
+            collection: collectionName, 
+            database: "Vita_user", 
+            dataSource: DATA_SOURCE,
+            document: subUserData, // Ensure this matches the backend expectation
+        };
 
-      // Call to the serverless function to handle sub user upload
-      const response = await apiClient.post('/insertOne', {
-        collectionName,
-        subUserData,
-        dataSource: DATA_SOURCE,
-      });
+        // Ensure the endpoint and method match your server configuration
+        const response = await apiClient.post('/insertOne', JSON.stringify(payload), {
+            headers: {
+                'Content-Type': 'application/json',
+                'api-key': API_KEY,
+            }
+        });
 
-      if (response.data.success) {
-        // Optionally update local storage if needed
-        console.log('Sub-user successfully added to MongoDB.');
-        return true;
-      } else {
-        console.log('Failed to add sub-user to MongoDB.');
-        return false;
-      }
+        if (response.data.success) {
+            console.log('Sub-user successfully added to MongoDB.');
+            return true;
+        } else {
+            console.log('Failed to add sub-user to MongoDB.');
+            return false;
+        }
     } catch (error) {
-      console.error('Failed to add sub-user.', error);
-      return false;
+        console.error('Failed to add sub-user:', error);
+        return false;
     }
-  };
+};
+
   
