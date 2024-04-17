@@ -213,7 +213,7 @@ export default function Signup({ navigation }) {
   <Text style={[styles.label, { color: themeStyles.text }]}>Subscribe to Newsletter</Text>
 </View>
 
-<TouchableOpacity onPress={handleSubmit} style={[styles.button, { backgroundColor: themeStyles.primary }]} disabled={loading}>
+<TouchableOpacity onPress={handleSubmit} style={[styles.button, { backgroundColor: themeStyles.accent }]} disabled={loading}>
   <Text style={[styles.buttonText, { color: themeStyles.text }]}>Register</Text>
 </TouchableOpacity>
             <Modal
@@ -226,15 +226,15 @@ export default function Signup({ navigation }) {
         >
               <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                  <Text style={styles.modalText}>Account successfully created!</Text>
+                  <Text style={[styles.modalText, {color: themeStyles.text}]}>Account successfully created!</Text>
                   <TouchableOpacity
-                    style={[styles.button, styles.buttonClose]}
+                    style={[styles.button, {backgroundColor: themeStyles.accent, color: themeStyles.text}]}
                     onPress={() => {
                       setModalVisible(!modalVisible);
                       navigation.navigate('Login'); // Navigate to Login
                     }}
                   >
-                    <Text style={styles.textStyle}>Go to Login</Text>
+                    <Text style={[styles.textStyle]}>Go to Login</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -280,9 +280,9 @@ const styles = StyleSheet.create({
 
   },
   button: {
-    backgroundColor: 'blue',
     padding: 10,
     borderRadius: 5,
+    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
@@ -344,6 +344,6 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   buttonClose: {
-    backgroundColor: "#2196F3",
+    backgroundColor: "black",
   },
 });
