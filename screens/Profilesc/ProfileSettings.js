@@ -115,51 +115,52 @@ export default function ProfileSettings({ }) {
         <View>
 
        {/* Settings Modal */}
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={settingsModalVisible}
-      onRequestClose={toggleSettingsModal}
-    >
-      <TouchableWithoutFeedback onPress={toggleSettingsModal}>
-        <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
-          <TouchableWithoutFeedback>
-            <View style={[styles.modalContent, { backgroundColor: themeStyles.secondary }]}>
-              <Text style={[styles.modalTitle, { color: themeStyles.text }]}>Settings</Text>
+       <Modal
+    animationType="slide"
+    transparent={true}
+    visible={settingsModalVisible}
+    onRequestClose={toggleSettingsModal}
+  >
+    
+    <TouchableWithoutFeedback onPress={toggleSettingsModal}>
+      <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
+        <TouchableWithoutFeedback>
+          <View style={[styles.modalContent, { backgroundColor: themeStyles.secondary }]}>
+            <Text style={[styles.modalTitle, { color: themeStyles.text }]}>Settings</Text>
 
-              {/* Theme Toggle */}
-              <View style={styles.buttonWrapper}>
-                <TouchableOpacity style={styles.button} onPress={toggleTheme}>
-                  {theme === 'light' ? (
-                    <Day width={35} height={35}/>
-                  ) : (
-                    <Night width={35} height={35}/>
-                  )}
-                </TouchableOpacity>
-              </View>
-                
-              {/* Wipe SubUsers */}
+            {/* Theme Toggle at Top Left */}
+            <View style={styles.buttonWrapper}>
+              <TouchableOpacity onPress={toggleTheme}>
+                {theme === 'light' ? (
+                  <Day width={35} height={35} />
+                ) : (
+                  <Night width={35} height={35} />
+                )}
+              </TouchableOpacity>
+            </View>
+              
+            {/* Centralized List of Options */}
+            <View style={ [styles.settingsList]}>
               <TouchableOpacity onPress={handleClearSubUserStorage} style={[styles.modalOption, { backgroundColor: themeStyles.primary }]}>
                 <Text style={[styles.modalOptionText, { color: themeStyles.text }]}>Wipe SubUsers</Text>
               </TouchableOpacity>
-                
-              {/* Wipe Storage */}
               <TouchableOpacity onPress={handleClearStorage} style={[styles.modalOption, { backgroundColor: themeStyles.primary }]}>
                 <Text style={[styles.modalOptionText, { color: themeStyles.text }]}>Wipe Storage</Text>
               </TouchableOpacity>
-                
-              {/* Logout */}
-              <View style={styles.logoutButtonWrapper}>
-                <TouchableOpacity onPress={handleLogout} style={[styles.logoutButton, { backgroundColor: themeStyles.accent }]}>
-                  <RLogout width={40} height={40} fill={themeStyles.text}/>
-                </TouchableOpacity>
-              </View>
-                
             </View>
-          </TouchableWithoutFeedback>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
+              
+            {/* Logout at Bottom Right */}
+            <View style={styles.logoutButtonWrapper}>
+              <TouchableOpacity onPress={handleLogout}>
+                <RLogout width={30} height={30} fill={themeStyles.text}/>
+              </TouchableOpacity>
+            </View>
+              
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    </TouchableWithoutFeedback>
+  </Modal>
 
         </View>
     </SafeAreaView>
@@ -195,46 +196,58 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
   },
+  settingsList: {
+    width: '80%', // Make settings options take 80% of modal width
+    alignItems: 'center', // Center content horizontally
+  },
+
 
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)', 
   },
 
   modalContent: {
+    width: width * 0.8, // 80% of the screen width
+    height: height * 0.6, // 60% of the screen height
     backgroundColor: 'white',
+    borderRadius: 20,
     padding: 20,
-    borderRadius: 10,
-    width: '80%',
-    height: '60%',
+    justifyContent: 'center', // Center content vertically within the modal
+    alignItems: 'center', // Center content horizontally within the modal
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 20,
     textAlign: 'center',
+    position: 'absolute',
+    top: 45,
   },
   buttonWrapper: {
-    marginBottom: 20,
+    position: 'absolute',
+    top: 40,
+    left: 20,
   },
-  button: {
-    padding: 10,
-    borderRadius: 10,
+  logoutButtonWrapper: {
+    position: 'absolute',
+    right: 20,
+    bottom: 40,
   },
   modalOption: {
+    width: '100%', // Option takes full width of settingsList
+    backgroundColor: 'transparent',
     padding: 10,
     borderRadius: 10,
+    justifyContent: 'center', // Center text vertically
     marginBottom: 10,
   },
   modalOptionText: {
     fontSize: 16,
+    textAlign: 'center', // Center text horizontally
   },
 
-  logoutButtonWrapper: {
-    alignItems: 'center',
-  },
   logoutButton: {
     padding: 10,
     borderRadius: 20,

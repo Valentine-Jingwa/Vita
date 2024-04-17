@@ -32,12 +32,14 @@ export const ThemeProvider = ({ children }) => {
     accent: '#DCE1E9', // Very light grey-blue for accents
   } : {
     // Dark mode styles unchanged
-    text: '#C7C7C7',
-    background: '#121212',
-    primary: '#27293D',
-    secondary: '#3D4050',
-    accent: '#555770',
-  };
+=======
+    text: '#2E2E2E', 
+    background: '#FFFFFF', 
+    primary: '#626D7A', 
+    secondary: '#A8B2C1', 
+    accent: '#DCE1E9', 
+  } : {
+
   
 
   return (

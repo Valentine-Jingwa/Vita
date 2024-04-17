@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
   Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform,
-  Keyboard
+  Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
 import { UploadSubUser } from '../../mongo/services/mongodbService';
+import { useTheme } from '../Settingsc/Theme';
 
 
 const { width } = Dimensions.get('window');
@@ -19,6 +20,7 @@ const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
   const [dob, setDob] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [adminUsername, setAdminUsername] = useState('');
+  const { themeStyles } = useTheme();
 
 
   useEffect(() => {
@@ -36,6 +38,7 @@ const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
       setLastName('');
       setUsername('');
       setDob(new Date());
+      onCancel();
     }
   }, [isVisible]);
 
@@ -87,67 +90,84 @@ const SubUserForm = ({ onSave, onCancel, isVisible, dataOwner}) => {
   };
 
   return (
-    <Modal visible={isVisible} animationType="slide" transparent onRequestClose={onCancel}>
-      <View style={styles.modalOverlay}>
-        <View style={styles.container}>
-          <Text style={styles.inputLabel}>{`Account Holder: ${adminUsername}`}</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="First Name"
-            onChangeText={setFirstName}
-            value={firstName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Last Name"
-            onChangeText={setLastName}
-            value={lastName}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Username"
-            onChangeText={setUsername}
-            value={username}
-          />
-          <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
-            <Text style={styles.datePickerButtonText}>Select Date of Birth</Text>
-          </TouchableOpacity>
-          <Text style={styles.selectedDateText}>Selected Date: {formatDate(dob)}</Text>
-          {showDatePicker && (
-            <DateTimePicker
-              value={dob}
-              mode="date"
-              display="default"
-              onChange={onDateChange}
-              maximumDate={new Date()}
-            />
-          )}
+<Modal visible={isVisible} animationType="slide" transparent onRequestClose={onCancel}>
+  <TouchableWithoutFeedback onPress={onCancel}>
+    <View style={styles.modalOverlay}>
 
-          <TouchableOpacity onPress={saveSubUser} style={[styles.submitButton, !canSubmit && styles.disabledButton]} disabled={!canSubmit}>
-            <Text style={styles.submitButtonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.container, {backgroundColor: themeStyles.background}]}>
+        <Text style={[styles.inputLabel, { color: themeStyles.text }]}>{`Account Holder: ${adminUsername}`}</Text>
+        <TextInput
+          style={[styles.input, { borderColor: themeStyles.primary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
+          placeholder="First Name"
+          placeholderTextColor={themeStyles.text}
+          onChangeText={setFirstName}
+          value={firstName}
+        />
+        <TextInput
+          style={[styles.input, { borderColor: themeStyles.primary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
+          placeholder="Last Name"
+          placeholderTextColor={themeStyles.text}
+          onChangeText={setLastName}
+          value={lastName}
+        />
+        <TextInput
+          style={[styles.input, { borderColor: themeStyles.primary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
+          placeholder="Username"
+          placeholderTextColor={themeStyles.text}
+          onChangeText={setUsername}
+          value={username}
+        />
+        <TouchableOpacity onPress={() => setShowDatePicker(true)} style={[styles.datePickerButton, {backgroundColor: themeStyles.accent}]}>
+          <Text style={[styles.datePickerButtonText,{color: themeStyles.text} ]}>Select Date of Birth</Text>
+        </TouchableOpacity>
+        {showDatePicker && (
+            <View style={[styles.datePickerContainer, {alignSelf: 'center'}]}>
+              <DateTimePicker
+                value={dob}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'clock' : 'default'}
+                onChange={onDateChange}
+                maximumDate={new Date()}
+                style={styles.datePicker}
+              />
+            </View>
+          )}
+        <Text style={[styles.selectedDateText, { color: themeStyles.text, alignSelf: 'center' }]}>
+          Selected Date: {formatDate(dob)}
+        </Text>
+        <TouchableOpacity onPress={saveSubUser} style={[styles.submitButton, {backgroundColor: themeStyles.secondary}]} disabled={!canSubmit}>
+          <Text style={[styles.submitButtonText, { color: themeStyles.text }]}>Save</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onCancel} style={[styles.cancelButton, { backgroundColor: themeStyles.secondary }]}>
+          <Text style={[styles.cancelButtonText, { color: themeStyles.text }]}>Cancel</Text>
+        </TouchableOpacity>
       </View>
-    </Modal>
+    </View>
+  </TouchableWithoutFeedback>
+</Modal>
+
   );
 };
 
 const styles = StyleSheet.create({
+  
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
+  datePickerContainer: {
+    width: '100%', 
+    alignItems: 'center', 
+    margin: 10,
+  },
   container: {
     width: width * 0.8,
-    backgroundColor: '#FFF',
     padding: 20,
     borderRadius: 10,
     shadowColor: "#000",
+    alignSelf: 'center',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -173,13 +193,11 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   submitButton: {
-    backgroundColor: '#4F4F4F',
     paddingVertical: 12,
     borderRadius: 5,
     marginBottom: 10,
   },
   submitButtonText: {
-    color: '#FFF',
     fontSize: 16,
     textAlign: 'center',
   },
@@ -200,7 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5578ff',
     padding: 10,
     borderRadius: 5,
-    marginBottom: 5,
+    marginBottom: 10,
   },
   datePickerButtonText: {
     textAlign: 'center',
