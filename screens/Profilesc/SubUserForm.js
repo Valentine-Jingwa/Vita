@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform, Button,
-  Keyboard
+  Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Dimensions, Platform,
+  Keyboard, DateTimePicker
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SubUserStorage from './subUser';
 
@@ -26,28 +25,44 @@ const SubUserForm = ({ onSave, onCancel, isVisible, adminUsername }) => {
   }, [isVisible]);
 
   const onDateChange = (event, selectedDate) => {
-    setShowDatePicker(Platform.OS === 'ios');  // Keeps the picker open on iOS after selection.
+    setShowDatePicker(Platform.OS === 'ios');
     if (selectedDate) {
       setDob(selectedDate);
     }
   };
 
   const formatDate = (date) => {
-    return date.toLocaleDateString();  // You can adjust the format as needed
+    return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
   };
 
-  const canSubmit = firstName.trim() !== '' && lastName.trim() !== '' && username.trim() !== '' && dob instanceof Date;
+  const calculateAge = (dob) => {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
+  const getInitials = (firstName, lastName) => {
+    return `${firstName[0].toUpperCase()}${lastName[0].toUpperCase()}`;
+  };
+
+  const canSubmit = firstName.trim() !== '' && lastName.trim() !== '' && username.trim() !== '';
 
   const saveSubUser = async () => {
     if (canSubmit) {
-      const subUserData = { firstName, lastName, username, dob: formatDate(dob), adminUsername };
+      const age = calculateAge(dob);
+      const initials = getInitials(firstName, lastName);
+      const subUserData = { firstName, lastName, username, dob: formatDate(dob), age, initials, adminUsername };
       try {
         await SubUserStorage.addSubUser(subUserData);
-        onSave(subUserData); // Assuming onSave is meant to handle the UI update/notification
-        onCancel(); // Close the modal
+        onSave(subUserData);
+        onCancel();
       } catch (error) {
         console.error("Failed to save sub-user:", error);
-        // Handle errors (e.g., show a message to the user)
       }
     }
   };
