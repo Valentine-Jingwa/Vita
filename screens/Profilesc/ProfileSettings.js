@@ -93,91 +93,75 @@ export default function ProfileSettings({ }) {
   }, [adminUser?.email]);
     
   return (
-    <SafeAreaView style={styles.container}>
-        {/* The user profile section the Profile will take parameters */}     
-        {/* <Profile userData={adminUser}/>  */}
-        <Profile adminData={adminUser} subUserData={subUsers} />
+    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
+      <Profile adminData={adminUser} subUserData={subUsers} style={{ color: themeStyles.text }} />
 
-
-        <View style={styles.profileOptions}>
-
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UpdatePage')} >
-        
-            <Text style={styles.Option_Text}>Update Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserSynch')}>
-            <Text style={styles.Option_Text}>Account Synch</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('NotificationPage')}>
-            <Text style={styles.Option_Text}>Notifications</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.Options_btn} onPress={() => navigation.navigate('UserLogs')}>
-            <Text style={styles.Option_Text}>View Logs</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={[styles.profileOptions, {backgroundColor: themeStyles.secondary}]}>
+        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UpdatePage')}>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Update Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserSynch')}>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Synch</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('NotificationPage')}>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Notifications</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserLogs')}>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>View Logs</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={toggleSettingsModal}>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Settings</Text>
+        </TouchableOpacity>
+      </View>
 
         <View>
-          {/* Settings Button */}
-          <TouchableOpacity
-            onPress={toggleSettingsModal}
-            style={styles.settingsButton}
-          >
-            <Text style={styles.settingsButtonText}>Settings</Text>
-          </TouchableOpacity>
 
+       {/* Settings Modal */}
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={settingsModalVisible}
+      onRequestClose={toggleSettingsModal}
+    >
+      <TouchableWithoutFeedback onPress={toggleSettingsModal}>
+        <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
+          <TouchableWithoutFeedback>
+            <View style={[styles.modalContent, { backgroundColor: themeStyles.secondary }]}>
+              <Text style={[styles.modalTitle, { color: themeStyles.text }]}>Settings</Text>
 
-                {/* Settings Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={settingsModalVisible}
-        onRequestClose={toggleSettingsModal}
-      >
-        <TouchableWithoutFeedback onPress={toggleSettingsModal}>
-          <View style={styles.modalOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Settings</Text>
-
-                {/* Theme Toggle */}
-                <View style={styles.ldbtnwrapper}>
-                  <TouchableOpacity style={[styles.button, ]} onPress={toggleTheme}>
-                    {theme === 'light' ? (
-                      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <Day width={35} height={35}/>
-                      </View>
-                    ) : (
-                      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <Night width={35} height={35}/>
-                      </View>
-                    )}
-                  </TouchableOpacity>
-                </View>
-
-                {/* Wipe SubUsers */}
-                <TouchableOpacity onPress={handleClearSubUserStorage} style={styles.modalOption}>
-                  <Text style={styles.modalOptionText}>Wipe SubUsers</Text>
+              {/* Theme Toggle */}
+              <View style={styles.buttonWrapper}>
+                <TouchableOpacity style={styles.button} onPress={toggleTheme}>
+                  {theme === 'light' ? (
+                    <Day width={35} height={35}/>
+                  ) : (
+                    <Night width={35} height={35}/>
+                  )}
                 </TouchableOpacity>
-
-                {/* Wipe Storage */}
-                <TouchableOpacity onPress={handleClearStorage} style={styles.modalOption}>
-                  <Text style={styles.modalOptionText}>Wipe Storage</Text>
-                </TouchableOpacity>
-
-                {/* Logout */}
-                <View style={styles.logoutButtonWrapper}>
-                  <TouchableOpacity onPress={handleLogout} style={[styles.logoutbtn, {backgroundColor: themeStyles.accent}]}>
-                    <View style={[styles.buttonText, { color: themeStyles.text }]}>
-                      <RLogout width={40} height={40}/>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                
               </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+                
+              {/* Wipe SubUsers */}
+              <TouchableOpacity onPress={handleClearSubUserStorage} style={[styles.modalOption, { backgroundColor: themeStyles.primary }]}>
+                <Text style={[styles.modalOptionText, { color: themeStyles.text }]}>Wipe SubUsers</Text>
+              </TouchableOpacity>
+                
+              {/* Wipe Storage */}
+              <TouchableOpacity onPress={handleClearStorage} style={[styles.modalOption, { backgroundColor: themeStyles.primary }]}>
+                <Text style={[styles.modalOptionText, { color: themeStyles.text }]}>Wipe Storage</Text>
+              </TouchableOpacity>
+                
+              {/* Logout */}
+              <View style={styles.logoutButtonWrapper}>
+                <TouchableOpacity onPress={handleLogout} style={[styles.logoutButton, { backgroundColor: themeStyles.accent }]}>
+                  <RLogout width={40} height={40} fill={themeStyles.text}/>
+                </TouchableOpacity>
+              </View>
+                
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
         </View>
     </SafeAreaView>
     );
@@ -188,24 +172,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
   },
   ldbtnwrapper: {
     position: 'absolute',
     top: 5,
     left: 10,
   },
+  Options_btn: {
+    padding: 10,
+    borderRadius: 10,
+  },
+  Option_Text: {
+    fontSize: 16,
+  },
   settingsButton: {
+    padding: 15,
+    borderRadius: 30,
+    alignItems: 'center',
+  },
+  settingsWrp: {
     position: 'absolute',
-    button: 40, // Adjust the position as needed
-    right: 5,
-    // Add more styling as per your app's theme
+    bottom: 10,
+    right: 10,
   },
 
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 
   modalContent: {
@@ -214,33 +210,46 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '80%',
     height: '60%',
-    // Add shadow or other styling as per your app's theme
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
-    // Color and other text styles
+  },
+  buttonWrapper: {
+    marginBottom: 20,
+  },
+  button: {
+    padding: 10,
+    borderRadius: 10,
   },
   modalOption: {
     padding: 10,
-    // Add border or background styles for the options
+    borderRadius: 10,
+    marginBottom: 10,
   },
   modalOptionText: {
-    fontSize: 18,
-    // Color and other text styles
+    fontSize: 16,
+  },
+
+  logoutButtonWrapper: {
+    alignItems: 'center',
+  },
+  logoutButton: {
+    padding: 10,
+    borderRadius: 20,
   },
 
   profileOptions: {
-    width: width, // Full width
-    height: '40%', // Full height
+    width: "90%",
+    height: "45%", // Full height
     flexDirection: 'column',
     justifyContent: 'space-evenly', // Add some space between the items
     borderRadius: 25, // Set border radius to match design
     backgroundColor: '#f0f0f0', // Set background color to a light grey
-    paddingBottom: 30, // Add some bottom padding
     alignItems: 'center', // Center the items
+    marginBottom: 20, 
     },
     Options_btn: {
         width: '80%', // 80% width
