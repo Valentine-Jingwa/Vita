@@ -121,6 +121,7 @@ export default function ProfileSettings({ }) {
     visible={settingsModalVisible}
     onRequestClose={toggleSettingsModal}
   >
+    
     <TouchableWithoutFeedback onPress={toggleSettingsModal}>
       <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
         <TouchableWithoutFeedback>

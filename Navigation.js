@@ -135,7 +135,7 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent size={24} />
+              <IconComponent size={24}  />
             </Animated.View>
           );
         },
