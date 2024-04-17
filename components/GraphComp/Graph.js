@@ -1,105 +1,58 @@
-// GraphModal.js
-import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Includes} from 'react-native';
+import React from 'react';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
-import DataStorage from '../Datahandling/DataStorage';
 import { AntDesign } from '@expo/vector-icons';
-import {useTheme} from '../../screens/Settingsc/Theme';
+import { useTheme } from '../../screens/Settingsc/Theme';
 
-const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
-  const [content, setContent] = useState(null);
+const GraphModal = ({ isVisible, onClose, userData }) => {
   const { themeStyles } = useTheme();
 
-
-
-  useEffect(() => {
-    fetchDataForSubcategory();
-  }, [isVisible, selectedSubcategory]);
-
-  const fetchDataForSubcategory = async () => {
-    if (!isVisible) return;
-    const data = await DataStorage.getDataForSubcategory(selectedSubcategory);
-    
-    if (!data || data.length === 0) {
-      setContent(<Text style={styles.noDataText}>No Data Available</Text>);
-      return;
-    }
-
-    const isNumeric = data.every(item => !isNaN(item.value));
-    if (isNumeric) {
-      prepareChartData(data);
-    } else {
-      prepareTextualData(data);
-    }
-  };
-
   const prepareChartData = (data) => {
-    const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const labels = sortedData.map(item => {
+    const labels = data.map(item => {
       const date = new Date(item.timestamp);
-      return `${date.getDate()} ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+      return `${date.getDate()}/${date.getMonth() + 1}`;
     });
-  
-    const values = sortedData.map(item => parseFloat(item.value));
-  
-    const chartWidth = Math.max(labels.length * 80, Dimensions.get('window').width);
-  
+    const values = data.map(item => parseFloat(item.value));
+    const chartWidth = Dimensions.get('window').width * 0.9;  // Dynamic width based on screen size
+
     const chartData = {
       labels,
-      datasets: [{ data: values }],
+      datasets: [{ data: values }]
     };
 
-  
-    setContent(
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={{ flexGrow: 0, width: '100%', height: 400 }}
-      contentContainerStyle={{ alignItems: 'center' }}
-    >
+    return (
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scrollView}>
         <LineChart
           data={chartData}
-          width={chartWidth} // Use the dynamic width
-          height={400}
-          // height={Dimensions.get('window').height * 0.4}
+          width={chartWidth}
+          height={220}
           chartConfig={{
-            backgroundGradientFrom: '#ffffff',
-            backgroundGradientTo: '#ffffff',
+            backgroundColor: themeStyles.background,
+            backgroundGradientFrom: themeStyles.background,
+            backgroundGradientTo: themeStyles.background,
             decimalPlaces: 2,
-            color: () => `rgba(0, 0, 0, 1)`,
-            labelColor: (opacity = 1, index) => index % 2 === 0 ? `rgba(255, 0, 0, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+            color: () => themeStyles.text.color,
+            labelColor: () => themeStyles.text.color,
             style: {
-              borderRadius: 16,
+              borderRadius: 16
             },
             propsForDots: {
               r: '6',
-              strokeWidth: '1',
-              stroke: 'blue',
-            },
-            propsForBackgroundLines: {
-              strokeDasharray: '',
-            },
+              strokeWidth: '2',
+              stroke: themeStyles.accent.color,
+            }
           }}
           bezier
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
+          style={styles.chart}
         />
       </ScrollView>
-      </View>
     );
   };
-  
-  
-  
 
   const prepareTextualData = (data) => {
-    const sortedData = data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    setContent(
-      <ScrollView style={{ maxHeight: 200 }}>
-        {sortedData.map((item, index) => (
+    return (
+      <ScrollView style={styles.dataList}>
+        {data.map((item, index) => (
           <View key={index} style={styles.textItem}>
             <Text>Date: {new Date(item.timestamp).toLocaleDateString()}</Text>
             <Text>Data: {item.value}</Text>
@@ -109,6 +62,8 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
     );
   };
 
+  const content = userData.every(item => !isNaN(item.value)) ? prepareChartData(userData) : prepareTextualData(userData);
+
   return (
     <Modal
       visible={isVisible}
@@ -116,22 +71,15 @@ const GraphModal = ({ isVisible, onClose, selectedSubcategory }) => {
       animationType="slide"
       onRequestClose={onClose}
     >
-    <TouchableOpacity
-      style={styles.overlay}
-      activeOpacity={1} // Maintain the overlay's visibility when pressed
-      onPressOut={onClose} // Close the modal when the overlay is pressed
-      >
-      <View
-      style={styles.modalView}
-      onStartShouldSetResponder={() => true} // Prevents the overlay's onPress event from triggering when the modal view is interacted with
-      >
+      <TouchableOpacity style={styles.overlay} activeOpacity={1} onPressOut={onClose}>
+        <View style={styles.modalView}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <AntDesign name="close" size={24} color="black" />
+            <AntDesign name="close" size={24} color={themeStyles.text.color} />
           </TouchableOpacity>
-          <Text style={styles.modalTitle}>Data for {selectedSubcategory}</Text>
+          <Text style={[styles.modalTitle, { color: themeStyles.text.color }]}>Graph for {userData[0]?.subcategory}</Text>
           {content}
         </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
     </Modal>
   );
 };
@@ -143,16 +91,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
   modalView: {
     width: '90%',
-    minHeight: '50%', // Ensure the modal has a minimum height
-    maxHeight: '80%', // Adjust the height as needed
+    minHeight: '50%',
+    maxHeight: '80%',
     backgroundColor: 'white',
     borderRadius: 20,
     padding: 15,
@@ -170,16 +112,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   closeButton: {
+    alignSelf: 'flex-end',
     marginTop: 5,
-    borderRadius: 20,
     padding: 10,
+    borderRadius: 20,
     elevation: 2,
-    alignSelf: 'flex-end',
-
   },
-  closeButtonText: {
-    textAlign: 'center',
-    alignSelf: 'flex-end',
+  scrollView: {
+    flexGrow: 0,
+    width: '100%',
+    height: 400
+  },
+  chart: {
+    marginVertical: 8,
+    borderRadius: 16,
+  },
+  dataList: {
+    maxHeight: 200
   },
   textItem: {
     padding: 10,
@@ -191,7 +140,7 @@ const styles = StyleSheet.create({
   noDataText: {
     fontSize: 18,
     color: '#666',
-  },
+  }
 });
 
 export default GraphModal;
