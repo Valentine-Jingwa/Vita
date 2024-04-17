@@ -7,7 +7,7 @@ import units from './UnitList'; // Assuming this is a new file you've created wi
 import { Picker } from '@react-native-picker/picker'; // Import Picker
 import {useTheme} from '../Settingsc/Theme';
 
-const NewSubForm = ({ isVisible, onClose, categoryname}) => {
+const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
@@ -54,11 +54,11 @@ const NewSubForm = ({ isVisible, onClose, categoryname}) => {
     try {
       const existingDataJson = await AsyncStorage.getItem('subcategories');
       const existingData = existingDataJson ? JSON.parse(existingDataJson) : [];
-      const updatedData = [...existingData, newSubcategory];
-      await AsyncStorage.setItem('subcategories', JSON.stringify(updatedData));
+      existingData.push(newSubcategory);
+      await AsyncStorage.setItem('subcategories', JSON.stringify(existingData));
       Alert.alert('Success', 'Subcategory added successfully.');
+      onNewSubcategoryAdded(newSubcategory); 
       resetForm();
-      onClose(); 
     } catch (error) {
       Alert.alert('Error', 'There was an error saving the subcategory.');
     }

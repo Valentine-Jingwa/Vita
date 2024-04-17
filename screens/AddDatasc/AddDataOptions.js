@@ -64,6 +64,12 @@ const AddDataOptions = ({ navigation }) => {
     fetchAdminUser();
   }, []);
 
+  // Function to update subcategories list in AddDataOptions
+const handleNewSubcategoryAdded = (newSubcategory) => {
+  setFilteredSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
+  setAllSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
+};
+
 
      // Function to show notification
      const showNotification = (message) => {
@@ -203,11 +209,7 @@ useEffect(() => {
                   {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
               </View>
               </View>
-              <ScrollView
-              contentContainerStyle={{
-                paddingBottom: 20,
-              }}
-            >
+              <ScrollView contentContainerStyle={{ paddingBottom: 20,}}>
                 <View style={styles.BentoBoxlayout}>
                   {filteredSubcategories.map((subcategory, index) => (
                     <TouchableOpacity 
@@ -215,6 +217,7 @@ useEffect(() => {
                       onPress={() => handleSubcategorySelect(subcategory)} 
                       style={[styles.subcategoryBox, { backgroundColor: themeStyles.primary }]}
                     >
+
                       <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
                     </TouchableOpacity>
                   ))}
@@ -226,7 +229,12 @@ useEffect(() => {
               </ScrollView>
           </View>
       )}
-      <NewSubForm isVisible={formVisible} onClose={() => setFormVisible(false)} categoryname={selectedCategory}/>
+    <NewSubForm
+      isVisible={formVisible}
+      onClose={() => setFormVisible(false)}
+      categoryname={selectedCategory}
+      onNewSubcategoryAdded={handleNewSubcategoryAdded}
+    />
       <DataEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} subcategory={selectedSubcategory} onSave={handleSave} />
 </SafeAreaView>
   );
