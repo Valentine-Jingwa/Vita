@@ -7,6 +7,7 @@ import { useAuth } from './AuthContext'; // Ensure this path matches your AuthCo
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
 import {useTheme} from '../screens/Settingsc/Theme';
 import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
+import { fetchAndStoreSubcategories } from '../mongo/services/mongodbService'; // Ensure this is properly imported
 
 
 export default function Login({ navigation }) {
@@ -17,28 +18,16 @@ export default function Login({ navigation }) {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
-        const { token } = await authenticateUser(values.loginId, values.password);
-        const currentEmail = await getCurrentUserEmail();
         const loginResponse = await authenticateUser(values.loginId, values.password);
-        if (loginResponse.success) {
-          if (currentEmail !== email) {
-              await clearLocalData(); // Clear data if different user
-              console.log('Cleared local data due to different user login');
-          }
-
-          // Always check for new data from the database to keep local up-to-date
-          await setCurrentUserEmail(email); // Update the current user email in storage
-
-          // Proceed with user login success actions
-      } else {
-          console.error('Login failed:', loginResponse.message);
-      }
-         await login(token);
-        // navigation.navigate('BottomTabs'); // Ensure your navigation and route names are correctly set up
+        if (loginResponse.token) {
+            // Assuming loginResponse returns a token and user email
+            await login(loginResponse.token); // Login context update
+            await fetchAndStoreSubcategories(loginResponse.user.email); // Fetch and store subcategories
+        } else {
+            console.error('Login failed:', loginResponse.message);
+        }
     } catch (error) {
-        // Assuming error.response.data contains a descriptive error message
-        const errorMessage = error.response?.data?.error || 'Failed to login';
-        alert(errorMessage);
+        alert("Failed to login: " + (error.message || "Unknown error"));
     } finally {
         setLoading(false);
     }

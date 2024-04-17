@@ -82,13 +82,12 @@ export const getCurrentUserEmail = async () => {
 
 export const clearLocalData = async (STORAGE_KEY) => {
     try {
-        await AsyncStorage.clear();
-        console.log('Local storage cleared successfully');
+        await AsyncStorage.removeItem(STORAGE_KEY);
+        console.log('Local data cleared successfully');
     } catch (error) {
-        console.error('Failed to clear local storage:', error);
+        console.error('Failed to clear local data:', error);
     }
-};
-
+}
 
 
 

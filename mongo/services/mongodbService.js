@@ -106,9 +106,6 @@ export const createUser = async (userData) => {
         // Add calculated age and initials to user data, retain dob
         const userDataWithAgeAndInitials = { ...safeUserData, age, initials };
   
-        // Log for debugging
-        console.log("User Data with Age and Initials:", userDataWithAgeAndInitials);
-  
         // Store user data without sensitive information, including calculated age, dob, and initials
         await AsyncStorage.setItem('adminUser', JSON.stringify(userDataWithAgeAndInitials));
   
@@ -124,7 +121,7 @@ export const createUser = async (userData) => {
       throw error;
     }
   };
-  
+
   export const UploadSubUser = async (adminEmail, subUserData) => {
     try {
         // Construct the unique collection name
@@ -158,4 +155,29 @@ export const createUser = async (userData) => {
     }
 };
 
-  
+
+export const fetchAndStoreSubcategories = async (userEmail) => {
+  try {
+      const collectionName = `${userEmail}subcategories`;
+      const payload = {
+          collection: collectionName, 
+          database: "Vita_user", 
+          dataSource: DATA_SOURCE,
+      };
+      const response = await apiClient.post('/find', JSON.stringify(payload), {
+          headers: {
+              'Content-Type': 'application/json',
+              'api-key': API_KEY,
+          }
+      });
+      if (response.data.documents) {
+          const subcategories = response.data.documents.map(({ _id, ...sub }) => sub);
+          await AsyncStorage.setItem('subcategories', JSON.stringify(subcategories));
+          console.log('Subcategories downloaded and stored locally');
+      } else {
+          console.error('No subcategories found');
+      }
+  } catch (error) {
+      console.error('Error fetching and storing subcategories:', error);
+  }
+};
