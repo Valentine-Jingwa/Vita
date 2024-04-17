@@ -27,7 +27,7 @@ const Welcome = ({ navigation }) => {
             </View>
             <View style={styles.textbox}>
                 <Text style={[styles.description, ]}>
-                    Input data and get it processed for your next appointment
+                    "Input data and get it stored for your next appointment."
                 </Text>
             </View>
             <View style={styles.buttonContainer}>
