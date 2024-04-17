@@ -8,6 +8,7 @@ import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust t
 import {useTheme} from '../screens/Settingsc/Theme';
 import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
 import { fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService'; // Ensure this is properly imported
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Login({ navigation }) {
@@ -17,6 +18,7 @@ export default function Login({ navigation }) {
 
   const handleLogin = async (values) => {
     setLoading(true);
+    // await AsyncStorage.removeItem('subcategories');
     try {
         const loginResponse = await authenticateUser(values.loginId, values.password);
         if (loginResponse.token) {
