@@ -123,9 +123,7 @@ const AddDataOptions = ({ navigation }) => {
           dataOwner: currentUser.username  
         };
         await DataStorage.Store(newDataPoint);
-        console.log(newDataPoint);
         setModalVisible(false);
-        showNotification('Data successfully saved');
         // fetchData();  // Optionally re-fetch data if needed
       } catch (error) {
         console.error('Save error:', error);
@@ -149,7 +147,6 @@ const fetchData = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('subcategories');
     const data = jsonValue != null ? JSON.parse(jsonValue) : [];
-    console.log('Data successfully fetched');
     setAllSubcategories(data);
     setFilteredSubcategories(data); // Initially, filtered list shows all items
   } catch (e) {

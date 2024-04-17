@@ -79,9 +79,7 @@ const getMarkedDates = () => {
 
 
 useEffect(() => {
-  fetchData().then(() => {
-    console.log("Data Loaded:", data);
-  });
+  fetchData();
 }, []);
 
   useFocusEffect(

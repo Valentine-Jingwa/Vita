@@ -33,7 +33,6 @@ const ProfileHolder = ({ adminData, subUserData }) => {
         <SafeAreaView>
             <SubUserForm
                 onSave={(data) => {
-                    console.log('Sub-user data:', data);
                     setIsFormVisible(false);
                 }}
                 onCancel={() => setIsFormVisible(false)}

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const STORAGE_KEY = 'localData';
 
@@ -17,10 +18,8 @@ const DataStorage = {
 
       const updatedData = [...existingData, newData];
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedData));
-      console.log('Data successfully saved.');
     } catch (error) {
-      console.error('Failed to save data.', error);
-    }
+      Alert.alert('Failed to save data.', error);}
   },
 
   async Retrieve() {
