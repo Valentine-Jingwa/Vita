@@ -41,7 +41,7 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
                         <Text style={[styles.user_image, { color: themeStyles.text, backgroundColor: themeStyles.secondary }]}>
-                            {currentUser?.initials || 'John'}
+                            {currentUser?.initials || 'Rien'}
                         </Text>
                     )}
                     <TouchableOpacity onPress={() => setIsFormVisible(true)} style={[styles.add_subuser, {backgroundColor: themeStyles.text}]}>
