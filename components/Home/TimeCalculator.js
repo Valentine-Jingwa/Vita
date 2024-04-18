@@ -1,9 +1,10 @@
 // TimeCalculator.js
 import React from 'react';
 import { SafeAreaView, Text, StyleSheet, View, ScrollView, } from 'react-native';
+import { useTheme } from '../../screens/Settingsc/Theme'; // Import the useTheme hook
 
 const TimeCalculator = ({ timestamp }) => {
-  // Format the date directly without calculating elapsed time
+  const { themeStyles } = useTheme();  // Format the date directly without calculating elapsed time
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
@@ -20,7 +21,7 @@ const TimeCalculator = ({ timestamp }) => {
 
   return (
     <View>
-      <Text style={styles.dateText}>{formatDate(timestamp)}</Text>
+      <Text style={[styles.dateText, { color: themeStyles.text }]}>{formatDate(timestamp)}</Text>
     </View>
   );
 };
