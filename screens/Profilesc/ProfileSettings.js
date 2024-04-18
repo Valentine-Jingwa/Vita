@@ -4,9 +4,7 @@ import { SafeAreaView, Text, StyleSheet, View, Dimensions, Image, TouchableOpaci
 import Profile from './ProfileHolder'; // Ensure this is correctly imported
 import SubUserStorage from './subUser';
 import AdminUserStorage from './AdminUser';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useNavigation } from '@react-navigation/native';
-import ThemedText from '../Settingsc/ThemedText';
 import { useFocusEffect } from '@react-navigation/native';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import {Day, Night, RLogout} from '../../assets/Icon';
@@ -99,7 +97,7 @@ export default function ProfileSettings({ }) {
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Update Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserSynch')}>
-          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Synch</Text>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Sync</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('NotificationPage')}>
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Notifications</Text>

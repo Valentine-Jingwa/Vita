@@ -24,12 +24,12 @@ const DataCard = ({ item }) => {
                 <View style={styles.textGroup}>
                     <Text style={[styles.subcatName, { color: themeStyles.text }]}>{item.subcategory}</Text>
                     <View style={styles.valueContainer}>
-                        <Text style={[styles.textvalue, { color: themeStyles.primary }]}>{item.value}</Text>
-                        <Text style={[styles.textunit, { color: themeStyles.secondary }]}>{item.unit}</Text>
+                        <Text style={[styles.textvalue, { color: themeStyles.text }]}>{item.value}</Text>
+                        <Text style={[styles.textunit, { color: themeStyles.text }]}>{item.unit}</Text>
                     </View>
                 </View>
-                <View style={styles.timeContainer}>
-                    <TimeCalculator timestamp={item.timestamp} />
+                <View style={[styles.timeContainer]}>
+                    <TimeCalculator style={{color: themeStyles.text}} timestamp={item.timestamp} />
                 </View>
             </LinearGradient>
         </TouchableOpacity>

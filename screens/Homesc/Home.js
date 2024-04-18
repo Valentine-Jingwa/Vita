@@ -104,7 +104,7 @@ useEffect(() => {
   return (
     <SafeAreaView style={[styles.screenContainer, {backgroundColor: themeStyles.background}]}>
       <TouchableOpacity style={styles.iconButton} onPress={() => setReminderModalVisible(true)}>
-        <Iclock width={40} height={40} />
+        <Iclock width={40} height={40} stroke={themeStyles.accent} />
       </TouchableOpacity>
 
       <ReminderModal

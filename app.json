@@ -5,10 +5,10 @@
     "slug": "Vita",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logo/logo12.png",
+    "icon": "./assets/logo/AppLogo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/logo/logo12.png",
+      "image": "./assets/logo/Logo2.png",
       "resizeMode": "contain",
       "backgroundColor": "#f9f6f7"
     },
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo/2.png",
+        "foregroundImage": "./assets/logo/Logo2.png",
         "backgroundColor": "#f9f6f7"
       },
       "package": "com.yourcompany.vita"

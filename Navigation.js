@@ -55,16 +55,15 @@ import UpdatePage from './screens/Profilesc/options/Update';
 function ProfileStackScreen() {
   return (
     <ProfileStack.Navigator>
-      <ProfileStack.Screen name="Profilepage" component={Profile} options={{ headerShown: false  }}/>
-      <ProfileStack.Screen name="UserThemes" component={UserThemes} />
-      <ProfileStack.Screen name="UserLogs" component={UserLogs} />
-      <ProfileStack.Screen name="NotificationPage" component={NotificationPage} />
-      <ProfileStack.Screen name="UserSynch" component={UserSynch} />
-      <ProfileStack.Screen name="UpdatePage" component={UpdatePage} />
+      <ProfileStack.Screen name="Profilepage" component={Profile} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserThemes" component={UserThemes} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserLogs" component={UserLogs} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="NotificationPage" component={NotificationPage} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserSynch" component={UserSynch} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UpdatePage" component={UpdatePage} options={{ headerShown: false }}/>
     </ProfileStack.Navigator>
   );
 }
-
 
 function AddDataStackScreen() {
   return (
@@ -99,7 +98,7 @@ function BottomTabs() {
           }],
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
-        tabBarIcon: ({ focused, color }) => {
+        tabBarIcon: ({ focused }) => {
           let IconComponent;
 
 

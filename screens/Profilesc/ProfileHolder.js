@@ -2,22 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, SafeAreaView, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import SubUserForm from './SubUserForm';
-import { useUser } from '../../UserContext'; // Import the context hook
+import { useUser } from '../../UserContext';
 import { useTheme } from '../Settingsc/Theme';
 
 const { width } = Dimensions.get('window');
 
 const ProfileHolder = ({ adminData, subUserData }) => {
-    const { currentUser, selectUser, userIndex } = useUser(); // Use context to manage user state
+    const { currentUser, selectUser, userIndex } = useUser();
     const [profilePic, setProfilePic] = useState(null);
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const { themeStyles } = useTheme(); // Destructure to get theme styles
+    const { themeStyles } = useTheme();
 
-
-    // Handles swiping left and right
     const handleSwipe = (direction) => {
         let newIndex = userIndex;
-        let totalUsers = 1 + subUserData.length; // Includes admin
+        let totalUsers = 1 + subUserData.length;
         if (direction === 'left' && userIndex < totalUsers - 1) {
             newIndex += 1;
         } else if (direction === 'right' && userIndex > 0) {
@@ -25,29 +23,29 @@ const ProfileHolder = ({ adminData, subUserData }) => {
         }
         if (newIndex !== userIndex) {
             const newUser = newIndex === 0 ? adminData : subUserData[newIndex - 1];
-            selectUser(newUser, newIndex); // Use context function to update user
+            selectUser(newUser, newIndex);
         }
     };
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ backgroundColor: themeStyles.background }}>
             <SubUserForm
-                onSave={(data) => {
-                    setIsFormVisible(false);
-                }}
-                onCancel={() => setIsFormVisible(false)}
+                onSave={(data) => { setIsFormVisible(false); }}
+                onCancel={() => { setIsFormVisible(false); }}
                 isVisible={isFormVisible}
                 dataOwner={currentUser?.username}
             />
-            <View style={styles.user_profile}>
-                <View style={styles.user_Themebubble}>
+            <View style={[styles.user_profile, { backgroundColor: themeStyles.background }]}>
+                <View style={[styles.user_Themebubble, { backgroundColor: themeStyles.secondary }]}>
                     {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={[styles.user_image,{ color: themeStyles.text }]}>{currentUser?.initials || 'No Image'}</Text>
+                        <Text style={[styles.user_image, { color: themeStyles.text }]}>
+                            {currentUser?.initials || 'John'}
+                        </Text>
                     )}
-                    <TouchableOpacity onPress={() => setIsFormVisible(true)} style={styles.add_subuser}>
-                        <Text style={styles.add_subuserText}>+</Text>
+                    <TouchableOpacity onPress={() => setIsFormVisible(true)} style={[styles.add_subuser, {backgroundColor: themeStyles.text}]}>
+                        <Text style={[styles.add_subuserText, {color: themeStyles.secondary}]}>+</Text>
                     </TouchableOpacity>
                 </View>
                 <PanGestureHandler
@@ -57,8 +55,12 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                         }
                     }}>
                     <View style={styles.user_detail}>
-                        <Text style={styles.user_name}>{currentUser ? currentUser.username : 'Loading...'}</Text>
-                        <Text style={styles.user_age}>{currentUser ? `AGE: ${currentUser.age}` : 'N/A'}</Text>
+                        <Text style={[styles.user_name, { color: themeStyles.text }]}>
+                            {currentUser ? currentUser.username : 'Loading...'}
+                        </Text>
+                        <Text style={[styles.user_age, { color: themeStyles.text }]}>
+                            {currentUser ? `AGE: ${currentUser.age}` : 'N/A'}
+                        </Text>
                     </View>
                 </PanGestureHandler>
             </View>
@@ -68,38 +70,43 @@ const ProfileHolder = ({ adminData, subUserData }) => {
 
 const styles = StyleSheet.create({
   user_profile: {
-    width: width, // Full width
-    height: '40%', // 60% height
+    width: width,
+    height: '40%',
     flexDirection: 'column',
-    alignItems: 'center', // Center the items
+    alignItems: 'center',
   },
-    user_Themebubble: {
-        width: 180, // 100 width
-        height: 175, // 100 height
-        borderRadius: 100, // Set border radius to match design
-        backgroundColor: '#000', // Light grey background
-        fontSize: 24, // Larger font size
-        fontWeight: 'bold', // Bold font
-        marginTop: 10, // Add some top margin
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+  user_Themebubble: {
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: '#DCE1E9', // This will be overridden by theme styles
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
     user_image: {
-        width: 175, // 100 width
-        height: 170, // 100 height
-        borderRadius: 85, // Set border radius to match design
-        backgroundColor: '#d3d3d3', // Light grey background
-        textAlign: 'center', // Center the text
-        textAlignVertical: 'center', // Center the text vertically
-        fontSize: 24, // Larger font size
-        fontWeight: 'bold', // Bold font
-        overflow: 'hidden', // Hide overflow
+        width: 175,
+        height: 170,
+        borderRadius: 85,
+        textAlign: 'center',
+        textAlignVertical: 'center',
+        fontSize: 24,
+        fontWeight: 'bold',
+        overflow: 'hidden',
     },
     user_detail: {
-        width: width*0.5, // Full width
+        width: width*0.5,
         flexDirection: 'column',
-        justifyContent: 'center', // Center the items
+        justifyContent: 'center',
     },
+    user_initials: {
+        // Style if there's no image
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        position: 'absolute',
+        lineHeight: 170, // For vertical center, should match the user_image height
+      },
     user_name: {
         textAlign: 'center',
         fontSize: 32, 
@@ -123,30 +130,12 @@ const styles = StyleSheet.create({
         right: -10,
     },
     add_subuserText: {
-        flex: 1,
         textAlign: 'center',
         alignItems: 'center',
-        fontSize: 44,
+        padding: 7,
+        fontSize: 25,
         justifyContent: 'center',
-    
     },
-    modalView: {
-        // Style for the modal view container
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-      },
-
-})
+});
 
 export default ProfileHolder;
