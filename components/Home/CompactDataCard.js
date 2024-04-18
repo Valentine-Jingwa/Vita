@@ -2,16 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import ColorId from '../../constants/ColorId';
 import TimeCalculator from './TimeCalculator';
+import { useTheme } from '../../screens/Settingsc/Theme';
+import { color } from 'd3';
 
 
 const CompactDataCard = ({ item }) => {
+  const themestyle = useTheme();
   return (
     <View>
       <View style={styles.compactCard}>
         <Text style={styles.compactCardText}>{item.subcategory}</Text>
         <Text style={styles.compactCardText}>{item.value} {item.unit}</Text>
       </View>
-        <Text><TimeCalculator timestamp={item.timestamp} /></Text>
+        <Text><TimeCalculator timestamp={[item.timestamp]} /></Text>
     </View>
     
   );
