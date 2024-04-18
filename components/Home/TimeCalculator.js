@@ -29,7 +29,6 @@ export default TimeCalculator;
 
 const styles = StyleSheet.create({
   dateText: {
-    fontSize: 16,
-    color: '#555', // Adjust color as needed
-  },
+    fontSize: 16
+    },
 });
