@@ -52,12 +52,12 @@ useEffect(() => {
 
       const existingData = await AsyncStorage.getItem('subcategories');
       if (!existingData) {
-          console.log('No existing subcategories found, setting default data.');
-          await storeData(); // Initialize with default data
+          // console.log('No existing subcategories found, setting default data.');
+          await storeData(); 
       } else {
-          console.log('Existing data found:', existingData);
+          // console.log('Existing subcategories found, loading data.');
       }
-      fetchData(); // This should load data into your component's state
+      fetchData(); 
   }
 
   initializeData();

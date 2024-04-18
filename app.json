@@ -13,7 +13,16 @@
       "backgroundColor": "#f9f6f7"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "./assets/logo/*", 
+      "./assets/icons/*.svg",
+      "./App.js",
+      "./Navigation.js",
+      "./mongo/*",
+      "./components/*",
+      "./constants.js",
+      "./security/*",
+      "./screens/*",
+      "**/*"    
     ],
     "ios": {
       "supportsTablet": true,
@@ -27,7 +36,7 @@
       "package": "com.yourcompany.vita"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo/Logo2.png"
     },
     "extra": {
       "eas": {

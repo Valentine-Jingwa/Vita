@@ -36,11 +36,11 @@ const ProfileHolder = ({ adminData, subUserData }) => {
                 dataOwner={currentUser?.username}
             />
             <View style={[styles.user_profile, { backgroundColor: themeStyles.background }]}>
-                <View style={[styles.user_Themebubble, { backgroundColor: themeStyles.secondary }]}>
+                <View style={[styles.user_Themebubble, { backgroundColor: themeStyles.primary }]}>
                     {profilePic ? (
                         <Image source={profilePic} style={styles.user_image} />
                     ) : (
-                        <Text style={[styles.user_image, { color: themeStyles.text }]}>
+                        <Text style={[styles.user_image, { color: themeStyles.text, backgroundColor: themeStyles.secondary }]}>
                             {currentUser?.initials || 'John'}
                         </Text>
                     )}
