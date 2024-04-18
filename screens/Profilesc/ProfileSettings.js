@@ -97,7 +97,7 @@ export default function ProfileSettings({ }) {
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Update Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('UserSynch')}>
-          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Synch</Text>
+          <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Account Sync</Text>
         </TouchableOpacity>
         {/* <TouchableOpacity style={[styles.Options_btn, { backgroundColor: themeStyles.accent, borderWidth:1, borderColor: themeStyles.text }]} onPress={() => navigation.navigate('NotificationPage')}>
           <Text style={[styles.Option_Text, { color: themeStyles.text }]}>Notifications</Text>

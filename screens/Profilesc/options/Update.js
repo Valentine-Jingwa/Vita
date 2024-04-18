@@ -41,23 +41,27 @@ const Update = ({ navigation }) => {
             </Modal>
             <View style={styles.form}>
                 <TextInput
-                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
                     value={password}
                     onChangeText={setPassword}
                     placeholder="Current Password"
+                    placeholderTextColor={themeStyles.text}
                     secureTextEntry
                 />
                 <TextInput
-                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
                     value={username}
                     onChangeText={setUsername}
                     placeholder="New Username"
+                    placeholderTextColor={themeStyles.text}
+
                 />
                 <TextInput
-                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.inputBackground }]}
+                    style={[styles.input, { borderColor: themeStyles.secondary, color: themeStyles.text, backgroundColor: themeStyles.background }]}
                     value={newPassword}
                     onChangeText={setNewPassword}
                     placeholder="New Password"
+                    placeholderTextColor={themeStyles.text}
                     secureTextEntry
                 />
                 <TouchableOpacity style={[styles.button, { backgroundColor: themeStyles.accent }]} onPress={handleSubmit}>
