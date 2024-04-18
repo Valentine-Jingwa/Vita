@@ -108,7 +108,8 @@ export default function Viewing() {
             onPress={() => handleSubcategorySelect(sub)}>
             <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
             <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id) }]}>
-              <Text style={styles.dotText}>{sub.count > 999 ? "999+" : sub.count || 'No Data'}</Text>
+              <Text style={[styles.dotText, {color: themeStyles.text}]}>{sub.count > 999 ? "999+" : sub.count || 'No Data'}</Text>
+
             </View>
           </TouchableOpacity>
         ))}

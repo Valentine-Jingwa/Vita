@@ -234,7 +234,7 @@ export default function Signup({ navigation }) {
                       navigation.navigate('Login'); // Navigate to Login
                     }}
                   >
-                    <Text style={[styles.textStyle]}>Go to Login</Text>
+                    <Text style={[styles.textStyle, {backgroundColor: themeStyles.accent, color: themeStyles.text}]}>Go to Login</Text>
                   </TouchableOpacity>
                 </View>
               </View>
