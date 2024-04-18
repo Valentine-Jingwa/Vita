@@ -67,29 +67,34 @@ const ReminderModal = ({ visible, onClose }) => {
 
   const renderItem = ({ item }) => {
     return (
-        <TouchableOpacity 
-            onPress={() => toggleDescription(item.id)} 
-            style={[styles.reminderItem, {backgroundColor: themeStyles.background}]}
-        >
-            <View style={styles.reminderHeader}>
-                <Text style={[styles.reminderTitle, {color: themeStyles.text}]}>{item.title}</Text>
-                <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
-                    <Icon name="close" size={16} color={themeStyles.accent} />
-                </TouchableOpacity>
-            </View>
-            {item.showDescription ? (
-                <Text style={[styles.descriptionText, {color: themeStyles.text}]}>
-                    {item.description}
-                </Text>
-            ) : (
-                <Text style={[styles.reminderDateTime, {color: themeStyles.text}]}>
-                    {`Alert Date: ${new Date(item.time).toLocaleDateString()}`}
-                    {`Alert Time: ${new Date(item.time).toLocaleTimeString()}`}
-                </Text>
-            )}
-        </TouchableOpacity>
+      <TouchableOpacity 
+        onPress={() => toggleDescription(item.id)} 
+        style={[styles.reminderItem, {backgroundColor: themeStyles.background}]}
+      >
+        <View style={styles.reminderHeader}>
+          <Text style={[styles.reminderTitle, {color: themeStyles.text}]}>{item.title}</Text>
+          <TouchableOpacity onPress={() => removeReminder(item.id)} style={styles.removeButton}>
+            <Icon name="close" size={16} color={themeStyles.accent} />
+          </TouchableOpacity>
+        </View>
+        {item.showDescription ? (
+          <Text style={[styles.descriptionText, {color: themeStyles.text}]}>
+            {item.description}
+          </Text>
+        ) : (
+          <View style={styles.reminderDateTime}>
+            <Text style={[styles.reminderDate, {color: themeStyles.text}]}>
+              {`Alert Date: ${new Date(item.time).toLocaleDateString()}`}
+            </Text>
+            <Text style={[styles.reminderTime, {color: themeStyles.text}]}>
+              {`Alert Time: ${new Date(item.time).toLocaleTimeString()}`}
+            </Text>
+          </View>
+        )}
+      </TouchableOpacity>
     );
-};
+  };
+  
   
 
   const saveReminder = async () => {
@@ -268,6 +273,17 @@ const styles = StyleSheet.create({
     width: '100%',
     // Android might allow some additional styling:
     ...(Platform.OS === 'android' ? { backgroundColor: 'white', color: 'black' } : {}),
+  },
+  reminderDateTime: {
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
+  reminderDate: {
+    fontSize: 16,
+    marginBottom: 4, // adds spacing between the date and time
+  },
+  reminderTime: {
+    fontSize: 16,
   },
   modalOverlay: {
     position: 'absolute',
