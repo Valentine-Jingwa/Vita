@@ -60,7 +60,6 @@ import Irealsetting from './icons/realsetting.svg';
 import Irealsetting2 from './icons/realsetting2.svg';
 import Icalendar1 from './icons/calendar.svg';
 import Ibackbtn from './icons/backbtn.svg';
-import Hlogo from './logo/logo11.svg';
 import Day from './icons/reallight.svg';
 import Night from './icons/realdark.svg';
 import RLogout from './icons/reallogout.svg';
@@ -129,7 +128,6 @@ export {
   Irealsetting2,
   Icalendar1,
   Ibackbtn,
-  Hlogo,
   Day,
   Night,
   RLogout,

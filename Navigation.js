@@ -98,7 +98,7 @@ function BottomTabs() {
           }],
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
-        tabBarIcon: ({ focused, color }) => {
+        tabBarIcon: ({ focused }) => {
           let IconComponent;
 
 

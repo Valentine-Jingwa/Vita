@@ -11,7 +11,6 @@ import {
     Image,
     Button,
   } from 'react-native';
-import {Hlogo} from '../assets/Icon'
 import { useTheme } from '../screens/Settingsc/Theme'; // Import the theme hook
 
 const { width, height } = Dimensions.get('window');
