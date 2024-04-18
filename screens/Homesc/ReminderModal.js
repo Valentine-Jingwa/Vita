@@ -235,7 +235,7 @@ const ReminderModal = ({ visible, onClose }) => {
           <TouchableOpacity 
             style={[styles.clearAllButton, {backgroundColor: themeStyles.accent}]} 
             onPress={clearAllReminders}>
-            <Icon name="trash-can-outline" size={24} color="#ffffff" />
+            <Icon name="trash-can-outline" size={24} style={{color:themeStyles.text,}} />
           </TouchableOpacity>
         </View>
       </View>

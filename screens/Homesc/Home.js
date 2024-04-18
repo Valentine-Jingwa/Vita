@@ -151,19 +151,23 @@ useEffect(() => {
 
       {/* Calendar Component */}
       <Calendar
-        onDayPress={handleDayPress}
-        markedDates={getMarkedDates()}
-        theme={{
-          arrowColor: themeStyles.primary,
-          todayTextColor: themeStyles.accent,
-          calendarBackground: themeStyles.background,
-        }}
-        style={[styles.calendar, {
-          borderColor: themeStyles.accent, 
-          shadowColor: themeStyles.text, 
-          backgroundColor: themeStyles.background, 
-        }]}
-      />
+  onDayPress={handleDayPress}
+  markedDates={getMarkedDates()}
+  theme={{
+    arrowColor: themeStyles.secondary,
+    todayTextColor: themeStyles.text,
+    calendarBackground: themeStyles.background,
+    textSectionTitleColor: themeStyles.text, // Color of the section titles (month and day names)
+    monthTextColor: themeStyles.text, // Color of the month title
+    dayTextColor: themeStyles.primary, // Color of the day numbers
+    // ... other theme properties
+  }}
+  style={[styles.calendar, {
+    borderColor: themeStyles.accent, 
+    shadowColor: themeStyles.text, 
+    backgroundColor: themeStyles.background, 
+  }]}
+/>
 
       {/* Card Viewer with Swipe Handling */}
       <PanGestureHandler
@@ -190,6 +194,7 @@ useEffect(() => {
           transparent={true}
           visible={isGraphModalVisible}
           onRequestClose={() => setIsGraphModalVisible(false)}
+          style={styles.modalOverlay}
         >
           <TouchableWithoutFeedback onPress={() => setIsGraphModalVisible(false)}>
             <View style={styles.modalOverlay}>
@@ -209,10 +214,10 @@ useEffect(() => {
       {/* Navigation Arrows */}
       <View style={styles.arrowContainer}>
         <TouchableOpacity onPress={() => handleSwipe('right')}>
-          <Icon name="chevron-left" size={30} color={themeStyles.primary} />
+          <Icon name="chevron-left" size={30} color={themeStyles.secondary} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleSwipe('left')}>
-          <Icon name="chevron-right" size={30} color={themeStyles.primary} />
+          <Icon name="chevron-right" size={30} color={themeStyles.secondary} />
         </TouchableOpacity>
       </View>
 

@@ -107,7 +107,7 @@ export default function Viewing() {
           <TouchableOpacity key={subIndex} style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}
             onPress={() => handleSubcategorySelect(sub)}>
             <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{sub.subcategory}</Text>
-            <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id) }]}>
+            <View style={[styles.dot, { backgroundColor: ColorId.getColor(sub.id), color: themeStyles.text }]}>
               <Text style={styles.dotText}>{sub.count > 999 ? "999+" : sub.count || 'No Data'}</Text>
             </View>
           </TouchableOpacity>
