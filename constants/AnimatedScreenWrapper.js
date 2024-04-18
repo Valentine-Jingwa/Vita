@@ -65,13 +65,14 @@ const AnimatedScreenWrapper = ({ children }) => {
     }));
 
     const animateShades = () => {
-      firstShadeTranslateX.value = withTiming(0, { duration: 20 }, () => {
-        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 20 });
-        secondShadeTranslateX.value = withTiming(0, { duration: 20 }, () => {
-          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 20 }, () => {
-
-            childrenOpacity.value = withTiming(1, { duration: 500 }); // Fade in the children
-            runOnJS(setShowContent)(true);
+      firstShadeTranslateX.value = withTiming(0, { duration: 200 }, () => {
+        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 200 }, () => {
+          secondShadeTranslateX.value = withTiming(0, { duration: 250 }, () => {
+            secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 250 }, () => {
+              // Here we want to wait until the second shade has moved out before fading in the children
+              childrenOpacity.value = withTiming(1, { duration: 200 });
+              runOnJS(setShowContent)(true);
+            });
           });
         });
       });

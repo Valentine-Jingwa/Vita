@@ -74,11 +74,10 @@ const DataEntryModal = ({ isVisible, onClose, subcategory, onSave }) => {
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={[styles.centeredView, { backgroundColor: themeStyles.background }]}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        style={styles.centeredView}
       >
         <TouchableWithoutFeedback onPress={onClose}>
-          <View style={styles.modalOverlay} />
+          <View style={[styles.modalOverlay, {backgroundColor: themeStyles.background}]} />
         </TouchableWithoutFeedback>
         <View style={[styles.modalView, { backgroundColor: themeStyles.secondary }]}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -134,7 +133,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   modalView: {
     borderRadius: 20,
@@ -186,14 +184,6 @@ const styles = StyleSheet.create({
   saveButton: {
     padding: 10,
     borderRadius: 10,
-    flex: 1,
-    marginHorizontal: 5,
-  },
-  saveAddMoreButton: {
-    backgroundColor: '#fff',
-    padding: 10,
-    borderRadius: 10,
-    elevation: 2,
     flex: 1,
     marginHorizontal: 5,
   },

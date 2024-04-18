@@ -48,7 +48,7 @@ export default function Login({ navigation }) {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidView}
-        keyboardVerticalOffset={Platform.select({ ios: 60, android: 0 })}
+        keyboardVerticalOffset={Platform.select({ ios: 50, android: 0 })}
       >
       <View style={[styles.loginCard, { shadowColor: themeStyles.text, backgroundColor: themeStyles.background, borderColor: themeStyles.accent }]}>
         <Text style={[styles.title, { color: themeStyles.text }]}>Login</Text>
@@ -83,10 +83,10 @@ export default function Login({ navigation }) {
                   />
                     <TouchableOpacity 
                     onPress={handleSubmit} 
-                    style={[styles.button, { backgroundColor: themeStyles.accent }]} 
+                    style={[styles.button, { backgroundColor: themeStyles.primary }]} 
                     disabled={loading}
                     >
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={[styles.buttonText]}>Login</Text>
               </TouchableOpacity>
               </>
           )}
