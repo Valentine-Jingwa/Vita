@@ -195,11 +195,14 @@ useEffect(() => {
                     onPress={() => setSelectedCategory(category)} 
                     style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
                   >
+                    <View style={[styles.circleBox, { backgroundColor: themeStyles.secondary }]} // Apply themeStyles here
+>
                     <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
                       {category === 'Vitals' && <Ihealth width={30} height={30} />}
                       {category === 'Medication' && <Imed width={30} height={30} />}
                       {category === 'Nutrition' && <Ifood width={30} height={30} />}
                       {category === 'Others' && <Ibandaid width={30} height={30} />}
+                    </View>
                   </TouchableOpacity>
               ))}
           </View>
@@ -432,6 +435,13 @@ const styles = StyleSheet.create({
     color: 'black', // Use primary color from theme
     fontWeight: 'bold', // Bold font weight
     paddingHorizontal: 10, 
+  },
+  circleBox: {
+    width: 100,
+    height: 100,
+    borderRadius: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
