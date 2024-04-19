@@ -10,17 +10,17 @@ Calendar View: View inputted data in a user-friendly calendar format.
 Interface Themes: Choose between light and dark modes for personal preference.
 Edit and Delete Functions: Provides users with the ability to modify or remove their data.
 ## Future Developments (Version X)
-*Broad Medical Data Support:* Integration of more diverse types of medical data.
-*Enhanced Security:* Implementation of advanced security measures to protect user data.
+**Broad Medical Data Support:** Integration of more diverse types of medical data.
+**Enhanced Security:** Implementation of advanced security measures to protect user data.
 Robust Data Validation: Ensuring the accuracy and reliability of the inputted data.
-*Automated Reminders:* Sophisticated reminder systems that prompt users based on their schedules.
-*Refined User Interface:* A more intuitive and smoother user interface experience.
-*Personalization Options:* Greater customization features for users to tailor the app to their needs.
-*AI-Driven Insights:* Use of Artificial Intelligence to analyze data and provide actionable insights.
-*Performance Improvements:* Enhanced algorithms for faster data retrieval and processing.
-Getting Started
-Prerequisites
-To set up and run Vita, you will need the following tools and technologies installed on your system:
+**Automated Reminders:** Sophisticated reminder systems that prompt users based on their schedules.
+**Refined User Interface:** A more intuitive and smoother user interface experience.
+**Personalization Options:** Greater customization features for users to tailor the app to their needs.
+**AI-Driven Insights:** Use of Artificial Intelligence to analyze data and provide actionable insights.
+**Performance Improvements:** Enhanced algorithms for faster data retrieval and processing.
+## Getting Started
+### Prerequisites
+__To set up and run Vita, you will need the following tools and technologies installed on your system:__
 
 Node.js: A JavaScript runtime built on Chrome's V8 JavaScript engine.
 npm: A package manager for JavaScript, used to install packages and manage dependencies.
