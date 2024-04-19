@@ -4,42 +4,42 @@ Vita is a comprehensive mobile application designed to empower users by simplify
 # Features
 ## Current Version (1.0)
 User Account Management: Allows users to create and manage their profiles.
-Data Input: Users can enter and store medical data like blood pressure, glucose levels, etc.
-Reminders: Set reminders for health appointments and medication schedules.
-Calendar View: View inputted data in a user-friendly calendar format.
-Interface Themes: Choose between light and dark modes for personal preference.
-Edit and Delete Functions: Provides users with the ability to modify or remove their data.
+- **Data Input:** Users can enter and store medical data like blood pressure, glucose levels, etc.
+- **Reminders:** Set reminders for health appointments and medication schedules.
+- **Calendar View:** View inputted data in a user-friendly calendar format.
+- **Interface Themes:** Choose between light and dark modes for personal preference.
+- **Edit and Delete Functions:** Provides users with the ability to modify or remove their data.
 ## Future Developments (Version X)
-**Broad Medical Data Support:** Integration of more diverse types of medical data.
-**Enhanced Security:** Implementation of advanced security measures to protect user data.
+- **Broad Medical Data Support:** Integration of more diverse types of medical data.
+- **Enhanced Security:** Implementation of advanced security measures to protect user data.
 Robust Data Validation: Ensuring the accuracy and reliability of the inputted data.
-**Automated Reminders:** Sophisticated reminder systems that prompt users based on their schedules.
-**Refined User Interface:** A more intuitive and smoother user interface experience.
-**Personalization Options:** Greater customization features for users to tailor the app to their needs.
-**AI-Driven Insights:** Use of Artificial Intelligence to analyze data and provide actionable insights.
-**Performance Improvements:** Enhanced algorithms for faster data retrieval and processing.
+- **Automated Reminders:** Sophisticated reminder systems that prompt users based on their schedules.
+- **Refined User Interface:** A more intuitive and smoother user interface experience.
+- **Personalization Options:** Greater customization features for users to tailor the app to their needs.
+- **AI-Driven Insights:** Use of Artificial Intelligence to analyze data and provide actionable insights.
+- **Performance Improvements:** Enhanced algorithms for faster data retrieval and processing.
 ## Getting Started
 ### Prerequisites
 __To set up and run Vita, you will need the following tools and technologies installed on your system:__
 
-**Node.js:** A JavaScript runtime built on Chrome's V8 JavaScript engine.
-**npm:** A package manager for JavaScript, used to install packages and manage dependencies.
-**Expo CLI:** A command-line tool that helps you build Expo and React Native projects.
-**Android Studio or Expo Go:** For testing your application on Android or iOS devices.
-**MongoDB:** A NoSQL database used for storing your application data.
+- **Node.js:** A JavaScript runtime built on Chrome's V8 JavaScript engine.
+- **npm:** A package manager for JavaScript, used to install packages and manage dependencies.
+- **Expo CLI:** A command-line tool that helps you build Expo and React Native projects.
+- **Android Studio or Expo Go:** For testing your application on Android or iOS devices.
+- **MongoDB:** A NoSQL database used for storing your application data.
 ### Installation Guide
 **Step 1:** Clone the Repository
 __First, obtain a copy of the project repository. You can do this by forking, cloning, or downloading the repository:__
 
-**Copy code**
+- **Copy code**
 git clone  https://github.com/Valentine-Jingwa/Vita?tab=readme-ov-file
-**cd vita**
-**Step 2:** Install Dependencies
+- **cd vita**
+- **Step 2:** Install Dependencies
 __Navigate to the project directory and install the necessary dependencies:__
 
 __Copy code__
 __npm install__
-**Step 3:** Install Expo CLI and Metro
+- **Step 3:** Install Expo CLI and Metro
 __Expo CLI facilitates the development and testing of React Native applications:__
 
 **Copy code**
