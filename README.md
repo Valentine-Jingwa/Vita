@@ -43,39 +43,39 @@ __npm install__
 __Expo CLI facilitates the development and testing of React Native applications:__
 
 **Copy code**
-**npm install -g expo-cli**
+-**npm install -g expo-cli**
 Metro, the JavaScript bundler for React Native:
 
-**Copy code**
-**npm install -g metro**
-**Step 4:** Setup MongoDB
-**If you do not have MongoDB set up, you will need to install it and configure it for your application:**
+- **Copy code**
+- **npm install -g metro**
+- **Step 4:** Setup MongoDB
+- **If you do not have MongoDB set up, you will need to install it and configure it for your application:**
 
-**Installation:** Follow the official MongoDB documentation to install MongoDB on your system.
-**Configuration:** Set up your database schemas based on the needs detailed in ./mongo/service/mongoDbService.
-**Connection:** Ensure your application is properly connected to MongoDB by adjusting the connection string in your .env.local file.
-**Step 5:** Setup Expo Application Services (EAS)
-**EAS helps manage and expedite the development process through cloud builds and other services:**
+- **Installation:** Follow the official MongoDB documentation to install MongoDB on your system.
+- **Configuration:** Set up your database schemas based on the needs detailed in ./mongo/service/mongoDbService.
+- **Connection:** Ensure your application is properly connected to MongoDB by adjusting the connection string in your .env.local file.
+- **Step 5:** Setup Expo Application Services (EAS)
+- **EAS helps manage and expedite the development process through cloud builds and other services:**
 
-**Installation:** Install EAS CLI globally using npm:
+- **Installation:** Install EAS CLI globally using npm:
 
-**Copy code**
-**npm install -g eas-cli**
-**Login:** Connect to your Expo account (or create one if necessary):
+- **Copy code**
+- **npm install -g eas-cli**
+- **Login:** Connect to your Expo account (or create one if necessary):
 
-**Copy code**
-**eas login**
-**Configuration:** Configure eas.json as per your project requirements or use the default settings provided by Expo.
-**Builds:** Start building your app using EAS:
+- **Copy code**
+- **eas login**
+- **Configuration:** Configure eas.json as per your project requirements or use the default settings provided by Expo.
+- **Builds:** Start building your app using EAS:
 
-**Copy code**
-**eas build --platform all**
-**Step 6:** Start the Application
-**Run the following command to start your Expo project:**
+- **Copy code**
+- **eas build --platform all**
+- **Step 6:** Start the Application
+- **Run the following command to start your Expo project:**
 
 
-**Copy code**
-## **npx expo start**
+- **Copy code**
+- ## **npx expo start**
 A QR code will be displayed in your terminal. You can scan this with the Expo Go app on your mobile device or use an Android Studio emulator to run your application.
 
 ## Testing the Application
