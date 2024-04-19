@@ -29,6 +29,7 @@
     "d3": "^7.9.0",
     "d3-shape": "^3.2.0",
     "expo": "~49.0.15",
+    "expo-cli": "^6.3.10",
     "expo-linear-gradient": "~12.3.0",
     "expo-notifications": "~0.20.1",
     "expo-splash-screen": "~0.20.5",
