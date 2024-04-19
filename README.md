@@ -1,96 +1,147 @@
 # Vita Application
+
 **Vita** is a comprehensive mobile application designed to empower users by simplifying the management of their medical information. By transforming user inputs into accessible graphical data, Vita makes it easier to monitor and understand various health metrics. This app is ideal for anyone seeking a user-friendly solution to track medical data, set reminders for health-related tasks, and visualize medical trends over time.
 
+## Table of Contents
+
+- [Features](#features)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation Guide](#installation-guide)
+- [Usage](#usage)
+- [Testing the Application](#testing-the-application)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## Features
+
 ### Current Version (1.0)
-- **User Account Management:** Allows users to create and manage their profiles.
-- **Data Input:** Users can enter and store medical data like blood pressure, glucose levels, etc.
-- **Reminders:** Set reminders for health appointments and medication schedules.
-- **Calendar View:** View inputted data in a user-friendly calendar format.
-- **Interface Themes:** Choose between light and dark modes for personal preference.
-- **Edit and Delete Functions:** Provides users with the ability to modify or remove their data.
+- **User Account Management:** Manage user profiles.
+- **Data Input:** Enter and store key medical data.
+- **Reminders:** Set reminders for health tasks.
+- **Calendar View:** Display data in a calendar.
+- **Interface Themes:** Switch between themes.
+- **Edit and Delete Functions:** Modify or remove data.
 
 ### Future Developments (Version X)
-- **Broad Medical Data Support:** Integration of more diverse types of medical data.
-- **Enhanced Security:** Implementation of advanced security measures to protect user data.
-- **Robust Data Validation:** Ensuring the accuracy and reliability of the inputted data.
-- **Automated Reminders:** Sophisticated reminder systems that prompt users based on their schedules.
-- **Refined User Interface:** A more intuitive and smoother user interface experience.
-- **Personalization Options:** Greater customization features for users to tailor the app to their needs.
-- **AI-Driven Insights:** Use of Artificial Intelligence to analyze data and provide actionable insights.
-- **Performance Improvements:** Enhanced algorithms for faster data retrieval and processing.
+- **Broad Medical Data Support**
+- **Enhanced Security**
+- **Robust Data Validation**
+- **Automated Reminders**
+- **Refined User Interface**
+- **Personalization Options**
+- **AI-Driven Insights**
+- **Performance Improvements**
 
 ## Getting Started
-### Prerequisites
-To set up and run Vita, you will need the following tools and technologies installed on your system:
 
-- **Node.js:** A JavaScript runtime built on Chrome's V8 JavaScript engine.
-- **npm:** A package manager for JavaScript, used to install packages and manage dependencies.
-- **Expo CLI:** A command-line tool that helps you build Expo and React Native projects.
-- **Android Studio or Expo Go:** For testing your application on Android or iOS devices.
-- **MongoDB:** A NoSQL database used for storing your application data.
+### Prerequisites
+Ensure you have the following installed:
+- **Node.js:** JavaScript runtime (https://nodejs.org/)
+- **npm:** JavaScript package manager (https://npmjs.com/)
+- **Expo CLI:** Tool for creating React Native apps (https://expo.dev/tools#cli)
+- **Android Studio or Expo Go:** For app testing (https://developer.android.com/studio)
 
 ### Installation Guide
+
 1. **Clone the Repository**
-First, obtain a copy of the project repository. You can do this by forking, cloning, or downloading the repository:
-git clone https://github.com/Valentine-Jingwa/Vita
-cd vita
-
+   ```bash
+   git clone https://github.com/Valentine-Jingwa/Vita
+   cd vita
+   ```
 2. **Install Dependencies**
-Navigate to the project directory and install the necessary dependencies:
-npm install
-
+   ```bash
+   npm install
+   ```
 3. **Install Expo CLI and Metro**
-Expo CLI facilitates the development and testing of React Native applications:
+```bash
 npm install -g expo-cli
 npm install -g metro
+```
 
 4. **Setup MongoDB**
-If you do not have MongoDB set up, you will need to install it and configure it for your application:
-- **Installation:** Follow the official MongoDB documentation to install MongoDB on your system.
-- **Configuration:** Set up your database schemas based on the needs detailed in ./mongo/service/mongoDbService.
-- **Connection:** Ensure your application is properly connected to MongoDB by adjusting the connection string in your .env.local file.
+- Follow MongoDB installation guides, then configure and connect:
+- Install MongoDB
+- Configure schemas in ./mongo/service/mongoDbService
+- Set the connection string in .env.local
 
 5. **Setup Expo Application Services (EAS)**
-EAS helps manage and expedite the development process through cloud builds and other services:
-- npm install -g eas-cli
-- eas login
-- eas build --platform all
-
+```bash
+npm install -g eas-cli
+eas login
+eas build --platform all
+  ```
 6. **Start the Application**
-Run the following command to start your Expo project:
-- npx expo start
+```bash
+npx expo start
+```
+- Scan the QR code with Expo Go or use an Android Studio emulator.
 
-A QR code will be displayed in your terminal. You can scan this with the Expo Go app on your mobile device or use an Android Studio emulator to run your application.
+## Usage
+
+**Get Started with Vita**
+
+After installation, perform the following steps to start utilizing Vita:
+
+1. **Open the App**
+   - Launch Vita on your device.
+   
+2. **Register an Account**
+   - Follow the on-screen instructions to create a new user account.
+
+3. **Enter Health Data**
+   - Input your medical information such as blood pressure, glucose levels, and more.
+
+4. **Use Calendar View**
+   - Navigate to the calendar to view entries or add new data.
+
+5. **Set Reminders**
+   - Easily set reminders for health appointments and medication schedules to ensure you never miss them.
+
+Explore the intuitive interface to fully harness the capabilities of Vita in managing your health data.
 
 ## Testing the Application
-Ensure that all features work as expected. Test the application on different devices to check for compatibility and responsiveness. Use the debugging tools provided by Expo and Android Studio to diagnose and fix any issues.
+
+**Ensuring Quality and Compatibility**
+
+To maintain the highest standards of quality and ensure smooth performance across all devices:
+
+1. **Regular Testing**
+   - Test the app on different hardware and OS versions to check compatibility.
+
+2. **Use Debugging Tools**
+   - Employ Expo and Android Studio's debugging tools to track down and solve any issues that arise.
+
+3. **Feedback Loop**
+   - Encourage users to report any problems they encounter, and use this feedback to make improvements.
 
 ## Contributing
-We welcome contributions from the community. Please read our contributing guidelines before submitting pull requests or issues.
+
+**Join the Vita Development Team**
+
+We are excited to collaborate with talented developers and enthusiasts in our community. If you're looking to contribute, please:
+
+1. **Read Our Guidelines**
+   - Familiarize yourself with the contributing guidelines.
+
+2. **Submit Patches**
+   - Enhancements and fixes are always welcome. Please submit your patches for review.
+
+3. **Propose Features**
+   - Have a great idea? Let us know!
+
+Your contributions help make Vita a better tool for everyone!
 
 ## License
-### MIT License
 
+**MIT License**
+
+```plaintext
 Copyright (c) [2024] Valentine Jingwa, Jean-Piere and Nicolas Gonsales
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
