@@ -28,13 +28,13 @@ __To set up and run Vita, you will need the following tools and technologies ins
 - **Android Studio or Expo Go:** For testing your application on Android or iOS devices.
 - **MongoDB:** A NoSQL database used for storing your application data.
 ### Installation Guide
-**Step 1:** Clone the Repository
+## **Step 1:** Clone the Repository
 __First, obtain a copy of the project repository. You can do this by forking, cloning, or downloading the repository:__
 
-- **Copy code**
+**Copy code**
 git clone  https://github.com/Valentine-Jingwa/Vita?tab=readme-ov-file
-- **cd vita**
-- **Step 2:** Install Dependencies
+## **cd vita**
+## **Step 2:** Install Dependencies
 __Navigate to the project directory and install the necessary dependencies:__
 
 __Copy code__
