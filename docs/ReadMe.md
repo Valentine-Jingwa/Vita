@@ -1,6 +1,0 @@
-5C5547
-3E3047
-2C4151
-6081C2
-95B5BB
-Basic Color pallet

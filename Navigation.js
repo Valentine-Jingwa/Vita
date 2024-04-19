@@ -1,14 +1,11 @@
 // Navigation.js
-import { StyleSheet, View, Text, ActivityIndicator, useWindowDimensions} from 'react-native';
+import { useWindowDimensions} from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import globalStyles from './global.js';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
-import { CommonActions } from '@react-navigation/native';
 
-import React, { useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import { useTheme } from './screens/Settingsc/Theme'; 
 
 import Welcome from './security/Welcome';
@@ -19,22 +16,15 @@ import PasswordRecovery from "./security/PasswordRecovery";
 import Home from "./screens/Homesc/Home";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import Settings from "./screens/Settingsc/Settings";
 import { useAuth } from './security/AuthContext'; 
-import RLogout from './screens/Profilesc/ProfileSettings';
 import Profile from "./screens/Profilesc/ProfileSettings";
-
-import { isTokenValid } from './security/auth/authUtils'; // Adjust the path as necessary
 
 
 //Bottom Tab animation
-import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { navigationRef } from './NavigationService';
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting, Irealsetting2} from "./assets/Icon";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting2} from "./assets/Icon";
 
 // import HomeIcon from "./assets/navicons/";
 
@@ -90,12 +80,15 @@ function BottomTabs() {
     initialRouteName="AddData"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: 
-        [globalStyles.tabBarStyle,
-           { 
-            height: tabBarHeight,
-            backgroundColor: themeStyles.accent,
-          }],
+        tabBarStyle: {
+          backgroundColor: themeStyles.backgroundColor,
+          height: tabBarHeight,
+          borderTopWidth: 0,
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
         tabBarIcon: ({ focused }) => {
