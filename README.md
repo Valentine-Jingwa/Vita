@@ -32,7 +32,7 @@ __To set up and run Vita, you will need the following tools and technologies ins
 __First, obtain a copy of the project repository. You can do this by forking, cloning, or downloading the repository:__
 
 **Copy code**
-git clone https://github.com/yourusername/vita.git
+git clone  https://github.com/Valentine-Jingwa/Vita?tab=readme-ov-file
 **cd vita**
 **Step 2:** Install Dependencies
 __Navigate to the project directory and install the necessary dependencies:__
