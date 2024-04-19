@@ -43,12 +43,12 @@ __npm install__
 __Expo CLI facilitates the development and testing of React Native applications:__
 
 **Copy code**
--**npm install -g expo-cli**
+- **npm install -g expo-cli**
 Metro, the JavaScript bundler for React Native:
 
 - **Copy code**
-- **npm install -g metro**
-- **Step 4:** Setup MongoDB
+## **npm install -g metro**
+## **Step 4: Setup MongoDB**
 - **If you do not have MongoDB set up, you will need to install it and configure it for your application:**
 
 - **Installation:** Follow the official MongoDB documentation to install MongoDB on your system.
