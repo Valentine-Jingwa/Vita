@@ -31,22 +31,19 @@ __To set up and run Vita, you will need the following tools and technologies ins
 ## **Step 1:** Clone the Repository
 __First, obtain a copy of the project repository. You can do this by forking, cloning, or downloading the repository:__
 
-**Copy code**
+
 git clone  https://github.com/Valentine-Jingwa/Vita?tab=readme-ov-file
 ## **cd vita**
 ## **Step 2:** Install Dependencies
 __Navigate to the project directory and install the necessary dependencies:__
 
-__Copy code__
 __npm install__
 - **Step 3:** Install Expo CLI and Metro
 __Expo CLI facilitates the development and testing of React Native applications:__
 
-**Copy code**
 - **npm install -g expo-cli**
 Metro, the JavaScript bundler for React Native:
 
-- **Copy code**
 ## **npm install -g metro**
 ## **Step 4: Setup MongoDB**
 - **If you do not have MongoDB set up, you will need to install it and configure it for your application:**
@@ -59,22 +56,19 @@ Metro, the JavaScript bundler for React Native:
 
 - **Installation:** Install EAS CLI globally using npm:
 
-- **Copy code**
 - **npm install -g eas-cli**
 - **Login:** Connect to your Expo account (or create one if necessary):
 
-- **Copy code**
 - **eas login**
 - **Configuration:** Configure eas.json as per your project requirements or use the default settings provided by Expo.
 - **Builds:** Start building your app using EAS:
 
-- **Copy code**
 - **eas build --platform all**
 - **Step 6:** Start the Application
 - **Run the following command to start your Expo project:**
 
 
-- **Copy code**
+
 - ## **npx expo start**
 A QR code will be displayed in your terminal. You can scan this with the Expo Go app on your mobile device or use an Android Studio emulator to run your application.
 
