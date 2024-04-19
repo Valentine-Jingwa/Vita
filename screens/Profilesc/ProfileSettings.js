@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import {Day, Night, RLogout} from '../../assets/Icon';
-import { useAuth } from '../../security/AuthContext';
+import { useAuth } from '../../security/userData/users/AuthContext'; // Ensure this path matches your AuthContext file location
 import { useTheme } from '../Settingsc/Theme'; // Adjust the path as necessary
 
 

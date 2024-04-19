@@ -16,7 +16,7 @@ import PasswordRecovery from "./security/PasswordRecovery";
 import Home from "./screens/Homesc/Home";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import { useAuth } from './security/AuthContext'; 
+import { useAuth } from './security/userData/users/AuthContext.js'; 
 import Profile from "./screens/Profilesc/ProfileSettings";
 
 

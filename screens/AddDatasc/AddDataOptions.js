@@ -10,19 +10,19 @@ import {
 } from 'react-native';
 // import { useTheme } from '@react-navigation/native';
 import { Ihealth, Imed, Ifood, Ibandaid, Ibackbtn } from '../../assets/Icon.js';
-import UserHead from '../../components/UserHead';
+import UserHead from '../../components/Datahandling/UserHead.js';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
 import { UploadUserData } from '../../mongo/services/mongodbService.js';
-import { subcategories as defaultSubcategories } from '../../components/DataList';
+import { subcategories as defaultSubcategories } from '../../components/Datahandling/DataList.js';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
 import { useUser } from '../../UserContext';
-import { storeData, readData } from '../../components/DataList'; // Adjust the import path as necessary
+import { storeData, readData } from '../../components/Datahandling/DataList.js'; // Adjust the import path as necessary
 
 
 const { width, height: screenHeight } = Dimensions.get('window');

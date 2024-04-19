@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import Navigation from './Navigation';
-import { AuthProvider } from './security/AuthContext';
+import { AuthProvider } from './security/userData/users/AuthContext';
 import { name as appName } from './app.json';
 import 'react-native-gesture-handler';
 import { ThemeProvider } from './screens/Settingsc/Theme';
