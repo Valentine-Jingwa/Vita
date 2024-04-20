@@ -14,9 +14,10 @@ export async function registerForPushNotificationsAsync() {
     return;
   }
 
-  // Directly obtaining the Expo push token without specifying experienceId
-  token = (await Notifications.getExpoPushTokenAsync()).data;
+  // Accessing the projectId from the nested eas object within extra
+  token = (await Notifications.getExpoPushTokenAsync({
+    projectId: Constants.manifest.extra.eas.projectId
+  })).data;
 
   console.log(token);
-  // Here, you could send the token to your server if needed
 }
