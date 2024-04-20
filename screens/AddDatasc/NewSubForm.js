@@ -101,14 +101,16 @@ const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded })
             <View style={[styles.formContainer, { backgroundColor: themeStyles.accent }]}>
               <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
+                style={[styles.input, { backgroundColor: themeStyles.accent, color: themeStyles.text, borderColor: themeStyles.background }]}
                 placeholder="Enter subcategory name"
+                placeholderTextColor={themeStyles.background}
                 value={subcategoryName}
                 onChangeText={setSubcategoryName}
               />
               <TextInput
-                style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background, height: 100 }]}
+                style={[styles.input, { backgroundColor: themeStyles.accent, color: themeStyles.text, borderColor: themeStyles.background, height: 100 }]}
                 placeholder="Description (optional)"
+                placeholderTextColor={themeStyles.background}
                 value={description}
                 onChangeText={setDescription}
                 multiline
@@ -116,6 +118,7 @@ const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded })
               <TextInput
                 style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
                 placeholder="Unit (optional)"
+                placeholderTextColor={themeStyles.background}
                 value={unit}
                 onChangeText={setUnit}
               />
