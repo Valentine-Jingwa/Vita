@@ -24,7 +24,6 @@ export default function Login({ navigation }) {
         await login(loginResponse.token);  // Update login status in context
         await fetchAndStoreSubcategories(loginResponse.user.email);  // Fetch subcategories related to the user
         await fetchAndStoreUserData(loginResponse.user.email);  // Fetch and store user data
-        navigation.navigate('Dashboard');  // Navigate to the Dashboard upon successful login
       } else {
         Alert.alert('Login Failed', loginResponse.message);  // Alert user on failed login
       }
