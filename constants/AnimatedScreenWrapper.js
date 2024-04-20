@@ -1,31 +1,30 @@
-//Screen animation
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Dimensions } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  runOnJS,
+  withSpring,
+  Easing,
 } from 'react-native-reanimated';
 import { useIsFocused } from '@react-navigation/native';
+import { useTheme } from '../screens/Settingsc/Theme'; // Adjust import path as needed
 
 const screenWidth = Dimensions.get('window').width;
 
 const AnimatedScreenWrapper = ({ children }) => {
   const isFocused = useIsFocused();
-  const childrenOpacity = useSharedValue(0); // New shared value for children opacity
-  const [showContent, setShowContent] = useState(false);
+  const { themeStyles } = useTheme();
+
+  const childrenOpacity = useSharedValue(0);
+  const childrenScale = useSharedValue(0.95); // Start slightly scaled down
 
   const firstShadeTranslateX = useSharedValue(screenWidth);
   const secondShadeTranslateX = useSharedValue(screenWidth);
-  // const thirdShadeTranslateX = useSharedValue(screenWidth);
 
-  const backgroundColor = '#0E0E0E';
+  // Easing function for a smoother transition
+  const easing = Easing.out(Easing.cubic);
 
-
-
-  // Use Animated styles for the shade screens
   const firstShadeAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: firstShadeTranslateX.value }],
     position: 'absolute',
@@ -33,8 +32,8 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#141414', // First shade color
-    zIndex: 3, // Above the second shade but below the content
+    backgroundColor: themeStyles.secondary,
+    zIndex: 3,
   }));
 
   const secondShadeAnimatedStyle = useAnimatedStyle(() => ({
@@ -44,64 +43,48 @@ const AnimatedScreenWrapper = ({ children }) => {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#1a1a1a', // Second shade color
-    zIndex: 2, // Below the first shade
+    backgroundColor: themeStyles.secondary,
+    zIndex: 2,
   }));
 
-  // const thirdShadeAnimatedStyle = useAnimatedStyle(() => ({
-  //   transform: [{ translateX: thirdShadeTranslateX.value }],
-  //   position: 'absolute',
-  //   top: 0,
-  //   left: 0,
-  //   right: 0,
-  //   bottom: 0,
-  //   backgroundColor: '#A38280', // Third shade color
-  //   zIndex: 1, // Below the second shade
-  // }));
+  const childrenAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: childrenOpacity.value,
+    transform: [{ scale: childrenScale.value }],
+  }));
 
-    // Animated style for children opacity
-    const childrenAnimatedStyle = useAnimatedStyle(() => ({
-      opacity: childrenOpacity.value,
-    }));
+  const resetAnimation = () => {
+    firstShadeTranslateX.value = screenWidth; // Reset to initial position off-screen
+    secondShadeTranslateX.value = screenWidth; // Reset to initial position off-screen
+    childrenOpacity.value = 0; // Reset opacity
+    childrenScale.value = 0.95; // Reset scale
+  };
 
-    const animateShades = () => {
-      firstShadeTranslateX.value = withTiming(0, { duration: 200 }, () => {
-        firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 200 });
-        secondShadeTranslateX.value = withTiming(0, { duration: 200 }, () => {
-          secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 200 }, () => {
-
-            childrenOpacity.value = withTiming(1, { duration: 500 }); // Fade in the children
-            runOnJS(setShowContent)(true);
-          });
-        });
+  const animateShades = () => {
+    firstShadeTranslateX.value = withTiming(0, { duration: 150, easing }, () => {
+      firstShadeTranslateX.value = withTiming(-screenWidth, { duration: 150, easing });
+      secondShadeTranslateX.value = withTiming(0, { duration: 100, easing, delay: 150 }, () => {
+        secondShadeTranslateX.value = withTiming(-screenWidth, { duration: 150, easing });
+        childrenOpacity.value = withTiming(1, { duration: 200, easing });
+        childrenScale.value = withSpring(1, { damping: 10, stiffness: 100 });
       });
-    };
-    
+    });
+  };
 
   useEffect(() => {
     if (isFocused) {
-      setShowContent(false); // Hide children initially
-      childrenOpacity.value = 0; // Reset opacity to 0
-      animateShades(); // Start the animation sequence
+      animateShades();
     } else {
-      firstShadeTranslateX.value = screenWidth;
-      secondShadeTranslateX.value = screenWidth;
-      // thirdShadeTranslateX.value = screenWidth;
-      setShowContent(false);
-      childrenOpacity.value = 0; // Ensure children are hidden when not focused
+      resetAnimation();
     }
   }, [isFocused]);
 
   return (
-    <View style={{ flex: 1, backgroundColor }}>
-      {showContent && (
-        <Animated.View style={[{ flex: 1 }, childrenAnimatedStyle]}>
-          {children}
-        </Animated.View>
-      )}
+    <View style={{ flex: 1, backgroundColor: themeStyles.background }}>
+      <Animated.View style={[{ flex: 1 }, childrenAnimatedStyle]}>
+        {children}
+      </Animated.View>
       <Animated.View style={firstShadeAnimatedStyle} />
       <Animated.View style={secondShadeAnimatedStyle} />
-      {/* <Animated.View style={thirdShadeAnimatedStyle} /> */}
     </View>
   );
 };

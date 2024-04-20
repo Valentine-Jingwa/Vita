@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import { useTheme } from '@react-navigation/native';
+import QuickSwitch from '../screens/Profilesc/quickSwitch';
+import { useTheme } from '../screens/Settingsc/Theme'
 
-
-export default function UserHead() {
+const UserHead = () => {
     const { colors } = useTheme();
  // State for the current time and date
     const [currentTime, setCurrentTime] = useState('');
     const [currentDate, setCurrentDate] = useState('');
     const [containerHeight, setContainerHeight] = useState(0);
+    const { themeStyles } = useTheme();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -22,26 +23,18 @@ export default function UserHead() {
         return () => clearInterval(interval);
       }, []);
 
-    return (
-        <View style={styles.header}>
-            <View style={styles.userhead}>
-                <Text style={[styles.greeting, { color: colors.text }]}>Hi! Markus</Text>
-                <View style={styles.user}>
-                    <Text>Profile Icon Place Holder</Text>
-                </View>
+      return (
+        <View style={[styles.header, { backgroundColor: themeStyles.background }]}>
+            <View>
+                <QuickSwitch />
             </View>
-            <Text style={[styles.time, { color: colors.text }]}>{currentTime}</Text>
-            <Text style={[styles.date, { color: colors.text }]}>{currentDate}</Text>
+            <Text style={[styles.time, { color: themeStyles.text }]}>{currentTime}</Text>
+            <Text style={[styles.date, { color: themeStyles.text }]}>{currentDate}</Text>
         </View>
-    )
+    );
 }
+export default UserHead;
 const styles = StyleSheet.create({
-    userhead: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 20,
-    },
     greeting: {
         fontSize: 30, // Increase font size for greeting
         fontWeight: 'bold',
@@ -61,6 +54,7 @@ const styles = StyleSheet.create({
         fontSize: 36, // Increase font size for time
         fontWeight: '300', // Make the font a bit lighter
         marginVertical: 5, // Maintain vertical margin
+        marginTop: 10, // Add some top margin
       },
       date: {
         paddingHorizontal: 30,

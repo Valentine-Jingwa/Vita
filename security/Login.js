@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
-import { CommonActions } from '@react-navigation/native';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
+import { useAuth } from './userData/users/AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
-import Navigation from '../Navigation';
-
+import {useTheme} from '../screens/Settingsc/Theme';
+import { fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService'; // Ensure this is properly imported
 
 export default function Login({ navigation }) {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { themeStyles } = useTheme();
 
   const handleLogin = async (values) => {
     setLoading(true);
+    // await AsyncStorage.removeItem('subcategories');
     try {
-        const { token } = await authenticateUser(values.loginId, values.password);
-        await login(token);
-        navigation.navigate('Home'); // Ensure your navigation and route names are correctly set up
+        const loginResponse = await authenticateUser(values.loginId, values.password);
+        if (loginResponse.token) {
+            // Assuming loginResponse returns a token and user email
+            await login(loginResponse.token); // Login context update
+            await fetchAndStoreSubcategories(loginResponse.user.email); // Fetch and store subcategories
+            await fetchAndStoreUserData(loginResponse.user.email);  // Fetch and store user data
+        } else {
+            console.error('Login failed:', loginResponse.message);
+        }
     } catch (error) {
-        // Assuming error.response.data contains a descriptive error message
-        const errorMessage = error.response?.data?.error || 'Failed to login';
-        alert(errorMessage);
+        alert("Failed to login: " + (error.message || "Unknown error"));
     } finally {
         setLoading(false);
     }
@@ -34,11 +39,16 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginCard}>
-        <Text style={styles.title}>Login</Text>
-        <Text style={styles.subtitle}>Login to continue using the app</Text>
-        {/* // Adjustments to the Formik setup in Login.js to accommodate loginId */}
+
+    <View style={[styles.container, { backgroundColor: themeStyles.background }]}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardAvoidView}
+        keyboardVerticalOffset={Platform.select({ ios: 50, android: 0 })}
+      >
+      <View style={[styles.loginCard, { shadowColor: themeStyles.text, backgroundColor: themeStyles.background, borderColor: themeStyles.accent }]}>
+        <Text style={[styles.title, { color: themeStyles.text }]}>Login</Text>
+        <Text style={[styles.subtitle, { color: themeStyles.text }]}>Login to continue using the app</Text>
       <Formik
           initialValues={{ loginId: '', password: '' }}
           onSubmit={handleLogin}
@@ -50,6 +60,7 @@ export default function Login({ navigation }) {
           {({ handleChange, handleBlur, handleSubmit, values }) => (
               <>
                   <TextInput
+                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
                       onChangeText={handleChange('loginId')} // Changed from email to loginId
                       onBlur={handleBlur('loginId')} // Changed from email to loginId
                       value={values.loginId}
@@ -58,6 +69,7 @@ export default function Login({ navigation }) {
                       autoCapitalize="none"
                   />
                   <TextInput
+                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
                       value={values.password}
@@ -65,12 +77,19 @@ export default function Login({ navigation }) {
                       placeholderTextColor={'black'}
                       secureTextEntry
                   />
-                  <Button onPress={handleSubmit} title="Login" />
+                    <TouchableOpacity 
+                    onPress={handleSubmit} 
+                    style={[styles.button, { backgroundColor: themeStyles.primary }]} 
+                    disabled={loading}
+                    >
+                <Text style={[styles.buttonText]}>Login</Text>
+              </TouchableOpacity>
               </>
           )}
       </Formik>
 
       </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -82,11 +101,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#95B5BB',
   },
   loginCard: {
     width: '100%',
-    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
     elevation: 10,
@@ -101,6 +118,9 @@ const styles = StyleSheet.create({
     color: '#2C4151',
     textAlign: 'center',
     marginBottom: 10,
+  },
+  keyboardAvoidView: {
+    width: '100%', 
   },
   subtitle: {
     fontSize: 16,

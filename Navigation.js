@@ -1,14 +1,11 @@
 // Navigation.js
-import { StyleSheet, View, Text, ActivityIndicator, useWindowDimensions} from 'react-native';
+import { useWindowDimensions} from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from '@react-navigation/stack';
-import globalStyles from './global.js';
 import AnimatedScreenWrapper from './constants/AnimatedScreenWrapper.js';
-import { CommonActions } from '@react-navigation/native';
 
-import React, { useEffect, useState} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import { useTheme } from './screens/Settingsc/Theme'; 
 
 import Welcome from './security/Welcome';
@@ -17,28 +14,17 @@ import Signup from "./security/SignUp";
 import PasswordRecovery from "./security/PasswordRecovery";
 
 import Home from "./screens/Homesc/Home";
-import Profile from "./screens/Profilesc/Profile";
 import Viewing from "./screens/View/Viewing";
 import AddDataOptions from "./screens/AddDatasc/AddDataOptions"; // Your initial AddData screen is now AddDataOptions
-import Settings from "./screens/Settingsc/Settings";
-import { useAuth } from './security/AuthContext'; 
-
-
-import Profiles from "./screens/Profilesc/ProfileSelect.js";  
-import EditProfile from "./screens/Profilesc/EditProfile";
-import ProfileSettings from "./screens/Profilesc/ProfileSettings";
-import SupportUs from "./screens/Profilesc/SupportUs";
+import { useAuth } from './security/userData/users/AuthContext.js'; 
+import Profile from "./screens/Profilesc/ProfileSettings";
 
 
 //Bottom Tab animation
-import Animated, { useAnimatedStyle, interpolate, withSpring } from 'react-native-reanimated';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-
-import { navigationRef } from './NavigationService';
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 //Icon Importation
-import {IHome, IPeople, ISettings, IPersonOutline, IPlusCircle, ITrendingUpOutline, ISettings2, ISettings2Outline, IHomeOutline, IPlusOutline, Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting, Irealsetting2} from "./assets/Icon";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Irealhome, Irealview, Irealadd, Irealprofile,} from "./assets/Icon";
 
 // import HomeIcon from "./assets/navicons/";
 
@@ -49,7 +35,23 @@ const AddDataStack = createStackNavigator(); // This section if for the add data
 const ProfileStack = createStackNavigator();
 const Stack = createStackNavigator();
 
+import UserThemes from './screens/Profilesc/options/UserThemes';
+import UserLogs from './screens/Profilesc/options/logs';
+import UserSynch from './screens/Profilesc/options/Synch';
+import UpdatePage from './screens/Profilesc/options/Update';
 
+
+function ProfileStackScreen() {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profilepage" component={Profile} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserThemes" component={UserThemes} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserLogs" component={UserLogs} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UserSynch" component={UserSynch} options={{ headerShown: false }}/>
+      <ProfileStack.Screen name="UpdatePage" component={UpdatePage} options={{ headerShown: false }}/>
+    </ProfileStack.Navigator>
+  );
+}
 
 function AddDataStackScreen() {
   return (
@@ -64,28 +66,29 @@ function AddDataStackScreen() {
 }
 
 
-const SettingsStack = createStackNavigator();
 
 function BottomTabs() {
   const { theme, themeStyles } = useTheme();
   const dimensions = useWindowDimensions();
   const tabBarHeight = dimensions.height * 0.1;
-  const tabBarBackground = theme === 'light' ? '#ECEFF1' : '#0D1019';
 
   return (
     <Tab.Navigator 
     initialRouteName="AddData"
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarStyle: 
-        [globalStyles.tabBarStyle,
-           { 
-            height: tabBarHeight,
-            backgroundColor: tabBarBackground,
-          }],
+        tabBarStyle: {
+          backgroundColor: themeStyles.background,
+          height: tabBarHeight,
+          borderTopWidth: 0,
+          shadowColor: 'transparent',
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+
         tabBarShowLabel: false, // This line hides the label
         swipeEnabled: true,
-        tabBarIcon: ({ focused, color }) => {
+        tabBarIcon: ({ focused }) => {
           let IconComponent;
 
 
@@ -97,10 +100,7 @@ function BottomTabs() {
             IconComponent = Irealadd;
           } else if (route.name === 'Profile') {
             IconComponent = Irealprofile;
-          } else if (route.name === 'Settings') {
-            IconComponent = Irealsetting2;
-          }
-
+          } 
           const animatedStyle = useAnimatedStyle(() => {
             const scale = focused ? 1.2 : 1; // Scale icon up when focused
             const translateY = focused ? -10 : 0; // Move icon up when focused
@@ -120,7 +120,7 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent size={24} />
+              <IconComponent size={24}  />
             </Animated.View>
           );
         },
@@ -150,22 +150,16 @@ function BottomTabs() {
       </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
-  
+{/* <Tab.Screen name="Profile" component={ProfileStackScreen} options={{ headerShown: false }} /> */}
+
   <Tab.Screen name="Profile" options={{ headerShown: false }}>
     {() => (
       <AnimatedScreenWrapper style={{ flex: 1 }}>
-        <Profile />
+        <ProfileStackScreen />
       </AnimatedScreenWrapper>
     )}
   </Tab.Screen>
   
-  <Tab.Screen name="Settings" options={{ headerShown: false }}>
-    {() => (
-      <AnimatedScreenWrapper style={{ flex: 1 }}>
-        <Settings />
-      </AnimatedScreenWrapper>
-    )}
-  </Tab.Screen>
     </Tab.Navigator>
   );
 }
@@ -185,10 +179,10 @@ const AppStack = () => (
 
 
 export default function Navigation() {
-  const { isAuthenticated } = useAuth(); // Using the isAuthenticated flag from AuthContext
+  const { isAuthenticated } = useAuth();
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer>
       {isAuthenticated ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );

@@ -2,15 +2,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { subcategories as localSubcategories } from '../../components/DataList';
+import { subcategories as localSubcategories } from '../../components/Datahandling/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
-import DropDownPicker from 'react-native-dropdown-picker';
+import { Picker } from '@react-native-picker/picker'; // Import Picker
+import {useTheme} from '../Settingsc/Theme';
 
-const NewSubForm = ({ isVisible, onClose }) => {
+const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
   const [unit, setUnit] = useState('');
+  const { themeStyles } = useTheme();
+
+
+  
 
   // Check if the subcategory name is already in use
   const isNameUnique = async (name) => {
@@ -30,34 +35,35 @@ const NewSubForm = ({ isVisible, onClose }) => {
       return;
     }
 
-    if (description.length > 150) {
+    if (description.length > 250) {
       Alert.alert('Validation', 'Description must be within 150 characters.');
       return;
     }
 
     const newSubcategory = {
-      id: Date.now(),
-      categoryname: 'New Category',
+      id: Date.now(), // Unique ID based on timestamp
+      categoryname: categoryname, // Use the passed category name
       subcategory: subcategoryName,
       description,
       units: unit ? [unit] : [],
       datatype: dataType,
-      max: dataType === 'number' ? 9999 : undefined,
+      max: dataType === 'number' ? 999 : undefined,
       min: dataType === 'number' ? 0 : undefined,
     };
 
     try {
       const existingDataJson = await AsyncStorage.getItem('subcategories');
       const existingData = existingDataJson ? JSON.parse(existingDataJson) : [];
-      const updatedData = [...existingData, newSubcategory];
-      await AsyncStorage.setItem('subcategories', JSON.stringify(updatedData));
+      existingData.push(newSubcategory);
+      await AsyncStorage.setItem('subcategories', JSON.stringify(existingData));
       Alert.alert('Success', 'Subcategory added successfully.');
+      onNewSubcategoryAdded(newSubcategory); 
       resetForm();
-      onClose(); // Close the form upon successful submission.
     } catch (error) {
       Alert.alert('Error', 'There was an error saving the subcategory.');
     }
   };
+
 
   // Reset form fields
   const resetForm = () => {
@@ -76,69 +82,58 @@ const NewSubForm = ({ isVisible, onClose }) => {
 return (
   <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
     <TouchableWithoutFeedback onPress={handleOnClose}>
-    <KeyboardAvoidingView 
-            behavior={Platform.OS === "ios" ? "padding" : "height"} 
-            style={{ flex: 1 }} 
-            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} 
-          >
-    <View style={styles.modalOverlay}>
-      <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>Add New Subcategory</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter subcategory name"
-          value={subcategoryName}
-          onChangeText={setSubcategoryName}
-          placeholderTextColor="#666" // Neutral color for placeholder text
-        />
-        <DropDownPicker
-          items={[
-            { label: 'Number', value: 'number' },
-            { label: 'Text', value: 'text' },
-            { label: 'Date', value: 'date' },
-          ]}
-          defaultValue={dataType}
-          containerStyle={styles.dropdownContainer}
-          style={styles.dropdown}
-          itemStyle={{
-            justifyContent: 'flex-start',
-          }}
-          dropDownStyle={styles.dropdown}
-          onChangeItem={item => setDataType(item.value)}
-          placeholderStyle={{ color: "#666" }} // Neutral placeholder color
-          labelStyle={{ color: "#333" }} // Neutral label color
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Description (optional)"
-          value={description}
-          onChangeText={text => setDescription(text)}
-          placeholderTextColor="#666"
-          multiline={true} // Allows for multi-line input
-          textAlignVertical="top" // Aligns text to the top
-          maxLength={150}
-          height={75} // Adjust the height based on your design
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Unit (optional)"
-          value={unit}
-          onChangeText={setUnit}
-          placeholderTextColor="#666"
-        />
-        <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
-          <Text style={styles.submitButtonText}>Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
-          <Text style={styles.cancelButtonText}>Close</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-    </KeyboardAvoidingView>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
+        <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
+          <View style={[styles.formContainer, { backgroundColor: themeStyles.accent }]}>
+            <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
+            {/* Subcategory Name Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
+              placeholder="Enter subcategory name"
+              placeholderTextColor={themeStyles.text}
+              value={subcategoryName}
+              onChangeText={setSubcategoryName}
+            />
+            {/* Description Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background, height: 100}]}
+              placeholder="Description (optional)"
+              placeholderTextColor={themeStyles.text}
+              value={description}
+              onChangeText={text => setDescription(text)}
+              multiline
+              textAlignVertical="top"
+              maxLength={150}
+            />
+            {/* Unit Input */}
+            <TextInput
+              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
+              placeholder="Unit (optional)"
+              placeholderTextColor={themeStyles.text}
+              value={unit}
+              onChangeText={setUnit}
+              maxLength={10}
 
-    </TouchableWithoutFeedback>
-
-  </Modal>
+            />
+            {/* Buttons */}
+              <TouchableOpacity 
+                onPress={handleSubmit} 
+                style={[styles.submitButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
+              >
+                <Text style={[styles.submitButtonText, { color: themeStyles.text }]}>Save</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                onPress={onClose} 
+                style={[styles.cancelButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
+              >
+                <Text style={[styles.cancelButtonText, { color: themeStyles.text }]}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </Modal>
 
 );
 };
@@ -170,14 +165,25 @@ formTitle: {
   textAlign: 'center', // Center-aligned title for a balanced look
 },
 input: {
-  backgroundColor: '#FFF', // White background for inputs
   borderWidth: 1,
-  borderColor: '#DDD', // Light border for subtle delineation
   borderRadius: 5,
-  padding: 10,
+  padding: 15,
   marginBottom: 15,
   fontSize: 16,
-  color: '#333', // Text color
+},
+pickerContainer: {
+  borderRadius: 10,
+  borderWidth: 1,
+  marginBottom: 15,
+  justifyContent: 'center',
+},
+pickerStyle: {
+  color: 'red',
+},
+modalOverlay: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
 },
 dropdownContainer: {
   height: 40,

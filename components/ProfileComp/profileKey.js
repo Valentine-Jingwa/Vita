@@ -1,11 +1,20 @@
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Key under which profiles are stored in AsyncStorage
 const profileKey = 'profiles';
 
 const profileStorage = {
+  /**
+   * Generates a unique identifier based on the current timestamp.
+   * @returns {string} A unique identifier.
+   */
   generateUID: () => `uid_${new Date().getTime()}`,
-  
+
+  /**
+   * Loads all profiles from AsyncStorage.
+   * @returns {Object} An object containing all profiles or an empty object if no profiles are found or an error occurs.
+   */
   loadProfiles: async () => {
     try {
       const profiles = await AsyncStorage.getItem(profileKey);
@@ -16,6 +25,11 @@ const profileStorage = {
     }
   },
   
+  /**
+   * Saves a single profile to AsyncStorage.
+   * @param {Object} profileData - The data of the profile to save.
+   * @param {boolean} isAdmin - Flag to determine if the profile is an admin.
+   */
   saveProfile: async (profileData, isAdmin = false) => {
     const profiles = await profileStorage.loadProfiles();
     const newUid = profileStorage.generateUID();
@@ -28,6 +42,10 @@ const profileStorage = {
     }
   },
   
+  /**
+   * Removes a specific profile from AsyncStorage.
+   * @param {string} uid - The unique identifier of the profile to remove.
+   */
   removeProfile: async (uid) => {
     const profiles = await profileStorage.loadProfiles();
     if (profiles[uid]) {
@@ -40,6 +58,10 @@ const profileStorage = {
     }
   },
 
+  /**
+   * Fetches an admin profile from a backend and stores it in AsyncStorage.
+   * @param {string} backendURL - The URL of the backend from which to fetch the admin profile.
+   */
   fetchAndStoreAdminProfile: async (backendURL) => {
     try {
       const response = await fetch(`${backendURL}/getAdmin`);
