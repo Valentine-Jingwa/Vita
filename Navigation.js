@@ -24,7 +24,7 @@ import Profile from "./screens/Profilesc/ProfileSettings";
 import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 //Icon Importation
-import { Irealhome, Irealview, Irealadd, Irealprofile, Irealsetting2} from "./assets/Icon";
+import { Irealhome, Irealview, Irealadd, Irealprofile,} from "./assets/Icon";
 
 // import HomeIcon from "./assets/navicons/";
 
@@ -37,7 +37,6 @@ const Stack = createStackNavigator();
 
 import UserThemes from './screens/Profilesc/options/UserThemes';
 import UserLogs from './screens/Profilesc/options/logs';
-import NotificationPage from './screens/Profilesc/options/Notifications';
 import UserSynch from './screens/Profilesc/options/Synch';
 import UpdatePage from './screens/Profilesc/options/Update';
 
@@ -48,7 +47,6 @@ function ProfileStackScreen() {
       <ProfileStack.Screen name="Profilepage" component={Profile} options={{ headerShown: false }}/>
       <ProfileStack.Screen name="UserThemes" component={UserThemes} options={{ headerShown: false }}/>
       <ProfileStack.Screen name="UserLogs" component={UserLogs} options={{ headerShown: false }}/>
-      <ProfileStack.Screen name="NotificationPage" component={NotificationPage} options={{ headerShown: false }}/>
       <ProfileStack.Screen name="UserSynch" component={UserSynch} options={{ headerShown: false }}/>
       <ProfileStack.Screen name="UpdatePage" component={UpdatePage} options={{ headerShown: false }}/>
     </ProfileStack.Navigator>
@@ -68,7 +66,6 @@ function AddDataStackScreen() {
 }
 
 
-const SettingsStack = createStackNavigator();
 
 function BottomTabs() {
   const { theme, themeStyles } = useTheme();
@@ -103,10 +100,7 @@ function BottomTabs() {
             IconComponent = Irealadd;
           } else if (route.name === 'Profile') {
             IconComponent = Irealprofile;
-          } else if (route.name === 'Settings') {
-            IconComponent = Irealsetting2;
-          }
-
+          } 
           const animatedStyle = useAnimatedStyle(() => {
             const scale = focused ? 1.2 : 1; // Scale icon up when focused
             const translateY = focused ? -10 : 0; // Move icon up when focused
@@ -166,13 +160,6 @@ function BottomTabs() {
     )}
   </Tab.Screen>
   
-  {/* <Tab.Screen name="Settings" options={{ headerShown: false }}>
-    {() => (
-      <AnimatedScreenWrapper style={{ flex: 1 }}>
-        <Settings />
-      </AnimatedScreenWrapper>
-    )}
-  </Tab.Screen> */}
     </Tab.Navigator>
   );
 }

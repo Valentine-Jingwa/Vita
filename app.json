@@ -8,9 +8,9 @@
     "icon": "./assets/logo/AppLogo.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/logo/Logo2.png",
+      "image": "./assets/logo/Logo12.png",
       "resizeMode": "contain",
-      "backgroundColor": "#f9f6f7"
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "./assets/logo/*", 
