@@ -120,6 +120,7 @@ export default function Signup({ navigation }) {
                   onChangeText={handleChange('first_name')}
                   onBlur={handleBlur('first_name')}
                   value={values.first_name}
+                  color={themeStyles.text}
                   placeholderTextColor={themeStyles.text}
                 />
                 <TextInput
@@ -129,6 +130,7 @@ export default function Signup({ navigation }) {
                   onChangeText={handleChange('last_name')}
                   onBlur={handleBlur('last_name')}
                   value={values.last_name}
+                  color={themeStyles.text}
                   placeholderTextColor={themeStyles.text}
                 />
               </View>
@@ -143,8 +145,8 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('email')}
               value={values.email}
               keyboardType="email-address"
+              color={themeStyles.text}
               placeholderTextColor={themeStyles.text}
-
             />
             {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
@@ -156,6 +158,7 @@ export default function Signup({ navigation }) {
                   onChangeText={handleChange('username')}
                   onBlur={handleBlur('username')}
                   value={values.username}
+                  color={themeStyles.text}
                   placeholderTextColor={themeStyles.text}
                 />
                 <TextInput
@@ -166,6 +169,7 @@ export default function Signup({ navigation }) {
                   onBlur={handleBlur('password')}
                   value={values.password}
                   secureTextEntry
+                  color={themeStyles.text}
                   placeholderTextColor={themeStyles.text}
                 />
               </View>
@@ -180,6 +184,7 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('confirmPassword')}
               value={values.confirmPassword}
               secureTextEntry
+              color={themeStyles.text}
               placeholderTextColor={themeStyles.text}
 
             />
@@ -193,6 +198,7 @@ export default function Signup({ navigation }) {
               onBlur={handleBlur('dob')}
               value={values.dob}
               keyboardType="default"
+              color={themeStyles.text}
               placeholderTextColor={themeStyles.text}
 
             />
