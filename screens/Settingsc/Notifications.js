@@ -14,10 +14,11 @@ export async function registerForPushNotificationsAsync() {
     return;
   }
 
-  // Accessing the projectId from the nested eas object within extra
+  // Updated to use Constants.expoConfig to address deprecation of Constants.manifest
   token = (await Notifications.getExpoPushTokenAsync({
-    projectId: Constants.manifest.extra.eas.projectId
+    projectId: Constants.expoConfig.extra.eas.projectId
   })).data;
 
   console.log(token);
+  // Here, you could send the token to your server if needed
 }
