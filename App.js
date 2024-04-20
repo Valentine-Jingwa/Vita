@@ -16,6 +16,17 @@ import { ThemeProvider } from './screens/Settingsc/Theme';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Import UserProvider for managing user data context throughout the app.
 import { UserProvider } from './UserContext';
+// Import LogBox to suppress warnings related to deprecated components.
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Animated: `useNativeDriver` was not specified.', // Existing ignored warning
+  "Sending 'onAnimatedValueUpdate' with no listeners registered.", // New ignored warning
+  "Sending"
+]);
+
+
+
 
 // Define the main App component.
 export default function App() {
