@@ -74,23 +74,28 @@ function BottomTabs() {
 
   return (
     <Tab.Navigator 
-    initialRouteName="AddData"
+      initialRouteName="AddData"
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
           backgroundColor: themeStyles.background,
-          height: tabBarHeight,
+          height: Platform.select({
+            ios: 90, // Adjusted height for iOS to accommodate icons better
+            default: tabBarHeight // Default height for other platforms
+          }),          
           borderTopWidth: 0,
           shadowColor: 'transparent',
           shadowOpacity: 0,
           elevation: 0,
+          paddingBottom: Platform.select({
+            ios: 10, // Additional bottom padding for iOS
+            default: 0
+          }) // Avoids icon overlap on iOS
         },
-
-        tabBarShowLabel: false, // This line hides the label
+        tabBarShowLabel: false, // Hides label for a cleaner look
         swipeEnabled: true,
         tabBarIcon: ({ focused }) => {
           let IconComponent;
-
 
           if (route.name === 'Home') {
             IconComponent = Irealhome;
@@ -103,7 +108,7 @@ function BottomTabs() {
           } 
           const animatedStyle = useAnimatedStyle(() => {
             const scale = focused ? 1.2 : 1; // Scale icon up when focused
-            const translateY = focused ? -10 : 0; // Move icon up when focused
+            const translateY = focused ? -10 : 0; // Move icon up when focused, reduce translation if needed
             return {
               transform: [
                 { scale: withSpring(scale) },
@@ -120,12 +125,13 @@ function BottomTabs() {
               justifyContent: 'center',
               borderRadius: 80,
             }]}>
-              <IconComponent size={24}  />
+              <IconComponent size={24} />
             </Animated.View>
           );
         },
       })}
     >
+
   <Tab.Screen name="Home"  options={{ headerShown: false }}>
     {() => (
     <AnimatedScreenWrapper>

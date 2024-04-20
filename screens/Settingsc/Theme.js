@@ -30,12 +30,14 @@ export const ThemeProvider = ({ children }) => {
     primary: '#626D7A', 
     secondary: '#A8B2C1', 
     accent: '#DCE1E9', 
-  } : {
+    red: '#FF0000'
+    } : {
     text: '#C7C7C7',
     background: '#010117',
     primary: '#27293D',
     secondary: '#3D4050',
     accent: '#555770',
+    red: '#FF6347',
   };
   
   return (

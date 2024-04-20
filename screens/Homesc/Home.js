@@ -150,16 +150,17 @@ useEffect(() => {
 
 
       {/* Calendar Component */}
-      <Calendar
+  <Calendar
   onDayPress={handleDayPress}
   markedDates={getMarkedDates()}
   theme={{
     arrowColor: themeStyles.secondary,
-    todayTextColor: themeStyles.text,
+    todayTextColor: themeStyles.red,
     calendarBackground: themeStyles.background,
     textSectionTitleColor: themeStyles.text, // Color of the section titles (month and day names)
     monthTextColor: themeStyles.text, // Color of the month title
-    dayTextColor: themeStyles.primary, // Color of the day numbers
+    dayTextColor: themeStyles.accent, // Color of the day numbers
+    dayBackgroundColor: themeStyles.background, // Background color of the day numbers
     // ... other theme properties
   }}
   style={[styles.calendar, {
@@ -263,7 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 20,
     marginRight: 20,
-    height: 370,
+    height: 375,
     borderRadius: 15,
     borderWidth: 1,
     shadowOffset: { width: 0, height: 5 },
