@@ -32,7 +32,7 @@ export const ThemeProvider = ({ children }) => {
     accent: '#DCE1E9', 
   } : {
     text: '#C7C7C7',
-    background: '#121212',
+    background: '#010117',
     primary: '#27293D',
     secondary: '#3D4050',
     accent: '#555770',

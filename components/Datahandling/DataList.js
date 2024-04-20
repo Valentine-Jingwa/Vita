@@ -1,7 +1,6 @@
 // Date: 03/24/2024
 //DataList
 
-import React, { useState, useTheme} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const subcategories = [

@@ -10,19 +10,19 @@ import {
 } from 'react-native';
 // import { useTheme } from '@react-navigation/native';
 import { Ihealth, Imed, Ifood, Ibandaid, Ibackbtn } from '../../assets/Icon.js';
-import UserHead from '../../components/UserHead';
+import UserHead from '../../components/Datahandling/UserHead.js';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
 import { UploadUserData } from '../../mongo/services/mongodbService.js';
-import { subcategories as defaultSubcategories } from '../../components/DataList';
+import { subcategories as defaultSubcategories } from '../../components/Datahandling/DataList.js';
 import DataStorage from '../../components/Datahandling/DataStorage';
 import { useTheme } from '../Settingsc/Theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
 import { useUser } from '../../UserContext';
-import { storeData, readData } from '../../components/DataList'; // Adjust the import path as necessary
+import { storeData, readData } from '../../components/Datahandling/DataList.js'; // Adjust the import path as necessary
 
 
 const { width, height: screenHeight } = Dimensions.get('window');
@@ -195,11 +195,14 @@ useEffect(() => {
                     onPress={() => setSelectedCategory(category)} 
                     style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
                   >
+                    <View style={[styles.circleBox, { backgroundColor: themeStyles.secondary }]} // Apply themeStyles here
+>
                     <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
                       {category === 'Vitals' && <Ihealth width={30} height={30} />}
                       {category === 'Medication' && <Imed width={30} height={30} />}
                       {category === 'Nutrition' && <Ifood width={30} height={30} />}
                       {category === 'Others' && <Ibandaid width={30} height={30} />}
+                    </View>
                   </TouchableOpacity>
               ))}
           </View>
@@ -432,6 +435,13 @@ const styles = StyleSheet.create({
     color: 'black', // Use primary color from theme
     fontWeight: 'bold', // Bold font weight
     paddingHorizontal: 10, 
+  },
+  circleBox: {
+    width: 100,
+    height: 100,
+    borderRadius: 75,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

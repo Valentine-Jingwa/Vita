@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { subcategories as localSubcategories } from '../../components/DataList';
+import { subcategories as localSubcategories } from '../../components/Datahandling/DataList';
 import units from './UnitList'; // Assuming this is a new file you've created with the list of units
 import { Picker } from '@react-native-picker/picker'; // Import Picker
 import {useTheme} from '../Settingsc/Theme';

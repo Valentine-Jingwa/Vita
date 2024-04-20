@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { CommonActions } from '@react-navigation/native';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, Switch, Button, KeyboardAvoidingView } from 'react-native';
+import { View, TextInput, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useAuth } from './AuthContext'; // Ensure this path matches your AuthContext file location
+import { useAuth } from './userData/users/AuthContext'; // Ensure this path matches your AuthContext file location
 import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
 import {useTheme} from '../screens/Settingsc/Theme';
-import {setCurrentUserEmail, getCurrentUserEmail, clearLocalData} from '../components/Datahandling/DataStorage'; // Adjust the path as necessary
 import { fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService'; // Ensure this is properly imported
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export default function Login({ navigation }) {
   const { login } = useAuth();
