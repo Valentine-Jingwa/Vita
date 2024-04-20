@@ -25,7 +25,6 @@ const { width, height } = Dimensions.get('window');
 export default function ProfileSettings({ }) {
   const [adminUser, setAdminUser] = useState(null);
   const [subUsers, setSubUsers] = useState([]);
-  const { themeStyles } = useTheme(); // Destructure to get theme styles
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
   const { logout } = useAuth();
