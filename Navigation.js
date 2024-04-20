@@ -78,7 +78,7 @@ function BottomTabs() {
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: themeStyles.backgroundColor,
+          backgroundColor: themeStyles.background,
           height: tabBarHeight,
           borderTopWidth: 0,
           shadowColor: 'transparent',
