@@ -132,12 +132,20 @@ We are excited to collaborate with talented developers and enthusiasts in our co
 
 Your contributions help make Vita a better tool for everyone!
 
+## Vita WebSite for Download
+
+https://vita-web-wine.vercel.app/
+
+## Vita WebSite GitHub Repo 
+
+https://github.com/nicoatsait/vita_web
+
 ## License
 
 **MIT License**
 
 ```plaintext
-Copyright (c) [2024] Valentine Jingwa, Jean-Piere and Nicolas Gonsales
+Copyright (c) [2024] Valentine Jingwa, Jean-Piere and Nicholas Gonzalez
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
