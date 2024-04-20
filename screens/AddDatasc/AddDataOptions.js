@@ -1,3 +1,4 @@
+// AddDataOptions.js
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -6,57 +7,72 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Animated,
-  ScrollView,
-  Dimensions,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTheme } from '../Settingsc/Theme';
-import { useUser } from '../../UserContext';
-
-import UserHead from '../../components/Datahandling/UserHead';
+// import { useTheme } from '@react-navigation/native';
+import { Ihealth, Imed, Ifood, Ibandaid, Ibackbtn } from '../../assets/Icon.js';
+import UserHead from '../../components/Datahandling/UserHead.js';
 import DataEntryModal from '../../components/Datahandling/DataEntryModal';
 import NewSubForm from './NewSubForm';
-import DataStorage from '../../components/Datahandling/DataStorage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminUserStorage from '../Profilesc/AdminUser';
-import { UploadUserData } from '../../mongo/services/mongodbService';
+import { UploadUserData } from '../../mongo/services/mongodbService.js';
+import { subcategories as defaultSubcategories } from '../../components/Datahandling/DataList.js';
+import DataStorage from '../../components/Datahandling/DataStorage';
+import { useTheme } from '../Settingsc/Theme';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Dimensions } from 'react-native';
+import { useUser } from '../../UserContext';
+import { storeData, readData } from '../../components/Datahandling/DataList.js'; // Adjust the import path as necessary
 
-import { Ihealth, Imed, Ifood, Ibandaid, Ibackbtn } from '../../assets/Icon';
 
 const { width, height: screenHeight } = Dimensions.get('window');
 
-const AddDataOptions = ({ navigation }) => {
-  const { themeStyles } = useTheme();
-  const { currentUser } = useUser();
 
+const AddDataOptions = ({ navigation }) => {
+  const { colors } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
   const [notificationAnim] = useState(new Animated.Value(-60));
   const [notificationOpacity] = useState(new Animated.Value(0));
   const [formVisible, setFormVisible] = useState(false);
+  const { themeStyles } = useTheme();
+  const { currentUser } = useUser(); // Get currentUser from UserContext
+
+
+  const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState({});
   const [notification, setNotification] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [adminUser, setAdminUser] = useState(null);
   const [allSubcategories, setAllSubcategories] = useState([]);
-  const [filteredSubcategories, setFilteredSubcategories] = useState([]);
+ const [filteredSubcategories, setFilteredSubcategories] = useState([]);
 
-  // Effect to initialize and fetch subcategories from AsyncStorage
-  useEffect(() => {
-    async function initializeData() {
+
+useEffect(() => {
+  async function initializeData() {
+
       const existingData = await AsyncStorage.getItem('subcategories');
       if (!existingData) {
-        await storeData(); // Store default data if not existing
+          // console.log('No existing subcategories found, setting default data.');
+          await storeData(); 
+      } else {
+          // console.log('Existing subcategories found, loading data.');
       }
-      fetchData(); // Always fetch data
-    }
-    initializeData();
-  }, []);
-
-  async function fetchData() {
-    const data = await readData();
-    if (data) {
-      setAllSubcategories(data);
-      setFilteredSubcategories(data);
-    }
+      fetchData(); 
   }
+
+  initializeData();
+}, []);
+
+async function fetchData() {
+  const data = await readData();
+  if (data) {
+    setAllSubcategories(data);
+    setFilteredSubcategories(data); // Initialize filtered data
+  }
+}
+
+
+
 
   useEffect(() => {
     const fetchAdminUser = async () => {
@@ -66,45 +82,76 @@ const AddDataOptions = ({ navigation }) => {
     fetchAdminUser();
   }, []);
 
-  // Handle addition of new subcategory
-  const handleNewSubcategoryAdded = (newSubcategory) => {
-    setFilteredSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
-    setAllSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
-  };
+  // Function to update subcategories list in AddDataOptions
+const handleNewSubcategoryAdded = (newSubcategory) => {
+  setFilteredSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
+  setAllSubcategories(prevSubcategories => [...prevSubcategories, newSubcategory]);
+};
 
-  // Function to display notification with animation
-  const showNotification = (message) => {
-    setNotification(message);
-    Animated.sequence([
-      Animated.parallel([
-        Animated.timing(notificationAnim, { toValue: 0, duration: 80, useNativeDriver: true }),
-        Animated.timing(notificationOpacity, { toValue: 1, duration: 80, useNativeDriver: true })
-      ]),
-      Animated.delay(2000),
-      Animated.parallel([
-        Animated.timing(notificationAnim, { toValue: -60, duration: 300, useNativeDriver: true }),
-        Animated.timing(notificationOpacity, { toValue: 0, duration: 300, useNativeDriver: true })
-      ])
-    ]).start(() => setNotification(''));
-  };
 
-  // Handle subcategory selection
+     // Function to show notification
+     const showNotification = (message) => {
+      setNotification(message);
+    
+      // First, make the notification visible and slide in
+      Animated.sequence([
+        Animated.parallel([
+          Animated.timing(notificationAnim, {
+            toValue: 0,
+            duration: 80,
+            useNativeDriver: true,
+          }),
+          Animated.timing(notificationOpacity, {
+            toValue: 1,
+            duration: 80,
+            useNativeDriver: true,
+          })
+        ]),
+        Animated.delay(2000), // Keep the notification visible for 3000 milliseconds
+        // Then, slide the notification out and make it invisible
+        Animated.parallel([
+          Animated.timing(notificationAnim, {
+            toValue: -60,
+            duration: 300,
+            useNativeDriver: true,
+          }),
+          Animated.timing(notificationOpacity, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: true,
+          })
+        ])
+      ]).start(() => {
+        // Optionally reset the notification message
+        setNotification('');
+      });
+    };
+    
+    
+
   const handleSubcategorySelect = (subcategory) => {
     setSelectedSubcategory(subcategory);
     setModalVisible(true);
   };
 
-  // Handle saving data and uploading to MongoDB
   const handleSave = async (id, value, unit, subcategory, categoryname) => {
     if (value && unit) {
       try {
         const newDataPoint = {
-          id, value, unit, subcategory, categoryname,
+          id,
+          value,
+          unit,
+          subcategory,
+          categoryname,
           timestamp: new Date().toISOString(),
           dataOwner: currentUser.username
         };
-        await DataStorage.Store(newDataPoint);
-        await UploadUserData(adminUser.email, newDataPoint);
+  
+        await DataStorage.Store(newDataPoint); // Store data locally
+  
+        // Additionally upload data to MongoDB
+        await UploadUserData(adminUser.email, newDataPoint); 
+  
         setModalVisible(false);
       } catch (error) {
         console.error('Save error:', error);
@@ -114,42 +161,98 @@ const AddDataOptions = ({ navigation }) => {
       showNotification('Incorrect data');
     }
   };
+  
 
-  // Update filtered subcategories on category selection
   useEffect(() => {
     if (selectedCategory) {
-      const filteredData = allSubcategories.filter(subcat => subcat.categoryname === selectedCategory);
-      setFilteredSubcategories(filteredData);
-    } else {
-      setFilteredSubcategories(allSubcategories);
+        setSubcategories(subcategories.filter(
+            subcat => subcat.categoryname === selectedCategory
+        ));
     }
-  }, [selectedCategory, allSubcategories]);
+}, [selectedCategory]);
+
+
+
+useEffect(() => {
+  if (selectedCategory) {
+    const filteredData = allSubcategories.filter(
+      subcat => subcat.categoryname === selectedCategory
+    );
+    setFilteredSubcategories(filteredData);
+  } else {
+    setFilteredSubcategories(allSubcategories); // Reset to all subcategories when no category is selected
+  }
+}, [selectedCategory, allSubcategories]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: themeStyles.background } ]}>
       <UserHead />
       {!selectedCategory ? (
-        <View style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
-          {/* Category selection view */}
-        </View>
+          <View style={[styles.categoryContainer, { backgroundColor: themeStyles.background }]}>
+          {['Vitals', 'Medication', 'Nutrition', 'Others'].map((category, index) => (
+                    <TouchableOpacity 
+                    key={index} 
+                    onPress={() => setSelectedCategory(category)} 
+                    style={[styles.categoryBox, { backgroundColor: themeStyles.primary }]} // Apply themeStyles here
+                  >
+                    <View style={[styles.circleBox, { backgroundColor: themeStyles.secondary }]} // Apply themeStyles here
+>
+                    <Text style={[styles.categoryText, { color: themeStyles.text }]}>{category}</Text>
+                      {category === 'Vitals' && <Ihealth width={30} height={30} />}
+                      {category === 'Medication' && <Imed width={30} height={30} />}
+                      {category === 'Nutrition' && <Ifood width={30} height={30} />}
+                      {category === 'Others' && <Ibandaid width={30} height={30} />}
+                    </View>
+                  </TouchableOpacity>
+              ))}
+          </View>
       ) : (
         <View style={[styles.subcategoryContainer, { backgroundColor: themeStyles.background }]}>
-          {/* Subcategory selection view */}
-        </View>
+            <View style={[styles.subcategoryContainerHeader, { backgroundColor: themeStyles.background }]}>
+            <TouchableOpacity style={[styles.backButton, { backgroundColor: themeStyles.accent }]} onPress={() => setSelectedCategory(null)}>
+                      <Ibackbtn width={30} height={30} />
+                  </TouchableOpacity>
+                  <View style={[styles.selectedTitleIcon, {
+                    backgroundColor: "white",
+                    borderColor: themeStyles.primary,
+                    borderWidth: 1 // Set this to the desired width of your border
+                    }]}>
+                  <Text style={[styles.selectedCategoryTitle]}>{selectedCategory}</Text>
+                  {/* Matching Icon */}
+                  {selectedCategory === 'Vitals' && <Ihealth width={30} height={30} />}
+                  {selectedCategory === 'Medication' && <Imed width={30} height={30} />}
+                  {selectedCategory === 'Nutrition' && <Ifood width={30} height={30} />}
+                  {selectedCategory === 'Others' && <Ibandaid width={30} height={30} />}
+              </View>
+              </View>
+              <ScrollView contentContainerStyle={{ paddingBottom: 20,}}>
+                <View style={styles.BentoBoxlayout}>
+                  {filteredSubcategories.map((subcategory, index) => (
+                    <TouchableOpacity 
+                      key={index} 
+                      onPress={() => handleSubcategorySelect(subcategory)} 
+                      style={[styles.subcategoryBox, { backgroundColor: themeStyles.primary }]}
+                    >
+
+                      <Text style={[styles.subcategoryText, { color: themeStyles.text }]}>{subcategory.subcategory}</Text>
+                    </TouchableOpacity>
+                  ))}
+                  <TouchableOpacity onPress={() => setFormVisible(true)} style={[styles.subcategoryBox, {backgroundColor: themeStyles.accent}]}>
+                    <Text style={[styles.addNewText, {color: themeStyles.text}]}>Add New</Text>
+                  </TouchableOpacity>
+                </View>
+
+              </ScrollView>
+          </View>
       )}
-      <NewSubForm
-        isVisible={formVisible}
-        onClose={() => setFormVisible(false)}
-        categoryname={selectedCategory}
-        onNewSubcategoryAdded={handleNewSubcategoryAdded}
-      />
-      <DataEntryModal
-        isVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        subcategory={selectedSubcategory}
-        onSave={handleSave}
-      />
-    </SafeAreaView>
+    <NewSubForm
+      isVisible={formVisible}
+      onClose={() => setFormVisible(false)}
+      categoryname={selectedCategory}
+      onNewSubcategoryAdded={handleNewSubcategoryAdded}
+    />
+      <DataEntryModal isVisible={modalVisible} onClose={() => setModalVisible(false)} subcategory={selectedSubcategory} onSave={handleSave} />
+</SafeAreaView>
   );
 };
 
