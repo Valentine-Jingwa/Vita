@@ -1,4 +1,5 @@
 // SignUp.js
+// Import necessary modules from React and React Native.
 import React, { useState } from 'react';
 import {
   View,
@@ -12,14 +13,20 @@ import {
   Modal,
   Alert
 } from 'react-native';
+
+// Import Formik for handling form submission and validation.
 import { Formik } from 'formik';
+// Yup for schema validation which will validate inputs according to defined rules.
 import * as Yup from 'yup';
+
+// Custom function to handle creating a user in the MongoDB database.
 import { createUser } from '../mongo/services/mongodbService';
-import { useTheme} from '../screens/Settingsc/Theme'; 
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Make sure to install the react-native-vector-icons package
+// Custom hook to handle theme changes.
+import { useTheme} from '../screens/Settingsc/Theme';
+// Import icon component for potential use in UI elements.
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
-
-// Define the schema for validation using Yup
+// Define the validation schema using Yup for form input validation.
 const signupValidationSchema = Yup.object().shape({
   first_name: Yup.string().required('First name is required'),
   last_name: Yup.string().required('Last name is required'),
@@ -34,43 +41,50 @@ const signupValidationSchema = Yup.object().shape({
   subscribeNewsletter: Yup.bool(),
 });
 
+// The main functional component for the SignUp screen.
 export default function Signup({ navigation }) {
+  // State hooks for managing various states within the component.
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const { themeStyles } = useTheme();
 
+  // Function to show alert on validation error.
   const showErrorAlert = (errorMessage) => {
     Alert.alert("Validation Error", errorMessage);
   };
 
+  // Function to handle user signup.
   const handleSignup = async (values) => {
     setLoading(true);
     try {
-      // Calculate age
+      // Calculates age from date of birth entered.
       const age = new Date().getFullYear() - new Date(values.dob).getFullYear();
+      // Constructs a new user object from form values.
       const newUser = {
         first_name: values.first_name,
         last_name: values.last_name,
         username: values.username,
         email: values.email,
-        password: values.password, // Consider hashing this before sending
+        password: values.password, // Consider implementing hashing before sending for security.
         dob: values.dob,
-        age: age, // Calculated age
+        age: age, // Store calculated age.
         termsAccepted: values.termsAccepted,
         subscribeNewsletter: values.subscribeNewsletter,
       };
 
+      // Call the createUser function which interacts with the database.
       await createUser(newUser);
-      setModalVisible(true); // Show modal on successful signup
+      setModalVisible(true); // Toggle modal visibility on successful signup.
       setLoading(false);
     } catch (error) {
-      console.error('Signup failed:', error);
+      console.error('Signup failed:', error); // Log any errors.
       setLoading(false);
     }
   };
 
+  // The component render method containing the UI elements.
   return (
     <KeyboardAvoidingView
       style={[styles.keyboardAvoidingView, { backgroundColor: themeStyles.background }]}

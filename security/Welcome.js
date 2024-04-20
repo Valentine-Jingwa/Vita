@@ -1,3 +1,4 @@
+// Import React and necessary components from React Native
 import React from 'react';
 import {
     StyleSheet,
@@ -10,31 +11,43 @@ import {
     Animated,
     Image,
     Button,
-  } from 'react-native';
-import { useTheme } from '../screens/Settingsc/Theme'; // Import the theme hook
+} from 'react-native';
 
+// Import custom hook to access the current theme styles from a centralized location.
+import { useTheme } from '../screens/Settingsc/Theme'; 
+
+// Retrieve and destructure the width and height from the device's screen dimensions.
 const { width, height } = Dimensions.get('window');
 
+// Functional component Welcome that accepts navigation props for screen navigation.
 const Welcome = ({ navigation }) => {
-    const { themeStyles } = useTheme(); // Assuming themeStyles contains your color and font styles
+    // Use the useTheme hook to access theme-related styles (colors, fonts, etc.).
+    const { themeStyles } = useTheme(); 
 
+    // Render the Welcome screen component.
     return (
         <SafeAreaView style={[styles.container]}>
+            {/* View container for the logo or welcome image */}
             <View style={styles.image}>
-                {/* Assuming you have an image called 'welcome_graphic.png' in your assets folder */}
+                {/* Image component loaded with a local image and styled to fill the container */}
                 <Image source={require('../assets/logo/logo12.png')} style={{ width: '100%', height: '100%' }} resizeMode='contain' />
             </View>
+            {/* Container for the welcome text */}
             <View style={styles.textbox}>
-                <Text style={[styles.description, ]}>
+                {/* Text component displaying a welcome message or description */}
+                <Text style={[styles.description]}>
                     "Input data and get it stored for your next appointment."
                 </Text>
             </View>
+            {/* Container for the buttons */}
             <View style={styles.buttonContainer}>
+                {/* TouchableOpacity for the login button with dynamic styling based on the theme */}
                 <TouchableOpacity
                     style={[styles.button, styles.loginButton, { borderColor: themeStyles.secondary, backgroundColor: themeStyles.background}]}
                     onPress={() => navigation.navigate('Login')}>
                     <Text style={[styles.buttonText, { color: themeStyles.text }]}>Login</Text>
                 </TouchableOpacity>
+                {/* TouchableOpacity for the registration button with dynamic styling based on the theme */}
                 <TouchableOpacity
                     style={[styles.button, styles.signupButton, { borderColor: themeStyles.secondary, backgroundColor: themeStyles.background }]}
                     onPress={() => navigation.navigate('Signup')}>
@@ -44,6 +57,7 @@ const Welcome = ({ navigation }) => {
         </SafeAreaView>
     );
 };
+
 
 export default Welcome;
 const styles = StyleSheet.create({
