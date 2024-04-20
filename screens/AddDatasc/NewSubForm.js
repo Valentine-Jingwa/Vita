@@ -1,29 +1,34 @@
-
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform } from 'react-native';
+import {
+  View, Text, TextInput, TouchableOpacity, StyleSheet, Alert,
+  Modal, TouchableWithoutFeedback, KeyboardAvoidingView, Platform
+} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { subcategories as localSubcategories } from '../../components/Datahandling/DataList';
-import units from './UnitList'; // Assuming this is a new file you've created with the list of units
-import { Picker } from '@react-native-picker/picker'; // Import Picker
-import {useTheme} from '../Settingsc/Theme';
+import { useTheme } from '../Settingsc/Theme';
 
-const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) => {
+/**
+ * Component for creating a new subcategory.
+ * @param {Object} props - Component props.
+ * @param {boolean} props.isVisible - Controls visibility of the modal.
+ * @param {Function} props.onClose - Function to call on closing the modal.
+ * @param {string} props.categoryname - Name of the category for the new subcategory.
+ * @param {Function} props.onNewSubcategoryAdded - Function to execute after adding a new subcategory.
+ */
+const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded }) => {
   const [subcategoryName, setSubcategoryName] = useState('');
   const [description, setDescription] = useState('');
   const [dataType, setDataType] = useState('number');
   const [unit, setUnit] = useState('');
   const { themeStyles } = useTheme();
 
-
-  
-
-  // Check if the subcategory name is already in use
+  // Validates the uniqueness of the subcategory name by checking against stored items
   const isNameUnique = async (name) => {
     const storedData = await AsyncStorage.getItem('subcategories');
     const storedSubcategories = storedData ? JSON.parse(storedData) : [];
     return !storedSubcategories.some(sub => sub.subcategory.toLowerCase() === name.toLowerCase());
   };
 
+  // Handles the submission of the new subcategory
   const handleSubmit = async () => {
     if (!subcategoryName.trim() || subcategoryName.length > 100) {
       Alert.alert('Validation', 'Please enter a subcategory name within 100 characters.');
@@ -41,8 +46,8 @@ const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) 
     }
 
     const newSubcategory = {
-      id: Date.now(), // Unique ID based on timestamp
-      categoryname: categoryname, // Use the passed category name
+      id: Date.now(),  // Unique ID based on timestamp
+      categoryname,
       subcategory: subcategoryName,
       description,
       units: unit ? [unit] : [],
@@ -57,15 +62,14 @@ const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) 
       existingData.push(newSubcategory);
       await AsyncStorage.setItem('subcategories', JSON.stringify(existingData));
       Alert.alert('Success', 'Subcategory added successfully.');
-      onNewSubcategoryAdded(newSubcategory); 
+      onNewSubcategoryAdded(newSubcategory);
       resetForm();
     } catch (error) {
       Alert.alert('Error', 'There was an error saving the subcategory.');
     }
   };
 
-
-  // Reset form fields
+  // Resets the form fields to their initial states
   const resetForm = () => {
     setSubcategoryName('');
     setDescription('');
@@ -74,58 +78,56 @@ const NewSubForm = ({ isVisible, onClose, categoryname, onNewSubcategoryAdded}) 
     onClose();
   };
 
+  // Closes the modal and resets the form
   const handleOnClose = () => {
     resetForm();
-    onClose(); // Call the passed onClose prop
+    onClose();
   };
 
-return (
-  <Modal visible={isVisible} animationType="slide" onRequestClose={onClose} transparent={true}>
-    <TouchableWithoutFeedback onPress={handleOnClose}>
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}>
-        <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
-          <View style={[styles.formContainer, { backgroundColor: themeStyles.accent }]}>
-            <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
-            {/* Subcategory Name Input */}
-            <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
-              placeholder="Enter subcategory name"
-              placeholderTextColor={themeStyles.text}
-              value={subcategoryName}
-              onChangeText={setSubcategoryName}
-            />
-            {/* Description Input */}
-            <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background, height: 100}]}
-              placeholder="Description (optional)"
-              placeholderTextColor={themeStyles.text}
-              value={description}
-              onChangeText={text => setDescription(text)}
-              multiline
-              textAlignVertical="top"
-              maxLength={150}
-            />
-            {/* Unit Input */}
-            <TextInput
-              style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
-              placeholder="Unit (optional)"
-              placeholderTextColor={themeStyles.text}
-              value={unit}
-              onChangeText={setUnit}
-              maxLength={10}
-
-            />
-            {/* Buttons */}
-              <TouchableOpacity 
-                onPress={handleSubmit} 
-                style={[styles.submitButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
+  return (
+    <Modal
+      visible={isVisible}
+      animationType="slide"
+      onRequestClose={onClose}
+      transparent={true}
+    >
+      <TouchableWithoutFeedback onPress={handleOnClose}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
+        >
+          <View style={[styles.modalOverlay, { backgroundColor: themeStyles.background }]}>
+            <View style={[styles.formContainer, { backgroundColor: themeStyles.accent }]}>
+              <Text style={[styles.formTitle, { color: themeStyles.text }]}>Add New Subcategory</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
+                placeholder="Enter subcategory name"
+                value={subcategoryName}
+                onChangeText={setSubcategoryName}
+              />
+              <TextInput
+                style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background, height: 100 }]}
+                placeholder="Description (optional)"
+                value={description}
+                onChangeText={setDescription}
+                multiline
+              />
+              <TextInput
+                style={[styles.input, { backgroundColor: themeStyles.inputBackground, color: themeStyles.text, borderColor: themeStyles.background }]}
+                placeholder="Unit (optional)"
+                value={unit}
+                onChangeText={setUnit}
+              />
+              <TouchableOpacity
+                onPress={handleSubmit}
+                style={[styles.submitButton, { backgroundColor: themeStyles.secondary }]}
               >
                 <Text style={[styles.submitButtonText, { color: themeStyles.text }]}>Save</Text>
               </TouchableOpacity>
-              
-              <TouchableOpacity 
-                onPress={onClose} 
-                style={[styles.cancelButton, { backgroundColor: themeStyles.secondary, borderWidth: 1, borderColor: themeStyles.background}]}
+              <TouchableOpacity
+                onPress={handleOnClose}
+                style={[styles.cancelButton, { backgroundColor: themeStyles.secondary }]}
               >
                 <Text style={[styles.cancelButtonText, { color: themeStyles.text }]}>Close</Text>
               </TouchableOpacity>
@@ -134,9 +136,9 @@ return (
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </Modal>
-
-);
+  );
 };
+
 
 const styles = StyleSheet.create({
 modalOverlay: {

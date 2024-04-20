@@ -1,94 +1,95 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import {
+  View, TextInput, StyleSheet, Text, TouchableOpacity,
+  KeyboardAvoidingView, Platform, Alert
+} from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useAuth } from './userData/users/AuthContext'; // Ensure this path matches your AuthContext file location
-import { authenticateUser } from '../mongo/services/mongodbService'; // Adjust the path as necessary
-import {useTheme} from '../screens/Settingsc/Theme';
-import { fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService'; // Ensure this is properly imported
+import { useAuth } from './userData/users/AuthContext';
+import { authenticateUser, fetchAndStoreSubcategories, fetchAndStoreUserData } from '../mongo/services/mongodbService';
+import { useTheme } from '../screens/Settingsc/Theme';
 
 export default function Login({ navigation }) {
-  const { login } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const { themeStyles } = useTheme();
+  const { login } = useAuth();  // Use the login function from the authentication context
+  const [loading, setLoading] = useState(false);  // State to handle loading status
+  const { themeStyles } = useTheme();  // Theme context for styling
 
+  // Handler for login operation
   const handleLogin = async (values) => {
     setLoading(true);
-    // await AsyncStorage.removeItem('subcategories');
     try {
-        const loginResponse = await authenticateUser(values.loginId, values.password);
-        if (loginResponse.token) {
-            // Assuming loginResponse returns a token and user email
-            await login(loginResponse.token); // Login context update
-            await fetchAndStoreSubcategories(loginResponse.user.email); // Fetch and store subcategories
-            await fetchAndStoreUserData(loginResponse.user.email);  // Fetch and store user data
-        } else {
-            console.error('Login failed:', loginResponse.message);
-        }
+      const loginResponse = await authenticateUser(values.loginId, values.password);
+      if (loginResponse.token) {
+        // Proceed if authentication is successful
+        await login(loginResponse.token);  // Update login status in context
+        await fetchAndStoreSubcategories(loginResponse.user.email);  // Fetch subcategories related to the user
+        await fetchAndStoreUserData(loginResponse.user.email);  // Fetch and store user data
+        navigation.navigate('Dashboard');  // Navigate to the Dashboard upon successful login
+      } else {
+        Alert.alert('Login Failed', loginResponse.message);  // Alert user on failed login
+      }
     } catch (error) {
-        alert("Failed to login: " + (error.message || "Unknown error"));
+      Alert.alert("Login Error", "Failed to login: " + (error.message || "Unknown error"));
     } finally {
-        setLoading(false);
+      setLoading(false);  // Reset loading status regardless of outcome
     }
-};
+  };
 
-
-
+  // Navigation to Password Recovery Screen
   const navigateToPasswordRecovery = () => {
     navigation.navigate('PasswordRecovery');
   };
 
+  // Login form UI using Formik for state management and validation
   return (
-
     <View style={[styles.container, { backgroundColor: themeStyles.background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidView}
         keyboardVerticalOffset={Platform.select({ ios: 50, android: 0 })}
       >
-      <View style={[styles.loginCard, { shadowColor: themeStyles.text, backgroundColor: themeStyles.background, borderColor: themeStyles.accent }]}>
-        <Text style={[styles.title, { color: themeStyles.text }]}>Login</Text>
-        <Text style={[styles.subtitle, { color: themeStyles.text }]}>Login to continue using the app</Text>
-      <Formik
-          initialValues={{ loginId: '', password: '' }}
-          onSubmit={handleLogin}
-          validationSchema={Yup.object({
-              loginId: Yup.string().required('Username or Email is required'), // Updated validation schema
-              password: Yup.string().required('Required'),
-          })}
-      >
-          {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View style={[styles.loginCard, { shadowColor: themeStyles.text, backgroundColor: themeStyles.background, borderColor: themeStyles.accent }]}>
+          <Text style={[styles.title, { color: themeStyles.text }]}>Login</Text>
+          <Text style={[styles.subtitle, { color: themeStyles.text }]}>Login to continue using the app</Text>
+          <Formik
+            initialValues={{ loginId: '', password: '' }}
+            onSubmit={handleLogin}
+            validationSchema={Yup.object({
+              loginId: Yup.string().required('Username or Email is required'),
+              password: Yup.string().required('Password is required')
+            })}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
               <>
-                  <TextInput
-                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
-                      onChangeText={handleChange('loginId')} // Changed from email to loginId
-                      onBlur={handleBlur('loginId')} // Changed from email to loginId
-                      value={values.loginId}
-                      placeholder="Username or Email" // Updated placeholder
-                      placeholderTextColor={'black'}
-                      autoCapitalize="none"
-                  />
-                  <TextInput
-                      style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
-                      placeholder="Password"
-                      placeholderTextColor={'black'}
-                      secureTextEntry
-                  />
-                    <TouchableOpacity 
-                    onPress={handleSubmit} 
-                    style={[styles.button, { backgroundColor: themeStyles.primary }]} 
-                    disabled={loading}
-                    >
-                <Text style={[styles.buttonText]}>Login</Text>
-              </TouchableOpacity>
+                <TextInput
+                  style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
+                  onChangeText={handleChange('loginId')}
+                  onBlur={handleBlur('loginId')}
+                  value={values.loginId}
+                  placeholder="Username or Email"
+                  placeholderTextColor={themeStyles.placeholder}
+                  autoCapitalize="none"
+                />
+                <TextInput
+                  style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
+                  onChangeText={handleChange('password')}
+                  onBlur={handleBlur('password')}
+                  value={values.password}
+                  placeholder="Password"
+                  placeholderTextColor={themeStyles.placeholder}
+                  secureTextEntry
+                />
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  style={[styles.button, { backgroundColor: themeStyles.primary }]}
+                  disabled={loading}
+                >
+                  <Text style={[styles.buttonText, { color: themeStyles.text }]}>Login</Text>
+                </TouchableOpacity>
               </>
-          )}
-      </Formik>
-
-      </View>
+            )}
+          </Formik>
+        </View>
       </KeyboardAvoidingView>
     </View>
   );
