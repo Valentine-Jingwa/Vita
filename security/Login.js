@@ -61,12 +61,13 @@ export default function Login({ navigation }) {
             {({ handleChange, handleBlur, handleSubmit, values }) => (
               <>
                 <TextInput
-                  style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.text }]}
+                  style={[styles.textInput, { borderColor: themeStyles.primary, color: themeStyles.background }]}
                   onChangeText={handleChange('loginId')}
                   onBlur={handleBlur('loginId')}
                   value={values.loginId}
                   placeholder="Username or Email"
-                  placeholderTextColor={themeStyles.placeholder}
+                  placeholderTextColor={themeStyles.text}
+                  color={themeStyles.text}
                   autoCapitalize="none"
                 />
                 <TextInput
@@ -75,7 +76,8 @@ export default function Login({ navigation }) {
                   onBlur={handleBlur('password')}
                   value={values.password}
                   placeholder="Password"
-                  placeholderTextColor={themeStyles.placeholder}
+                  placeholderTextColor={themeStyles.text}
+                  color={themeStyles.text}
                   secureTextEntry
                 />
                 <TouchableOpacity
